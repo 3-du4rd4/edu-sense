@@ -1,19 +1,14 @@
 from fastapi import APIRouter
-from app.services.database import insert_environment_data
+from app.services.database import insert_data, get_data
 
 router = APIRouter()
 
 @router.get("/test-db")
 def test_db():
-    data = {
-        "temperature": 25,
-        "humidity": 60
-    }
-
-    inserted_id = insert_environment_data(data)
+    received_data = get_data()
 
     return {
         "status": "success",
-        "message": "Data inserted",
-        "id": inserted_id
+        "message": "Data retrieved",
+        "data": received_data
     }

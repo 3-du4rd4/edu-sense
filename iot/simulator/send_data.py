@@ -6,9 +6,9 @@ client = mqtt.Client()
 client.connect("localhost", 1883, 60)
 
 data = {
-    "temperature": 25,
-    "humidity": 60
+    "atention": "low",
+    "eyes_closed": True,
 }
 
-client.publish("study/environment", json.dumps(data))
+client.publish("study/vision", json.dumps(data))
 print("Sent:", data)
