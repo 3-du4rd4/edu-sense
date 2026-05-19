@@ -3,7 +3,7 @@ from datetime import datetime
 
 import paho.mqtt.client as mqtt
 
-from app.config import settings
+from backend.app.core.config import settings
 from app.services.database import insert_data
 
 
