@@ -1,14 +1,23 @@
 from fastapi import FastAPI
-from app.routes.health import router as health_router
-from app.routes.test_db import router as test_db_router
-from app.services.mqtt_client import start_mqtt
+
+from routes import health, session
+from db.mongo import connect_to_mongo, close_mongo_connection
+from services.mqtt_client import start_mqtt
 
 app = FastAPI()
-start_mqtt()
+# start_mqtt()
 
-app.include_router(health_router)
-app.include_router(test_db_router)
 
-@app.get("/")
-def root():
-    return {"message": "api test"}
+
+@app.on_event("startup")
+async def startup_event():
+    await connect_to_mongo()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await close_mongo_connection()
+
+
+app.include_router(health.router)
+app.include_router(session.router)
