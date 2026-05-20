@@ -53,7 +53,7 @@ class SessionRepository:
             }
         )
 
-        return self.get_by_id(session_id)
+        return await self.get_by_id(session_id)
     
 
     async def list_sessions_by_user_id(self, user_id: str) -> list[dict]:

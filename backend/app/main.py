@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from routes import health, session
+from routes import health, session, websocket
 from db.mongo import connect_to_mongo, close_mongo_connection
 from services.mqtt_client import start_mqtt
 
@@ -21,3 +21,4 @@ async def shutdown_event():
 
 app.include_router(health.router)
 app.include_router(session.router)
+app.include_router(websocket.router)
