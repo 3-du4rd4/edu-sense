@@ -5,6 +5,8 @@ from fastapi import HTTPException
 
 from repositories.session_repository import SessionRepository
 from schemas.session import StartSessionRequest
+from websocket.events import WebSocketEvent
+from websocket.manager import websocket_manager
 
 
 class SessionService:
@@ -30,7 +32,7 @@ class SessionService:
             "durationSeconds": None,
             "createdAt": now,
 
-            "sumary": {
+            "summary": {
                 "temperature": None,
                 "noise": None,
                 "light": None,
@@ -57,11 +59,19 @@ class SessionService:
             }
         }
 
-        return await self.repository.create_session(session_data=session_data)
+        created_session = await self.repository.create_session(session_data=session_data)
+
+        await websocket_manager.send_to_user(
+            user_id=data.userId,
+            event=WebSocketEvent.SESSION_STARTED,
+            payload=created_session
+        )
+
+        return created_session
 
 
     async def finish_session(self, session_id: str) -> dict:
-        session = await self.repository.get_session_by_id(session_id)
+        session = await self.repository.get_by_id(session_id=session_id)
         
         if not session:
             raise HTTPException(
@@ -77,13 +87,25 @@ class SessionService:
         
         end_time = datetime.now(timezone.utc)
         start_time = session["startTime"]
+
+        if start_time.tzinfo is None:
+            start_time = start_time.replace(tzinfo=timezone.utc)
+            
         duration_seconds = int((end_time - start_time).total_seconds())
 
-        return await self.repository.finish_session(
+        finished_session = await self.repository.finish_session(
             session_id=session_id, 
             end_time=end_time, 
             duration_seconds=duration_seconds
         )
+
+        await websocket_manager.send_to_user(
+            user_id=finished_session["userId"],
+            event=WebSocketEvent.SESSION_FINISHED,
+            payload=finished_session
+        )
+
+        return finished_session
     
 
     async def get_active_session(self, user_id: str) -> Optional[dict]:

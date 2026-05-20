@@ -41,7 +41,7 @@ class SessionTask(BaseModel):
 
 class SessionResponse(BaseModel):
     id: str = Field(alias="_id")
-    user_id: str
+    userId: str
     startTime: datetime
     endTime: Optional[datetime] = None
     durationSeconds: Optional[int] = None
