@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from routes import health, session, websocket
 from db.mongo import connect_to_mongo, close_mongo_connection
@@ -6,6 +7,14 @@ from services.mqtt_client import start_mqtt
 from mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
 # start_mqtt()
 
 
