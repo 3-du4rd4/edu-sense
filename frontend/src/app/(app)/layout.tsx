@@ -8,7 +8,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "16rem",
+          "--sidebar-width": "18rem",
           "--header-height": "4rem",
         } as React.CSSProperties
       }
@@ -18,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <SidebarInset>
         <SiteHeader />
 
-        <main className="flex-1 bg-muted/30 p-6">{children}</main>
+        <main className="flex-1 p-10">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
