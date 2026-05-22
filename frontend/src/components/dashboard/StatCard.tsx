@@ -1,20 +1,9 @@
-import { LucideIcon } from "lucide-react";
-
 import { Card, CardContent } from "@/components/ui/card";
+import { DashboardStat } from "@/types/dashboard";
 
-type StatCardProps = {
-  title: string;
-  value: string;
-  description?: string;
-  icon?: LucideIcon;
-};
+type StatCardProps = DashboardStat;
 
-export function StatCard({
-  title,
-  value,
-  description,
-  icon: Icon,
-}: StatCardProps) {
+export function StatCard({ title, value }: StatCardProps) {
   return (
     <Card className="rounded-3xl ring-2 ring-[#45C8FF]">
       <CardContent className="flex items-center gap-3 px-4 py-2">

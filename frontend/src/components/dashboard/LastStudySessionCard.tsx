@@ -1,24 +1,9 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Thermometer, Lightbulb, Volume2, Flame } from "lucide-react";
+import { Flame } from "lucide-react";
 
-const metrics = [
-  {
-    label: "Temperature avg.",
-    value: "28.4°C",
-    icon: Thermometer,
-  },
-  {
-    label: "Light avg.",
-    value: "430 lx",
-    icon: Lightbulb,
-  },
-  {
-    label: "Noise avg.",
-    value: "52 dB",
-    icon: Volume2,
-  },
-];
+import { Badge } from "@/components/ui/badge";
+import { lastSessionMetrics } from "@/mocks/dashboard";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function LastStudySessionCard() {
   return (
@@ -42,7 +27,7 @@ export function LastStudySessionCard() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            {metrics.map((metric) => (
+            {lastSessionMetrics.map((metric) => (
               <div key={metric.label} className="flex items-center gap-1">
                 <metric.icon className="size-6 text-muted-foreground" />
 
