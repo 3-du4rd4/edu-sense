@@ -3,20 +3,12 @@
 import { isSameDay } from "date-fns";
 
 import { Calendar } from "@/components/ui/calendar";
+import { calendarStudyData } from "@/mocks/dashboard";
+
 import { Card, CardContent } from "@/components/ui/card";
 
-const monthDate = new Date(2025, 10, 1);
-const today = new Date(2025, 10, 20);
-
-const studiedDates = [
-  new Date(2025, 10, 7),
-  new Date(2025, 10, 19),
-  new Date(2025, 10, 20),
-];
-
-const streakDates = [new Date(2025, 10, 20), new Date(2025, 10, 19)];
-
-const streakCount = 2;
+const { monthDate, today, studiedDates, streakDates, streakCount } =
+  calendarStudyData;
 
 function hasDate(date: Date, dates: Date[]) {
   return dates.some((item) => isSameDay(item, date));

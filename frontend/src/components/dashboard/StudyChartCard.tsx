@@ -10,17 +10,9 @@ import {
   YAxis,
 } from "recharts";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { studyChartData } from "@/mocks/dashboard";
 
-const data = [
-  { day: "Mon", hours: 1.5 },
-  { day: "Tue", hours: 2.4 },
-  { day: "Wed", hours: 3.1 },
-  { day: "Thu", hours: 1.8 },
-  { day: "Fri", hours: 4.2 },
-  { day: "Sat", hours: 3.5 },
-  { day: "Sun", hours: 2.8 },
-];
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function StudyChartCard() {
   return (
@@ -35,7 +27,7 @@ export function StudyChartCard() {
       <CardContent>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data}>
+            <AreaChart data={studyChartData}>
               <defs>
                 <linearGradient id="studyHours" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#22c55e" stopOpacity={0.35} />
