@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 
-import { SessionSetupData } from "../types";
+import { MonitoringOptionsSection } from "../setup/MonitoringOptionsSection";
+import { SetupHeader } from "../setup/SetupHeader";
+import { StartSessionIllustration } from "../setup/StartSessionIllustration";
+import { StudyModeSection } from "../setup/StudyModeSection";
+import { TaskSetupSection } from "../setup/TaskSetupSection";
+import { TimeGoalSection } from "../setup/TimeGoalSection";
+import { SessionSetupData, StudyMode } from "../types";
+import Image from "next/image";
 
 type SetupViewProps = {
   setupData: SessionSetupData;
@@ -13,27 +20,110 @@ export function SetupView({
   onSetupChange,
   onStart,
 }: SetupViewProps) {
+  function updateStudyMode(studyMode: StudyMode) {
+    onSetupChange({
+      ...setupData,
+      studyMode,
+    });
+  }
+
+  function updateCameraEnabled(cameraEnabled: boolean) {
+    onSetupChange({
+      ...setupData,
+      cameraEnabled,
+    });
+  }
+
+  function updateSensorsEnabled(sensorsEnabled: boolean) {
+    onSetupChange({
+      ...setupData,
+      sensorsEnabled,
+    });
+  }
+
+  function addTask(title: string) {
+    onSetupChange({
+      ...setupData,
+      tasks: [
+        ...setupData.tasks,
+        {
+          id: crypto.randomUUID(),
+          title,
+          completed: false,
+        },
+      ],
+    });
+  }
+
+  function removeTask(taskId: string) {
+    onSetupChange({
+      ...setupData,
+      tasks: setupData.tasks.filter((task) => task.id !== taskId),
+    });
+  }
+
+  function editTask(taskId: string, title: string) {
+    onSetupChange({
+      ...setupData,
+      tasks: setupData.tasks.map((task) =>
+        task.id === taskId ? { ...task, title } : task,
+      ),
+    });
+  }
+
+  function updateTimeGoal(timeGoalMinutes: number | null) {
+    onSetupChange({
+      ...setupData,
+      timeGoalMinutes,
+    });
+  }
+
   return (
-    <div className="space-y-8">
-      <section>
-        <h1 className="text-3xl font-bold">Ready to start?</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Your study session is about to start, but first let&apos;s set some
-          things up!
-        </p>
-      </section>
+    <div className="space-y-6">
+      <SetupHeader />
 
-      <section className="rounded-3xl border bg-card p-6">
-        <h2 className="text-xl font-semibold">Session setup</h2>
+      <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+        <div className="space-y-6">
+          <TaskSetupSection
+            tasks={setupData.tasks}
+            onAddTask={addTask}
+            onRemoveTask={removeTask}
+            onEditTask={editTask}
+          />
+          <TimeGoalSection
+            timeGoalMinutes={setupData.timeGoalMinutes}
+            onChange={updateTimeGoal}
+          />
+          <StudyModeSection
+            value={setupData.studyMode}
+            onChange={updateStudyMode}
+          />
+          <MonitoringOptionsSection
+            cameraEnabled={setupData.cameraEnabled}
+            sensorsEnabled={setupData.sensorsEnabled}
+            onCameraChange={updateCameraEnabled}
+            onSensorsChange={updateSensorsEnabled}
+          />
+        </div>
 
-        <pre className="mt-4 rounded-2xl bg-muted p-4 text-xs">
-          {JSON.stringify(setupData, null, 2)}
-        </pre>
-
-        <Button onClick={onStart} className="mt-5 rounded-full">
-          Start
-        </Button>
-      </section>
+        <div className="flex flex-col items-end justify-between gap-12">
+          <StartSessionIllustration />
+          <div className="flex flex-col items-center">
+            <Image
+              src="/illustrations/study-idle-illustration.svg"
+              alt="Session setup illustration"
+              width={40}
+              height={40}
+            />
+            <Button
+              onClick={onStart}
+              className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
+            >
+              Start
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
