@@ -1,27 +1,57 @@
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+
+import { SessionSetupData } from "../types";
+import { ActiveSessionDock } from "../active/ActiveSessionDock";
+import { SessionIllustrationStage } from "../active/SessionIllustrationStage";
+import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
 
 type ActiveSessionViewProps = {
+  setupData: SessionSetupData;
+  onSetupChange: (data: SessionSetupData) => void;
   onFinish: () => void;
 };
 
-export function ActiveSessionView({ onFinish }: ActiveSessionViewProps) {
+export function ActiveSessionView({
+  setupData,
+  onSetupChange,
+  onFinish,
+}: ActiveSessionViewProps) {
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setElapsedSeconds((current) => current + 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  function toggleTask(taskId: string) {
+    onSetupChange({
+      ...setupData,
+      tasks: setupData.tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task,
+      ),
+    });
+  }
+
   return (
-    <div className="space-y-8">
-      <header className="flex items-center justify-between">
-        <div className="rounded-full bg-pink-300 px-6 py-2 font-semibold">
-          00:15:30
-        </div>
+    <div className="relative min-h-[calc(100vh-8rem)] space-y-6 pb-24">
+      <ActiveSessionTopBar
+        cameraConnected={setupData.cameraEnabled}
+        sensorsConnected={setupData.sensorsEnabled}
+        elapsedSeconds={elapsedSeconds}
+        onFinish={onFinish}
+      />
 
-        <Button onClick={onFinish} className="rounded-full">
-          Finish
-        </Button>
-      </header>
+      <SessionIllustrationStage />
 
-      <section className="mx-auto h-72 max-w-3xl rounded-3xl bg-orange-500" />
-
-      <section className="mx-auto w-fit rounded-full border bg-card px-6 py-3 text-sm">
-        Environment and session metrics will appear here.
-      </section>
+      <ActiveSessionDock
+        tasks={setupData.tasks}
+        timeGoalMinutes={setupData.timeGoalMinutes}
+        elapsedSeconds={elapsedSeconds}
+        onToggleTask={toggleTask}
+      />
     </div>
   );
 }

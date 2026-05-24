@@ -45,7 +45,13 @@ export function SessionStateRenderer({
   }
 
   if (state === "active") {
-    return <ActiveSessionView onFinish={onFinish} />;
+    return (
+      <ActiveSessionView
+        setupData={setupData}
+        onSetupChange={onSetupChange}
+        onFinish={onFinish}
+      />
+    );
   }
 
   if (state === "finished") {
