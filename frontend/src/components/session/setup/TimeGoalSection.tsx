@@ -94,7 +94,6 @@ export function TimeGoalSection({
 
             {timeGoalMinutes && (
               <Button
-                type="button"
                 variant="ghost"
                 size="icon"
                 onPointerDown={(e) => e.stopPropagation()}

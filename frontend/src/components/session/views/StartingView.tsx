@@ -1,19 +1,34 @@
-import { Loader2 } from "lucide-react";
+import { Loader2, LoaderCircle } from "lucide-react";
+import { StartingIllustration } from "../starting/StartingIllustration";
+import { StartingProgress } from "../starting/StartingProgress";
+import { Button } from "@/components/ui/button";
 
-export function StartingView() {
+type StartingViewProps = {
+  onCancel: () => void;
+};
+
+export function StartingView({ onCancel }: StartingViewProps) {
   return (
-    <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
-      <div className="mb-8 size-44 rounded-3xl bg-orange-500" />
+    <div className="flex min-h-[70vh] flex-col gap-6 items-center justify-center text-center">
+      <StartingIllustration />
 
-      <div className="flex items-center gap-2">
-        <h1 className="text-xl font-semibold">Starting session</h1>
-        <Loader2 className="size-5 animate-spin" />
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex items-center gap-2">
+          <h1 className="text-base font-semibold">Starting session</h1>
+          <LoaderCircle className="size-5 animate-spin" />
+        </div>
+
+        <p className="max-w-md text-sm text-muted-foreground">
+          Take a deep breath, get comfortable, keep some water nearby.
+          We&apos;re almost there!
+        </p>
       </div>
 
-      <p className="mt-3 max-w-md text-sm text-muted-foreground">
-        Take a deep breath, get comfortable, keep some water nearby. We&apos;re
-        almost there!
-      </p>
+      <StartingProgress />
+
+      <Button variant="outline" onClick={onCancel}>
+        Cancel
+      </Button>
     </div>
   );
 }

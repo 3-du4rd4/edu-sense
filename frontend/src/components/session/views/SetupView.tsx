@@ -13,12 +13,14 @@ type SetupViewProps = {
   setupData: SessionSetupData;
   onSetupChange: (data: SessionSetupData) => void;
   onStart: () => void;
+  onCancel: () => void;
 };
 
 export function SetupView({
   setupData,
   onSetupChange,
   onStart,
+  onCancel,
 }: SetupViewProps) {
   function updateStudyMode(studyMode: StudyMode) {
     onSetupChange({
@@ -108,19 +110,31 @@ export function SetupView({
 
         <div className="flex flex-col items-end justify-between gap-12">
           <StartSessionIllustration />
-          <div className="flex flex-col items-center">
+
+          <div className="flex flex-col items-end">
             <Image
               src="/illustrations/study-idle-illustration.svg"
               alt="Session setup illustration"
               width={40}
               height={40}
+              className="mr-9"
             />
-            <Button
-              onClick={onStart}
-              className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
-            >
-              Start
-            </Button>
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={onCancel}
+                className="rounded-full"
+              >
+                Cancel
+              </Button>
+
+              <Button
+                onClick={onStart}
+                className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
+              >
+                Start session
+              </Button>
+            </div>
           </div>
         </div>
       </div>

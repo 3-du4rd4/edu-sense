@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionSetupData, SessionUIState } from "./types";
@@ -29,6 +29,8 @@ export function SessionPageContent() {
   const [setupData, setSetupData] =
     useState<SessionSetupData>(initialSetupData);
 
+  const startTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   function goToSetup() {
     setState("configuring");
   }
@@ -36,9 +38,19 @@ export function SessionPageContent() {
   function startSessionFlow() {
     setState("starting");
 
-    setTimeout(() => {
+    startTimeoutRef.current = setTimeout(() => {
       setState("active");
-    }, 2000);
+      startTimeoutRef.current = null;
+    }, 4000);
+  }
+
+  function cancelStartSessionFlow() {
+    if (startTimeoutRef.current) {
+      clearTimeout(startTimeoutRef.current);
+      startTimeoutRef.current = null;
+    }
+
+    setState("configuring");
   }
 
   function finishSessionFlow() {
@@ -58,6 +70,8 @@ export function SessionPageContent() {
       onStart={startSessionFlow}
       onFinish={finishSessionFlow}
       onReset={resetSessionFlow}
+      onCancelStart={cancelStartSessionFlow}
+      onCancelSetup={resetSessionFlow}
     />
   );
 }

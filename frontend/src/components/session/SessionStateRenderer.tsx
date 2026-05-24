@@ -14,6 +14,8 @@ type SessionStateRendererProps = {
   onStart: () => void;
   onFinish: () => void;
   onReset: () => void;
+  onCancelStart: () => void;
+  onCancelSetup: () => void;
 };
 
 export function SessionStateRenderer({
@@ -24,6 +26,8 @@ export function SessionStateRenderer({
   onStart,
   onFinish,
   onReset,
+  onCancelStart,
+  onCancelSetup,
 }: SessionStateRendererProps) {
   if (state === "configuring") {
     return (
@@ -31,12 +35,13 @@ export function SessionStateRenderer({
         setupData={setupData}
         onSetupChange={onSetupChange}
         onStart={onStart}
+        onCancel={onCancelSetup}
       />
     );
   }
 
   if (state === "starting") {
-    return <StartingView />;
+    return <StartingView onCancel={onCancelStart} />;
   }
 
   if (state === "active") {
