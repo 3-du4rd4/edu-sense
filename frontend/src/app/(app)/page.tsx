@@ -10,13 +10,13 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
 
 export default function DashboardPage() {
-  const { loadActiveSession } = useSession();
+  // const { loadActiveSession } = useSession();
 
-  useWebSocket(TEST_USER_ID);
+  // useWebSocket(TEST_USER_ID);
 
-  useEffect(() => {
-    loadActiveSession(TEST_USER_ID);
-  }, [loadActiveSession]);
+  // useEffect(() => {
+  //   loadActiveSession(TEST_USER_ID);
+  // }, [loadActiveSession]);
 
   return <DashboardContent />;
 }

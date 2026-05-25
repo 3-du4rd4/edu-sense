@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
@@ -35,7 +36,13 @@ const mockResultData: SessionResultData = {
 };
 
 export function SessionPageContent() {
-  const [state, setState] = useState<SessionUIState>("idle");
+  const searchParams = useSearchParams();
+
+  const initialMode = searchParams.get("mode");
+
+  const [state, setState] = useState<SessionUIState>(
+    initialMode === "setup" ? "configuring" : "idle",
+  );
   const [setupData, setSetupData] =
     useState<SessionSetupData>(initialSetupData);
 
