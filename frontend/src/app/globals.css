@@ -9,6 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-instrument-sans: var(--font-instrument-sans);
+  --font-graduate: var(--font-graduate);
   --font-mono: var(--font-geist-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -126,6 +127,6 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-instrument-sans;
+    @apply font-instrument-sans font-graduate;
   }
 }
