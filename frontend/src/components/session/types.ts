@@ -20,3 +20,13 @@ export type SessionSetupData = {
   cameraEnabled: boolean;
   sensorsEnabled: boolean;
 };
+
+export type SessionResultData = {
+  durationMinutes: number;
+  focusAverage: number;
+  temperatureAverage: number;
+  lightAverage: number;
+  noiseAverage: number;
+  pointsEarned: number;
+  level: number;
+};

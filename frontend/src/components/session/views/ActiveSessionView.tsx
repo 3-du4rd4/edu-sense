@@ -36,7 +36,7 @@ export function ActiveSessionView({
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-8rem)] space-y-6 pb-24">
+    <div className="relative min-h-[calc(100vh-8rem)] space-y-6">
       <ActiveSessionTopBar
         cameraConnected={setupData.cameraEnabled}
         sensorsConnected={setupData.sensorsEnabled}

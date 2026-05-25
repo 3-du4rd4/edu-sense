@@ -36,7 +36,7 @@ export function ActiveSessionDock({
     : "No reading yet";
 
   return (
-    <footer className="fixed bottom-6 left-1/2 z-20 -translate-x-1/2">
+    <footer className="md:absolute fixed bottom-6 left-1/2 z-20 -translate-x-1/2">
       <div className="flex items-center gap-2 rounded-full bg-[#F5F5F5] px-5 py-2 shadow-sm">
         <MetricTooltipItem
           icon={Focus}

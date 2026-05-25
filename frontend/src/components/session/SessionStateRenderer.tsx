@@ -4,11 +4,12 @@ import { IdleView } from "./views/IdleView";
 import { SetupView } from "./views/SetupView";
 import { StartingView } from "./views/StartingView";
 
-import { SessionSetupData, SessionUIState } from "./types";
+import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 
 type SessionStateRendererProps = {
   state: SessionUIState;
   setupData: SessionSetupData;
+  resultData: SessionResultData;
   onSetupChange: (data: SessionSetupData) => void;
   onGoToSetup: () => void;
   onStart: () => void;
@@ -21,6 +22,7 @@ type SessionStateRendererProps = {
 export function SessionStateRenderer({
   state,
   setupData,
+  resultData,
   onSetupChange,
   onGoToSetup,
   onStart,
@@ -55,7 +57,13 @@ export function SessionStateRenderer({
   }
 
   if (state === "finished") {
-    return <FinishedSessionView onContinue={onReset} />;
+    return (
+      <FinishedSessionView
+        onContinue={onReset}
+        resultData={resultData}
+        setupData={setupData}
+      />
+    );
   }
 
   return <IdleView onGoToSetup={onGoToSetup} />;

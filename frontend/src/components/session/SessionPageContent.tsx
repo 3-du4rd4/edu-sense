@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 
 import { SessionStateRenderer } from "./SessionStateRenderer";
-import { SessionSetupData, SessionUIState } from "./types";
+import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 
 const initialSetupData: SessionSetupData = {
   tasks: [
@@ -22,6 +22,16 @@ const initialSetupData: SessionSetupData = {
   studyMode: "normal",
   cameraEnabled: true,
   sensorsEnabled: true,
+};
+
+const mockResultData: SessionResultData = {
+  durationMinutes: 155,
+  focusAverage: 88,
+  temperatureAverage: 30,
+  lightAverage: 800,
+  noiseAverage: 800,
+  pointsEarned: 200,
+  level: 2,
 };
 
 export function SessionPageContent() {
@@ -65,6 +75,7 @@ export function SessionPageContent() {
     <SessionStateRenderer
       state={state}
       setupData={setupData}
+      resultData={mockResultData}
       onSetupChange={setSetupData}
       onGoToSetup={goToSetup}
       onStart={startSessionFlow}
