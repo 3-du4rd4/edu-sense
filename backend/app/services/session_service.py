@@ -39,7 +39,8 @@ class SessionService:
                 "focus": None
             },
 
-            "tasks": [],
+            "tasks": [task.model_dump() for task in data.tasks],
+            "studyMode": data.studyMode,
             "timeGoal": data.timeGoal,
             "status": "active",
 
