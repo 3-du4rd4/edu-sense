@@ -1,5 +1,9 @@
 import { api } from "./api";
-import { MonitoringSession, StartSessionPayload } from "@/types/session";
+import {
+  MonitoringSession,
+  StartSessionPayload,
+  FinishSessionPayload,
+} from "@/types/session";
 
 export async function startSession(
   payload: StartSessionPayload,
@@ -14,9 +18,11 @@ export async function startSession(
 
 export async function finishSession(
   sessionId: string,
+  payload: FinishSessionPayload,
 ): Promise<MonitoringSession> {
   const response = await api.post<MonitoringSession>(
     `/sessions/${sessionId}/finish`,
+    payload,
   );
 
   return response.data;

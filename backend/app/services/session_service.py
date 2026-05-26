@@ -4,14 +4,20 @@ from typing import Optional
 from fastapi import HTTPException
 
 from repositories.session_repository import SessionRepository
-from schemas.session import StartSessionRequest
+from schemas.session import StartSessionRequest, FinishSessionRequest
 from websocket.events import WebSocketEvent
 from websocket.manager import websocket_manager
+from repositories.environment_repository import EnvironmentRepository
+from services.points_service import PointsService
+from services.session_summary_service import SessionSummaryService
 
 
 class SessionService:
     def __init__(self):
         self.repository = SessionRepository()
+        self.environment_repository = EnvironmentRepository()
+        self.summary_service = SessionSummaryService()
+        self.points_service = PointsService()
 
 
     async def start_session(self, data: StartSessionRequest) -> dict:
@@ -71,19 +77,23 @@ class SessionService:
         return created_session
 
 
-    async def finish_session(self, session_id: str) -> dict:
+    async def finish_session(
+            self, 
+            session_id: str,
+            data: FinishSessionRequest
+    ) -> dict:
         session = await self.repository.get_by_id(session_id=session_id)
         
         if not session:
             raise HTTPException(
                 status_code=404, 
-                detail="Session not found"
+                detail="Monitoring session not found"
             )
 
         if session["status"] != "active":
             raise HTTPException(
                 status_code=400, 
-                detail="Session is not active"
+                detail="Monitoring session is not active"
             )
         
         end_time = datetime.now(timezone.utc)
@@ -94,10 +104,28 @@ class SessionService:
             
         duration_seconds = int((end_time - start_time).total_seconds())
 
+        readings = await self.environment_repository.get_readings_by_session(session_id=session_id)
+
+        summary = self.summary_service.calculate_environment_summary(readings)
+
+        final_tasks = [task.model_dump() for task in data.tasks]
+
+        if not final_tasks:
+            final_tasks = session.get("tasks", [])
+
+        points = self.points_service.calculate_points(
+            duration_seconds=duration_seconds,
+            time_goal_minutes=session.get("timeGoal"),
+            tasks=final_tasks,
+        )
+
         finished_session = await self.repository.finish_session(
             session_id=session_id, 
             end_time=end_time, 
-            duration_seconds=duration_seconds
+            duration_seconds=duration_seconds,
+            summary=summary,
+            points=points,
+            tasks=final_tasks
         )
 
         await websocket_manager.send_to_user(

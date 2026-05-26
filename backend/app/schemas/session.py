@@ -41,6 +41,10 @@ class SessionSummary(BaseModel):
     focus: Optional[float] = None
 
 
+class FinishSessionRequest(BaseModel):
+    tasks: list[SessionTask] = Field(default_factory=list)
+
+
 class SessionResponse(BaseModel):
     id: str = Field(alias="_id")
     userId: str

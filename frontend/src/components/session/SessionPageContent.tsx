@@ -105,7 +105,9 @@ export function SessionPageContent() {
 
   async function finishSessionFlow() {
     try {
-      await finishSession();
+      await finishSession({
+        tasks: setupData.tasks,
+      });
 
       setState("finished");
     } catch (error) {
