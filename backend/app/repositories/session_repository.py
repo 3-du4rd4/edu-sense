@@ -41,14 +41,25 @@ class SessionRepository:
         return self._serialize(session)
     
 
-    async def finish_session(self, session_id: str, end_time: datetime, duration_seconds: int) -> Optional[dict]:
+    async def finish_session(
+            self, 
+            session_id: str, 
+            end_time: datetime,
+            duration_seconds: int,
+            summary: dict,
+            points: dict,
+            tasks: list[dict]
+        ) -> Optional[dict]:
         await self.collection.update_one(
             {"_id": ObjectId(session_id)},
             {
                 "$set": {
                     "status": "finished",
                     "endTime": end_time,
-                    "durationSeconds": duration_seconds
+                    "durationSeconds": duration_seconds,
+                    "summary": summary,
+                    "points": points,
+                    "tasks": tasks
                 }
             }
         )

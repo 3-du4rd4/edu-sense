@@ -6,7 +6,7 @@ import {
   startSession,
 } from "@/services/sessionService";
 import { useSessionStore } from "@/stores/sessionStore";
-import { StartSessionPayload } from "@/types/session";
+import { FinishSessionPayload, StartSessionPayload } from "@/types/session";
 
 export function useSession() {
   const {
@@ -52,23 +52,26 @@ export function useSession() {
     [setActiveSession, setIsLoading, setError],
   );
 
-  const handleFinishSession = useCallback(async () => {
-    if (!activeSession) return;
+  const handleFinishSession = useCallback(
+    async (payload: FinishSessionPayload) => {
+      if (!activeSession) return;
 
-    try {
-      setIsLoading(true);
-      setError(null);
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      const session = await finishSession(activeSession._id);
-      setActiveSession(null);
+        const session = await finishSession(activeSession._id, payload);
+        setActiveSession(null);
 
-      return session;
-    } catch {
-      setError("Erro ao encerrar sessão.");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [setActiveSession, setIsLoading, setError, activeSession]);
+        return session;
+      } catch {
+        setError("Erro ao encerrar sessão.");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setActiveSession, setIsLoading, setError, activeSession],
+  );
 
   return {
     activeSession,

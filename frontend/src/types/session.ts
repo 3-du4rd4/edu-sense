@@ -50,3 +50,7 @@ export type StartSessionPayload = {
   tasks: SessionTask[];
   features: SessionFeatures;
 };
+
+export type FinishSessionPayload = {
+  tasks: SessionTask[];
+};

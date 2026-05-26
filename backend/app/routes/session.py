@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Query
 
-from schemas.session import StartSessionRequest, SessionResponse
+from schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest
 from services.session_service import SessionService
 
 router = APIRouter(prefix="/sessions", tags=["Sessions"])
@@ -14,9 +14,12 @@ async def start_session(data: StartSessionRequest):
 
 
 @router.post("/{session_id}/finish", response_model=SessionResponse)
-async def finish_session(session_id: str):
+async def finish_session(
+        session_id: str,
+        data: FinishSessionRequest
+):
     service = SessionService()
-    return await service.finish_session(session_id=session_id)
+    return await service.finish_session(session_id=session_id, data=data)
 
 
 @router.get("/active", response_model=Optional[SessionResponse])
