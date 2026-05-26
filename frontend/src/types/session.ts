@@ -1,6 +1,13 @@
+export type StudyMode = "normal" | "focus" | "reading";
+
 export type SessionFeatures = {
   cameraEnabled: boolean;
   sensorsEnabled: boolean;
+};
+
+export type SessionTask = {
+  title: string;
+  completed: boolean;
 };
 
 export type SessionSummary = {
@@ -28,7 +35,8 @@ export type MonitoringSession = {
   durationSeconds: number | null;
   createdAt: string;
   summary: SessionSummary;
-  tasks: unknown[]; // Ajustar depois de definir o tipo
+  tasks: SessionTask[];
+  studyMode: StudyMode;
   timeGoal: number | null;
   status: "active" | "finished" | "paused";
   features: SessionFeatures;
@@ -38,5 +46,7 @@ export type MonitoringSession = {
 export type StartSessionPayload = {
   userId: string;
   timeGoal?: number | null;
+  studyMode: StudyMode;
+  tasks: SessionTask[];
   features: SessionFeatures;
 };

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Literal
 
 from pydantic import BaseModel, Field
 
@@ -18,13 +18,20 @@ class PointsBreakdown(BaseModel):
 
 class SessionPoints(BaseModel):
     earned: int = 0
-    breakdown: PointsBreakdown = PointsBreakdown()
+    breakdown: PointsBreakdown = Field(default_factory=PointsBreakdown)
+
+
+class SessionTask(BaseModel):
+    title: str
+    completed: bool = False
 
 
 class StartSessionRequest(BaseModel):
     userId: str
     timeGoal: Optional[int] = None
-    features: SessionFeatures
+    studyMode: Literal["normal", "focus", "reading"] = "normal"
+    tasks: Optional[list[SessionTask]] = Field(default_factory=list)
+    features: SessionFeatures = Field(default_factory=SessionFeatures)
 
 
 class SessionSummary(BaseModel):
@@ -34,11 +41,6 @@ class SessionSummary(BaseModel):
     focus: Optional[float] = None
 
 
-class SessionTask(BaseModel):
-    description: str = ""
-    completed: bool = False
-
-
 class SessionResponse(BaseModel):
     id: str = Field(alias="_id")
     userId: str
@@ -46,9 +48,10 @@ class SessionResponse(BaseModel):
     endTime: Optional[datetime] = None
     durationSeconds: Optional[int] = None
     createdAt: datetime
-    summary: Optional[SessionSummary] = None
-    tasks: Optional[list[SessionTask]] = None
+    summary: SessionSummary
+    tasks: list[SessionTask]
     timeGoal: Optional[int] = None
+    studyMode: Literal["normal", "focus", "reading"] = "normal"
     features: SessionFeatures
     status: str
     points: SessionPoints

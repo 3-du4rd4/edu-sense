@@ -23,17 +23,20 @@ export function ActiveSessionDock({
 }: ActiveSessionDockProps) {
   const latestReading = useEnvironmentStore((state) => state.latestReading);
 
-  const temperature = latestReading?.temperature
-    ? `${latestReading.temperature}°C`
-    : "No reading yet";
+  const temperature =
+    latestReading?.temperature !== undefined
+      ? `${latestReading.temperature}°C`
+      : "No reading yet";
 
-  const light = latestReading?.light
-    ? `${latestReading.light}`
-    : "No reading yet";
+  const light =
+    latestReading?.light !== undefined
+      ? `${latestReading.light}`
+      : "No reading yet";
 
-  const noise = latestReading?.noise
-    ? `${latestReading.noise}`
-    : "No reading yet";
+  const noise =
+    latestReading?.noise !== undefined
+      ? `${latestReading.noise}`
+      : "No reading yet";
 
   return (
     <footer className="md:absolute fixed bottom-6 left-1/2 z-20 -translate-x-1/2">

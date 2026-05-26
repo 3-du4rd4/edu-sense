@@ -2,6 +2,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { AppRealtimeProvider } from "@/components/layout/AppRealtimeProvider";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         } as React.CSSProperties
       }
     >
+      <AppRealtimeProvider />
+
       <AppSidebar variant="inset" />
 
       <SidebarInset>

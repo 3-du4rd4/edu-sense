@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 
 import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
+import { useSession } from "@/hooks/useSession";
+
+const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
 
 const initialSetupData: SessionSetupData = {
   tasks: [
@@ -35,10 +38,13 @@ const mockResultData: SessionResultData = {
   level: 2,
 };
 
+const MIN_STARTING_DURATION_MS = 4000;
+
 export function SessionPageContent() {
   const searchParams = useSearchParams();
-
   const initialMode = searchParams.get("mode");
+
+  const { startSession, finishSession } = useSession();
 
   const [state, setState] = useState<SessionUIState>(
     initialMode === "setup" ? "configuring" : "idle",
@@ -52,13 +58,40 @@ export function SessionPageContent() {
     setState("configuring");
   }
 
-  function startSessionFlow() {
+  async function startSessionFlow() {
     setState("starting");
 
-    startTimeoutRef.current = setTimeout(() => {
+    try {
+      const startPromise = startSession({
+        userId: TEST_USER_ID,
+        timeGoal: setupData.timeGoalMinutes,
+        studyMode: setupData.studyMode,
+        tasks: setupData.tasks,
+        features: {
+          cameraEnabled: setupData.cameraEnabled,
+          sensorsEnabled: setupData.sensorsEnabled,
+        },
+      });
+
+      const delayPromise = new Promise<void>((resolve) => {
+        startTimeoutRef.current = setTimeout(() => {
+          resolve();
+        }, MIN_STARTING_DURATION_MS);
+      });
+
+      await Promise.all([startPromise, delayPromise]);
+
       setState("active");
-      startTimeoutRef.current = null;
-    }, 4000);
+    } catch (error) {
+      console.error(error);
+
+      if (startTimeoutRef.current) {
+        clearTimeout(startTimeoutRef.current);
+        startTimeoutRef.current = null;
+      }
+
+      setState("configuring");
+    }
   }
 
   function cancelStartSessionFlow() {
@@ -70,8 +103,14 @@ export function SessionPageContent() {
     setState("configuring");
   }
 
-  function finishSessionFlow() {
-    setState("finished");
+  async function finishSessionFlow() {
+    try {
+      await finishSession();
+
+      setState("finished");
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   function resetSessionFlow() {
