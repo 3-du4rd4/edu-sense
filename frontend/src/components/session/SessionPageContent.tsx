@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 import { useSession } from "@/hooks/useSession";
+import { MonitoringSession } from "@/types/session";
 
 const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
 
@@ -28,16 +29,6 @@ const initialSetupData: SessionSetupData = {
   sensorsEnabled: true,
 };
 
-const mockResultData: SessionResultData = {
-  durationMinutes: 155,
-  focusAverage: 88,
-  temperatureAverage: 30,
-  lightAverage: 800,
-  noiseAverage: 800,
-  pointsEarned: 200,
-  level: 2,
-};
-
 const MIN_STARTING_DURATION_MS = 4000;
 
 export function SessionPageContent() {
@@ -49,8 +40,12 @@ export function SessionPageContent() {
   const [state, setState] = useState<SessionUIState>(
     initialMode === "setup" ? "configuring" : "idle",
   );
+
   const [setupData, setSetupData] =
     useState<SessionSetupData>(initialSetupData);
+
+  const [finishedSession, setFinishedSession] =
+    useState<MonitoringSession | null>(null);
 
   const startTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -105,9 +100,13 @@ export function SessionPageContent() {
 
   async function finishSessionFlow() {
     try {
-      await finishSession({
+      const session = await finishSession({
         tasks: setupData.tasks,
       });
+
+      if (session) {
+        setFinishedSession(session);
+      }
 
       setState("finished");
     } catch (error) {
@@ -119,11 +118,25 @@ export function SessionPageContent() {
     setState("idle");
   }
 
+  function buildResultData(session: MonitoringSession): SessionResultData {
+    return {
+      durationMinutes: session.durationSeconds
+        ? Math.round(session.durationSeconds / 60)
+        : 0,
+      focusAverage: session.summary.focus ?? null,
+      temperatureAverage: session.summary.temperature ?? null,
+      lightAverage: session.summary.light ?? null,
+      noiseAverage: session.summary.noise ?? null,
+      pointsEarned: session.points.earned,
+      level: 2,
+    };
+  }
+
   return (
     <SessionStateRenderer
       state={state}
       setupData={setupData}
-      resultData={mockResultData}
+      resultData={finishedSession ? buildResultData(finishedSession) : null}
       onSetupChange={setSetupData}
       onGoToSetup={goToSetup}
       onStart={startSessionFlow}

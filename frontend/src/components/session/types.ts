@@ -23,10 +23,10 @@ export type SessionSetupData = {
 
 export type SessionResultData = {
   durationMinutes: number;
-  focusAverage: number;
-  temperatureAverage: number;
-  lightAverage: number;
-  noiseAverage: number;
+  focusAverage: number | null;
+  temperatureAverage: number | null;
+  lightAverage: number | null;
+  noiseAverage: number | null;
   pointsEarned: number;
   level: number;
 };

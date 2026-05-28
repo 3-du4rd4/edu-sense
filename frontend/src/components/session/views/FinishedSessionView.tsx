@@ -14,7 +14,7 @@ import { CompletedTasksSummary } from "../finished/CompletedTasksSummary";
 type FinishedSessionViewProps = {
   onContinue: () => void;
   setupData: SessionSetupData;
-  resultData: SessionResultData;
+  resultData: SessionResultData | null;
 };
 
 export function FinishedSessionView({
@@ -22,6 +22,14 @@ export function FinishedSessionView({
   setupData,
   resultData,
 }: FinishedSessionViewProps) {
+  if (!resultData) {
+    return (
+      <div className="rounded-3xl border bg-card p-6">
+        Session result not available.
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -41,7 +49,9 @@ export function FinishedSessionView({
             durationMinutes={resultData.durationMinutes}
           />
 
-          <FocusSummary averageFocus={resultData.focusAverage} />
+          {resultData.focusAverage !== null && (
+            <FocusSummary averageFocus={resultData.focusAverage} />
+          )}
 
           <MonitoringSummary
             averageTemperature={resultData.temperatureAverage}

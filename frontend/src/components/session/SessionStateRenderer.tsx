@@ -9,7 +9,7 @@ import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 type SessionStateRendererProps = {
   state: SessionUIState;
   setupData: SessionSetupData;
-  resultData: SessionResultData;
+  resultData: SessionResultData | null;
   onSetupChange: (data: SessionSetupData) => void;
   onGoToSetup: () => void;
   onStart: () => void;
