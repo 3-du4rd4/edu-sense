@@ -11,22 +11,11 @@ import { MonitoringSession } from "@/types/session";
 const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
 
 const initialSetupData: SessionSetupData = {
-  tasks: [
-    {
-      id: "1",
-      title: "Read 10 book pages",
-      completed: false,
-    },
-    {
-      id: "2",
-      title: "Study for Math exam",
-      completed: false,
-    },
-  ],
-  timeGoalMinutes: 120,
+  tasks: [],
+  timeGoalMinutes: null,
   studyMode: "normal",
-  cameraEnabled: true,
-  sensorsEnabled: true,
+  cameraEnabled: false,
+  sensorsEnabled: false,
 };
 
 const MIN_STARTING_DURATION_MS = 4000;

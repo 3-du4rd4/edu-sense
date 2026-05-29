@@ -52,6 +52,35 @@ export function ActiveSessionDock({
           label="Focus"
           value={focus.tooltip}
           active={focus.active}
+          tooltipContent={
+            <div className="space-y-2">
+              <div>
+                <p className="text-xs font-medium">Focus</p>
+                <p className="text-xs text-muted-foreground">{focus.tooltip}</p>
+              </div>
+
+              {latestFacialMetrics && (
+                <div className="space-y-1 text-xs">
+                  <TooltipRow
+                    label="EAR"
+                    value={latestFacialMetrics.ear.toFixed(2)}
+                  />
+                  <TooltipRow
+                    label="MAR"
+                    value={latestFacialMetrics.mar.toFixed(2)}
+                  />
+                  <TooltipRow
+                    label="Eyes closed"
+                    value={latestFacialMetrics.eyesClosed ? "Yes" : "No"}
+                  />
+                  <TooltipRow
+                    label="Yawning"
+                    value={latestFacialMetrics.yawning ? "Yes" : "No"}
+                  />
+                </div>
+              )}
+            </div>
+          }
         />
 
         <div className="h-5 w-px bg-border" />
@@ -141,4 +170,13 @@ function getFocusStatus(
     active: true,
     tooltip: "Good focus",
   };
+}
+
+function TooltipRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between gap-4">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium">{value}</span>
+    </div>
+  );
 }

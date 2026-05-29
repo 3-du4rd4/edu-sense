@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 
 import {
@@ -12,6 +13,7 @@ type MetricTooltipItemProps = {
   value: string;
   span?: string;
   active?: boolean;
+  tooltipContent?: ReactNode;
 };
 
 export function MetricTooltipItem({
@@ -20,6 +22,7 @@ export function MetricTooltipItem({
   value,
   span,
   active = false,
+  tooltipContent,
 }: MetricTooltipItemProps) {
   return (
     <Tooltip>
@@ -40,8 +43,12 @@ export function MetricTooltipItem({
       </TooltipTrigger>
 
       <TooltipContent>
-        <p className="text-xs font-medium">{label}</p>
-        <p className="text-xs text-muted-foreground">{value}</p>
+        {tooltipContent ?? (
+          <>
+            <p className="text-xs font-medium">{label}</p>
+            <p className="text-xs text-muted-foreground">{value}</p>
+          </>
+        )}
       </TooltipContent>
     </Tooltip>
   );
