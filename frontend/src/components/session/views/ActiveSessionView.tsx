@@ -5,6 +5,7 @@ import { ActiveSessionDock } from "../active/ActiveSessionDock";
 import { SessionIllustrationStage } from "../active/SessionIllustrationStage";
 import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
 import { MonitoringSession } from "@/types/session";
+import { RealtimeSimulatorPanel } from "../dev/RealtimeSimulatorPanel";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
@@ -66,6 +67,10 @@ export function ActiveSessionView({
         elapsedSeconds={elapsedSeconds}
         onToggleTask={toggleTask}
       />
+
+      {process.env.NEXT_PUBLIC_ENABLE_SIMULATOR === "true" && (
+        <RealtimeSimulatorPanel />
+      )}
     </div>
   );
 }

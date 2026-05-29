@@ -18,7 +18,7 @@ class EnvironmentReadingRequest(BaseModel):
 
 
 class EnvironmentReadingResponse(BaseModel):
-    id: str
+    _id: str
     sessionId: str
     temperature: float
     noise: float
