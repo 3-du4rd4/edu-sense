@@ -6,11 +6,15 @@ import { createWebSocketConnection } from "@/services/websocketService";
 import { useEnvironmentStore } from "@/stores/environmentStore";
 import { useSessionStore } from "@/stores/sessionStore";
 import { WebSocketMessage } from "@/types/websocket";
+import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
 
 export function useWebSocket(userId: string) {
   const socketRef = useRef<WebSocket | null>(null);
 
   const setActiveSession = useSessionStore((state) => state.setActiveSession);
+  const setLatestMetrics = useFacialMetricsStore(
+    (state) => state.setLatestMetrics,
+  );
 
   const setLatestReading = useEnvironmentStore(
     (state) => state.setLatestReading,
@@ -33,6 +37,10 @@ export function useWebSocket(userId: string) {
         if (message.event === "environment_update") {
           setLatestReading(message.payload);
         }
+
+        if (message.event === "facial_metrics_update") {
+          setLatestMetrics(message.payload);
+        }
       },
     );
 
@@ -42,5 +50,5 @@ export function useWebSocket(userId: string) {
       socket.close();
       socketRef.current = null;
     };
-  }, [userId, setActiveSession, setLatestReading]);
+  }, [userId, setActiveSession, setLatestReading, setLatestMetrics]);
 }

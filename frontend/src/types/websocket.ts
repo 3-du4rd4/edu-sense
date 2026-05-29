@@ -1,10 +1,12 @@
 import { EnvironmentReading } from "./environment";
+import { FacialMetrics } from "./facialMetrics";
 import { MonitoringSession } from "./session";
 
 export type WebSocketEventName =
   | "session_started"
   | "session_finished"
-  | "environment_update";
+  | "environment_update"
+  | "facial_metrics_update";
 
 export type WebSocketMessage =
   | {
@@ -18,4 +20,8 @@ export type WebSocketMessage =
   | {
       event: "environment_update";
       payload: EnvironmentReading;
+    }
+  | {
+      event: "facial_metrics_update";
+      payload: FacialMetrics;
     };
