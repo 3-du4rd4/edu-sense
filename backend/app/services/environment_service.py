@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 from repositories.environment_repository import EnvironmentRepository
 from repositories.session_repository import SessionRepository
-from schemas.environment import EnvironmentPayload
+from schemas.environment import EnvironmentReadingRequest
 from websocket.events import WebSocketEvent
 from websocket.manager import websocket_manager
 
@@ -15,27 +15,28 @@ class EnvironmentService:
     
     async def process_environment_reading(
         self,
-        user_id: str,
-        payload: EnvironmentPayload
+        data: EnvironmentReadingRequest,
     ) -> dict | None:
-        active_session = await self.session_repository.get_active_session_by_user_id(user_id)
+        active_session = await self.session_repository.get_active_session_by_user_id(
+            data.userId
+        )
 
         if not active_session:
-            print(f"No active session found for user_id: {user_id}")
+            print(f"No active session found for user_id: {data.userId}")
             return None
         
         reading_data = {
             "sessionId": active_session["_id"],
-            "temperature": payload.temperature,
-            "noise": payload.noise,
-            "light": payload.light,
+            "temperature": data.temperature,
+            "noise": data.noise,
+            "light": data.light,
             "timestamp": datetime.now(timezone.utc)
         }
 
         created_reading = await self.environment_repository.create_reading(reading_data)
 
         await websocket_manager.send_to_user(
-            user_id=user_id,
+            user_id=data.userId,
             event=WebSocketEvent.ENVIRONMENT_UPDATE,
             payload=created_reading
         )
