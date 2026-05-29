@@ -47,6 +47,9 @@ export function SessionPageContent() {
   const [finishedSession, setFinishedSession] =
     useState<MonitoringSession | null>(null);
 
+  const [currentSession, setCurrentSession] =
+    useState<MonitoringSession | null>(null);
+
   const startTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   function goToSetup() {
@@ -74,8 +77,9 @@ export function SessionPageContent() {
         }, MIN_STARTING_DURATION_MS);
       });
 
-      await Promise.all([startPromise, delayPromise]);
+      const [session] = await Promise.all([startPromise, delayPromise]);
 
+      setCurrentSession(session);
       setState("active");
     } catch (error) {
       console.error(error);
@@ -108,6 +112,7 @@ export function SessionPageContent() {
         setFinishedSession(session);
       }
 
+      setCurrentSession(null);
       setState("finished");
     } catch (error) {
       console.error(error);
@@ -115,6 +120,8 @@ export function SessionPageContent() {
   }
 
   function resetSessionFlow() {
+    setCurrentSession(null);
+    setFinishedSession(null);
     setState("idle");
   }
 
@@ -137,6 +144,7 @@ export function SessionPageContent() {
       state={state}
       setupData={setupData}
       resultData={finishedSession ? buildResultData(finishedSession) : null}
+      currentSession={currentSession}
       onSetupChange={setSetupData}
       onGoToSetup={goToSetup}
       onStart={startSessionFlow}

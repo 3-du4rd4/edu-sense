@@ -5,11 +5,13 @@ import { SetupView } from "./views/SetupView";
 import { StartingView } from "./views/StartingView";
 
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
+import { MonitoringSession } from "@/types/session";
 
 type SessionStateRendererProps = {
   state: SessionUIState;
   setupData: SessionSetupData;
   resultData: SessionResultData | null;
+  currentSession: MonitoringSession | null;
   onSetupChange: (data: SessionSetupData) => void;
   onGoToSetup: () => void;
   onStart: () => void;
@@ -23,6 +25,7 @@ export function SessionStateRenderer({
   state,
   setupData,
   resultData,
+  currentSession,
   onSetupChange,
   onGoToSetup,
   onStart,
@@ -50,6 +53,7 @@ export function SessionStateRenderer({
     return (
       <ActiveSessionView
         setupData={setupData}
+        currentSession={currentSession}
         onSetupChange={onSetupChange}
         onFinish={onFinish}
       />
