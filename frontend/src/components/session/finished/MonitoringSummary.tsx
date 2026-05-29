@@ -26,24 +26,29 @@ export function MonitoringSummary({
         <div className="flex items-center gap-1">
           <Thermometer className="size-4" />
           <span className="text-sm font-medium">
-            {averageTemperature ? `${averageTemperature}°C` : "not available"}
+            {formatMetric(averageTemperature, "°C")}
           </span>
         </div>
 
         <div className="flex items-center gap-1">
           <Lightbulb className="size-4" />
           <span className="text-sm font-medium">
-            {averageLight ? `${averageLight} lux` : "not available"}
+            {formatMetric(averageLight, " lux")}
           </span>
         </div>
 
         <div className="flex items-center gap-1">
           <Volume2 className="size-4" />
           <span className="text-sm font-medium">
-            {averageNoise ? `${averageNoise} dB` : "not available"}
+            {formatMetric(averageNoise, " dB")}
           </span>
         </div>
       </div>
     </section>
   );
+}
+
+function formatMetric(value: number | null, suffix: string) {
+  if (value === null) return "not available";
+  return `${value} ${suffix}`;
 }

@@ -42,14 +42,18 @@ export function useSession() {
         setError(null);
 
         const session = await startSession(payload);
+
         setActiveSession(session);
+
+        return session;
       } catch {
         setError("Erro ao iniciar sessão.");
+        throw new Error("Erro ao iniciar sessão.");
       } finally {
         setIsLoading(false);
       }
     },
-    [setActiveSession, setIsLoading, setError],
+    [setActiveSession, setError, setIsLoading],
   );
 
   const handleFinishSession = useCallback(
@@ -66,6 +70,7 @@ export function useSession() {
         return session;
       } catch {
         setError("Erro ao encerrar sessão.");
+        throw new Error("Erro ao encerrar sessão.");
       } finally {
         setIsLoading(false);
       }

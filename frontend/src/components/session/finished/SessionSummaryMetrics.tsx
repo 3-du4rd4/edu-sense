@@ -1,25 +1,29 @@
-import { Focus, Goal, Lightbulb, Thermometer, Volume2 } from "lucide-react";
+import { Goal, Lightbulb, Thermometer, Volume2 } from "lucide-react";
+import { SessionResultData } from "../types";
 
 type SessionSummaryMetricsProps = {
-  timeGoalMinutes: number | null;
+  resultData: SessionResultData;
 };
 
 export function SessionSummaryMetrics({
-  timeGoalMinutes,
+  resultData,
 }: SessionSummaryMetricsProps) {
   return (
     <section className="space-y-6">
       <SummaryRow
         title="Duration"
-        description="your session was 2hrs 35 min long"
-        badge={timeGoalMinutes ? formatTimeGoal(timeGoalMinutes) : undefined}
+        description={`your session was ${formatTimeGoal(resultData.durationMinutes)} long`}
         icon={Goal}
       />
 
       <SummaryRow
         title="Focus"
         description="during the session overall your focus was"
-        value="88%"
+        value={
+          resultData.focusAverage !== null
+            ? `${resultData.focusAverage}%`
+            : "Not available"
+        }
         valueClassName="text-green-500"
       />
 
@@ -35,9 +39,32 @@ export function SessionSummaryMetrics({
       </div>
 
       <div className="flex flex-wrap items-center gap-5 pl-6">
-        <Metric icon={Thermometer} value="30 C" />
-        <Metric icon={Lightbulb} value="800" />
-        <Metric icon={Volume2} value="800" />
+        <Metric
+          icon={Thermometer}
+          value={
+            resultData.temperatureAverage !== null
+              ? `${resultData.temperatureAverage}°C`
+              : "Not available"
+          }
+        />
+
+        <Metric
+          icon={Lightbulb}
+          value={
+            resultData.lightAverage !== null
+              ? `${resultData.lightAverage} lux`
+              : "Not available"
+          }
+        />
+
+        <Metric
+          icon={Volume2}
+          value={
+            resultData.noiseAverage !== null
+              ? `${resultData.noiseAverage} dB`
+              : "Not available"
+          }
+        />
       </div>
     </section>
   );

@@ -28,7 +28,7 @@ export function TasksPopover({ tasks, onToggleTask }: TasksPopoverProps) {
           <ListTodo
             className={cn("size-4", allTasksCompleted && "text-[#76DF64]")}
           />
-          <span className="font-medium">
+          <span className="font-medium tabular-nums">
             {completedTasks}/{tasks.length}
           </span>
         </button>
