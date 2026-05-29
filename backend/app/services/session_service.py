@@ -126,6 +126,7 @@ class SessionService:
             duration_seconds=duration_seconds,
             time_goal_minutes=session.get("timeGoal"),
             tasks=final_tasks,
+            focus_average=summary.get("focus")
         )
 
         finished_session = await self.repository.finish_session(

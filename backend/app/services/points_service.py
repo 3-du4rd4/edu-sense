@@ -7,6 +7,7 @@ class PointsService:
         duration_seconds: int,
         time_goal_minutes: int | None,
         tasks: list[dict],
+        focus_average: float | None
     ) -> dict:
         duration_minutes = duration_seconds / 60
 
@@ -26,7 +27,7 @@ class PointsService:
 
         completed_tasks_points = min(completed_tasks_count * 5, 30)
 
-        focus_bonus = 0
+        focus_bonus = self._calculate_focus_bonus(focus_average)
 
         earned = session_completed_points + time_goal_points + completed_tasks_points + focus_bonus
 
@@ -55,3 +56,16 @@ class PointsService:
         bonus = round((time_goal_minutes / 5) * 0.3)
 
         return min(max(bonus, 5), 25)
+    
+
+    def _calculate_focus_bonus(self, focus_average: float | None) -> int:
+        if focus_average is None:
+            return 0
+
+        if focus_average >= 80:
+            return 20
+
+        if focus_average >= 60:
+            return 10
+
+        return 0
