@@ -3,6 +3,7 @@
 import { Focus, Goal, Lightbulb, Thermometer, Volume2 } from "lucide-react";
 
 import { useEnvironmentStore } from "@/stores/environmentStore";
+import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
 
 import { SetupTask } from "../types";
 import { MetricTooltipItem } from "./MetricTooltipItem";
@@ -22,6 +23,9 @@ export function ActiveSessionDock({
   onToggleTask,
 }: ActiveSessionDockProps) {
   const latestReading = useEnvironmentStore((state) => state.latestReading);
+  const latestFacialMetrics = useFacialMetricsStore(
+    (state) => state.latestMetrics,
+  );
 
   const temperature =
     latestReading?.temperature !== undefined
@@ -38,14 +42,16 @@ export function ActiveSessionDock({
       ? `${latestReading.noise}`
       : "No reading yet";
 
+  const focus = getFocusStatus(latestFacialMetrics);
+
   return (
     <footer className="md:absolute fixed bottom-6 left-1/2 z-20 -translate-x-1/2">
       <div className="flex items-center gap-2 rounded-full bg-[#F5F5F5] px-5 py-2 shadow-sm">
         <MetricTooltipItem
           icon={Focus}
           label="Focus"
-          value="Good focus"
-          active
+          value={focus.tooltip}
+          active={focus.active}
         />
 
         <div className="h-5 w-px bg-border" />
@@ -112,4 +118,27 @@ function formatMinutes(totalMinutes: number) {
   }
 
   return `${hours}h ${minutes} mins`;
+}
+
+function getFocusStatus(
+  metrics: { eyesClosed: boolean; yawning: boolean } | null,
+) {
+  if (!metrics) {
+    return {
+      active: false,
+      tooltip: "No facial metrics yet",
+    };
+  }
+
+  if (metrics.eyesClosed || metrics.yawning) {
+    return {
+      active: false,
+      tooltip: "Possible fatigue detected",
+    };
+  }
+
+  return {
+    active: true,
+    tooltip: "Good focus",
+  };
 }

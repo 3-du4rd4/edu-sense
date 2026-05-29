@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import health, session, websocket
+from routes import health, session, websocket, facial_metrics
 from db.mongo import connect_to_mongo, close_mongo_connection
-from services.mqtt_client import start_mqtt
 from mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
 
 app = FastAPI()
@@ -15,8 +14,6 @@ app.add_middleware(
     allow_headers=["*"],
     allow_credentials=True,
 )
-# start_mqtt()
-
 
 
 @app.on_event("startup")
@@ -34,3 +31,4 @@ async def shutdown_event():
 app.include_router(health.router)
 app.include_router(session.router)
 app.include_router(websocket.router)
+app.include_router(facial_metrics.router)
