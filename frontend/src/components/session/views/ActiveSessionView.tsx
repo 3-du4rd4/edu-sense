@@ -4,27 +4,41 @@ import { SessionSetupData } from "../types";
 import { ActiveSessionDock } from "../active/ActiveSessionDock";
 import { SessionIllustrationStage } from "../active/SessionIllustrationStage";
 import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
+import { MonitoringSession } from "@/types/session";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
+  currentSession: MonitoringSession | null;
   onSetupChange: (data: SessionSetupData) => void;
   onFinish: () => void;
 };
 
 export function ActiveSessionView({
   setupData,
+  currentSession,
   onSetupChange,
   onFinish,
 }: ActiveSessionViewProps) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setElapsedSeconds((current) => current + 1);
-    }, 1000);
+    if (!currentSession?.startTime) return;
+
+    function updateElapsedSeconds() {
+      const startTime = parseBackendDate(currentSession!.startTime).getTime();
+      const now = Date.now();
+
+      const elapsed = Math.floor((now - startTime) / 1000);
+
+      setElapsedSeconds(Math.max(elapsed, 0));
+    }
+
+    updateElapsedSeconds();
+
+    const interval = setInterval(updateElapsedSeconds, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentSession?.startTime]);
 
   function toggleTask(taskId: string) {
     onSetupChange({
@@ -54,4 +68,10 @@ export function ActiveSessionView({
       />
     </div>
   );
+}
+
+function parseBackendDate(date: string) {
+  const hasTimezone = /Z|[+-]\d{2}:\d{2}$/.test(date);
+
+  return new Date(hasTimezone ? date : `${date}Z`);
 }
