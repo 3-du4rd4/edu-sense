@@ -8,6 +8,7 @@ from schemas.session import StartSessionRequest, FinishSessionRequest
 from websocket.events import WebSocketEvent
 from websocket.manager import websocket_manager
 from repositories.environment_repository import EnvironmentRepository
+from repositories.facial_metrics_repository import FacialMetricsRepository
 from services.points_service import PointsService
 from services.session_summary_service import SessionSummaryService
 
@@ -16,6 +17,7 @@ class SessionService:
     def __init__(self):
         self.repository = SessionRepository()
         self.environment_repository = EnvironmentRepository()
+        self.facial_metrics_repository = FacialMetricsRepository()
         self.summary_service = SessionSummaryService()
         self.points_service = PointsService()
 
@@ -106,7 +108,14 @@ class SessionService:
 
         readings = await self.environment_repository.get_readings_by_session(session_id=session_id)
 
-        summary = self.summary_service.calculate_environment_summary(readings)
+        facial_metrics = await self.facial_metrics_repository.get_metrics_by_session(
+            session_id=session_id
+        )
+
+        summary = self.summary_service.calculate_session_summary(
+            environment_readings=readings,
+            facial_metrics=facial_metrics,
+        )
 
         final_tasks = [task.model_dump() for task in data.tasks]
 

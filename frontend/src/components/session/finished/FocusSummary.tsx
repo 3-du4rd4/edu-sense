@@ -8,13 +8,15 @@ export function FocusSummary({ averageFocus }: FocusSummaryProps) {
       <div className="flex items-center gap-6 flex-wrap">
         <h2 className="text-base font-semibold">Focus</h2>
 
-        <p className="text-sm text-muted-foreground font-medium">
-          during the session overall your focus was
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-sm text-muted-foreground font-medium">
+            during the session overall your focus was
+          </p>
 
-        <span className="text-[#76DF64] text-sm font-medium">
-          {averageFocus}%
-        </span>
+          <span className="text-[#76DF64] text-sm font-medium">
+            {averageFocus}%
+          </span>
+        </div>
       </div>
     </section>
   );
