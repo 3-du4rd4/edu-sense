@@ -2,7 +2,7 @@ import asyncio
 
 from core.config import settings
 from mqtt.client import get_mqtt_client
-from mqtt.handlers import handle_environment_message
+from mqtt.handlers import handle_environment_message, handle_facial_metrics_message
 
 
 mqtt_task: asyncio.Task | None = None
@@ -31,8 +31,10 @@ async def _mqtt_listener():
 
     async with get_mqtt_client() as client:
         await client.subscribe(settings.MQTT_TOPIC_ENVIRONMENT)
+        await client.subscribe(settings.MQTT_TOPIC_FACIAL_METRICS)
 
         print(f"Subscribed to MQTT topic: {settings.MQTT_TOPIC_ENVIRONMENT}")
+        print(f"Subscribed to MQTT topic: {settings.MQTT_TOPIC_FACIAL_METRICS}")
 
         async for message in client.messages:
             topic = str(message.topic)
@@ -40,3 +42,6 @@ async def _mqtt_listener():
 
             if topic.endswith("/environment"):
                 await handle_environment_message(topic, payload)
+                
+            if topic.endswith("/facial-metrics"):
+                await handle_facial_metrics_message(topic, payload)
