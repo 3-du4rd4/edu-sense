@@ -10,8 +10,15 @@ class EnvironmentPayload(BaseModel):
     light: float
 
 
+class EnvironmentReadingRequest(BaseModel):
+    userId: str
+    temperature: float
+    light: float
+    noise: float
+
+
 class EnvironmentReadingResponse(BaseModel):
-    id: str
+    _id: str
     sessionId: str
     temperature: float
     noise: float
