@@ -67,9 +67,19 @@ class SessionRepository:
         return await self.get_by_id(session_id)
     
 
-    async def list_sessions_by_user_id(self, user_id: str) -> list[dict]:
-        cursor = self.collection.find({"userId": user_id}).sort("startTime", -1)
-        sessions = await cursor.to_list(length=100)
+    async def list_sessions_by_user_id(
+        self, 
+        user_id: str,
+        status: str | None = None,
+        limit: int = 20
+    ) -> list[dict]:
+        query = {"userId": user_id}
+
+        if status:
+            query["status"] = status
+
+        cursor = self.collection.find(query).sort("startTime", -1).limit(limit)
+        sessions = await cursor.to_list(length=limit)
 
         return [self._serialize(session) for session in sessions]
     

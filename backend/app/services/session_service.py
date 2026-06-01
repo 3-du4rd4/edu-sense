@@ -151,5 +151,26 @@ class SessionService:
         return await self.repository.get_active_session_by_user_id(user_id=user_id)
     
 
-    async def list_sessions(self, user_id: str) -> list[dict]:
-        return await self.repository.list_sessions_by_user_id(user_id=user_id)
+    async def get_user_sessions(
+        self, 
+        user_id: str,
+        status: str | None = None,
+        limit: int = 20
+    ) -> list[dict]:
+        return await self.repository.list_sessions_by_user_id(
+            user_id=user_id,
+            status=status,
+            limit=limit
+        )
+    
+
+    async def get_session_by_id(self, session_id: str) -> dict:
+        session = await self.repository.get_by_id(session_id=session_id)
+
+        if not session:
+            raise HTTPException(
+                status_code=404, 
+                detail="Monitoring session not found"
+            )
+
+        return session

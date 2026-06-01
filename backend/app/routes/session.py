@@ -28,7 +28,23 @@ async def get_active_session(userId: str = Query(..., description="The ID of the
     return await service.get_active_session(userId)
 
 
-@router.get("", response_model=list[SessionResponse])
-async def list_sessions(userId: str = Query(..., description="The ID of the user to filter sessions by")):
+@router.get("/user/{userId}", response_model=list[SessionResponse])
+async def get_user_sessions(
+    userId: str,
+    status: Optional[str] = Query(default=None),
+    limit: int = Query(default=20, ge=1, le=100)
+):
     service = SessionService()
-    return await service.list_sessions(userId)
+
+    return await service.get_user_sessions(
+        user_id=userId,
+        status=status,
+        limit=limit
+    )
+
+
+@router.get("/{session_id}", response_model=Optional[SessionResponse])
+async def get_session_by_id(session_id: str):
+    service = SessionService()
+    
+    return await service.get_session_by_id(session_id=session_id)
