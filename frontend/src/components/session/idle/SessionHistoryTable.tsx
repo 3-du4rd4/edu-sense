@@ -15,6 +15,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { MonitoringSession } from "@/types/session";
+import { Button } from "@/components/ui/button";
+import { SessionDetailsDialog } from "./SessionDetailsDialog";
 
 type SessionHistoryTableProps = {
   sessions: MonitoringSession[];
@@ -137,7 +139,15 @@ export function SessionHistoryTable({
                   </TableCell>
 
                   <TableCell className="flex justify-center">
-                    <TextSearch className="size-4 text-muted-foreground" />
+                    <SessionDetailsDialog session={session}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full"
+                      >
+                        <TextSearch className="size-4 text-muted-foreground" />
+                      </Button>
+                    </SessionDetailsDialog>
                   </TableCell>
                 </TableRow>
               ))}
