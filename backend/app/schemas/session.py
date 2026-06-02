@@ -22,6 +22,7 @@ class SessionPoints(BaseModel):
 
 
 class SessionTask(BaseModel):
+    id: str
     title: str
     completed: bool = False
 
@@ -63,3 +64,7 @@ class SessionResponse(BaseModel):
     model_config = {
         "populate_by_name": True
     }
+
+
+class UpdateSessionTasksRequest(BaseModel):
+    tasks: list[SessionTask] = Field(default_factory=list)

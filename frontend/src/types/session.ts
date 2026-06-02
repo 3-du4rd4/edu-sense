@@ -6,6 +6,7 @@ export type SessionFeatures = {
 };
 
 export type SessionTask = {
+  id: string;
   title: string;
   completed: boolean;
 };

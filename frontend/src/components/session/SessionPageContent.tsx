@@ -1,12 +1,16 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 import { useSession } from "@/hooks/useSession";
 import { MonitoringSession } from "@/types/session";
+import { getLatestEnvironmentReading } from "@/services/environmentService";
+import { getLatestFacialMetric } from "@/services/facialMetricsService";
+import { useEnvironmentStore } from "@/stores/environmentStore";
+import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
 
 const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
 
@@ -24,7 +28,18 @@ export function SessionPageContent() {
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("mode");
 
-  const { startSession, finishSession } = useSession();
+  const { activeSession, loadActiveSession, startSession, finishSession } =
+    useSession();
+
+  const setLatestReading = useEnvironmentStore(
+    (state) => state.setLatestReading,
+  );
+
+  const setLatestMetrics = useFacialMetricsStore(
+    (state) => state.setLatestMetrics,
+  );
+
+  const [isRecoveringSession, setIsRecoveringSession] = useState(true);
 
   const [state, setState] = useState<SessionUIState>(
     initialMode === "setup" ? "configuring" : "idle",
@@ -40,6 +55,32 @@ export function SessionPageContent() {
     useState<MonitoringSession | null>(null);
 
   const startTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    async function recoverActiveSession() {
+      try {
+        const session = await loadActiveSession(TEST_USER_ID);
+
+        console.log("Recovered session:", session);
+
+        if (session) {
+          setCurrentSession(session);
+          setSetupData(buildSetupDataFromSession(session));
+
+          await hydrateRealtimeStores(session._id);
+
+          setState("active");
+          return;
+        }
+
+        setState(initialMode === "setup" ? "configuring" : "idle");
+      } finally {
+        setIsRecoveringSession(false);
+      }
+    }
+
+    recoverActiveSession();
+  }, [loadActiveSession, initialMode]);
 
   function goToSetup() {
     setState("configuring");
@@ -68,7 +109,14 @@ export function SessionPageContent() {
 
       const [session] = await Promise.all([startPromise, delayPromise]);
 
+      if (!session) {
+        setState("configuring");
+        return;
+      }
+
       setCurrentSession(session);
+      await hydrateRealtimeStores(session._id);
+      setSetupData(buildSetupDataFromSession(session));
       setState("active");
     } catch (error) {
       console.error(error);
@@ -128,6 +176,29 @@ export function SessionPageContent() {
     };
   }
 
+  async function hydrateRealtimeStores(sessionId: string) {
+    const [latestEnvironmentReading, latestFacialMetric] = await Promise.all([
+      getLatestEnvironmentReading(sessionId),
+      getLatestFacialMetric(sessionId),
+    ]);
+
+    if (latestEnvironmentReading) {
+      setLatestReading(latestEnvironmentReading);
+    }
+
+    if (latestFacialMetric) {
+      setLatestMetrics(latestFacialMetric);
+    }
+  }
+
+  if (isRecoveringSession) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground">
+        Loading session...
+      </div>
+    );
+  }
+
   return (
     <SessionStateRenderer
       state={state}
@@ -143,4 +214,20 @@ export function SessionPageContent() {
       onCancelSetup={resetSessionFlow}
     />
   );
+}
+
+function buildSetupDataFromSession(
+  session: MonitoringSession,
+): SessionSetupData {
+  return {
+    tasks: session.tasks.map((task) => ({
+      id: task.id ?? crypto.randomUUID(),
+      title: task.title,
+      completed: task.completed,
+    })),
+    timeGoalMinutes: session.timeGoal ?? null,
+    studyMode: session.studyMode,
+    cameraEnabled: session.features.cameraEnabled,
+    sensorsEnabled: session.features.sensorsEnabled,
+  };
 }

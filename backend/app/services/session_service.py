@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import HTTPException
 
 from repositories.session_repository import SessionRepository
-from schemas.session import StartSessionRequest, FinishSessionRequest
+from schemas.session import StartSessionRequest, FinishSessionRequest, UpdateSessionTasksRequest
 from websocket.events import WebSocketEvent
 from websocket.manager import websocket_manager
 from repositories.environment_repository import EnvironmentRepository
@@ -174,3 +174,38 @@ class SessionService:
             )
 
         return session
+    
+
+    async def update_session_tasks(
+        self, 
+        session_id: str, 
+        data: UpdateSessionTasksRequest
+    ) -> dict:
+        session = await self.repository.get_by_id(session_id=session_id)
+
+        if not session:
+            raise HTTPException(
+                status_code=404, 
+                detail="Monitoring session not found"
+            )
+
+        if session["status"] != "active":
+            raise HTTPException(
+                status_code=400, 
+                detail="Only active sessions can update tasks"
+            )
+
+        tasks = [task.model_dump() for task in data.tasks]
+
+        updated_session = await self.repository.update_tasks(
+            session_id=session_id,
+            tasks=tasks
+        )
+
+        if not updated_session:
+            raise HTTPException(
+                status_code=404,
+                detail="Monitoring session not found after update",
+            )
+
+        return updated_session

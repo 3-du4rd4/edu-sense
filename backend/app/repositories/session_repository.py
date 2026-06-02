@@ -84,6 +84,23 @@ class SessionRepository:
         return [self._serialize(session) for session in sessions]
     
 
+    async def update_tasks(
+        self,
+        session_id: str,
+        tasks: list[dict]
+    ) -> dict | None:
+        await self.collection.update_one(
+            {"_id": ObjectId(session_id)},
+            {
+                "$set": {
+                    "tasks": tasks
+                }
+            }
+        )
+
+        return await self.get_by_id(session_id)
+    
+
     def _serialize(self, session: dict) -> dict:
         session["_id"] = str(session["_id"])
         return session

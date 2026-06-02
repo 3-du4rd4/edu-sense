@@ -42,3 +42,12 @@ class EnvironmentService:
         )
 
         return created_reading
+    
+
+    async def get_latest_reading_by_session(
+        self,
+        session_id: str
+    ) -> dict | None:
+        return await self.environment_repository.get_latest_reading_by_session(
+            session_id=session_id
+        )

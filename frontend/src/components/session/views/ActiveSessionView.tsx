@@ -6,6 +6,7 @@ import { SessionIllustrationStage } from "../active/SessionIllustrationStage";
 import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
 import { MonitoringSession } from "@/types/session";
 import { RealtimeSimulatorPanel } from "../dev/RealtimeSimulatorPanel";
+import { updateSessionTasks } from "@/services/sessionService";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
@@ -38,16 +39,34 @@ export function ActiveSessionView({
 
     const interval = setInterval(updateElapsedSeconds, 1000);
 
+    console.log("Active currentSession:", currentSession);
+    console.log("Active startTime:", currentSession?.startTime);
+
     return () => clearInterval(interval);
   }, [currentSession?.startTime]);
 
-  function toggleTask(taskId: string) {
+  async function toggleTask(taskId: string) {
+    if (!currentSession?._id) return;
+
+    const updatedTasks = setupData.tasks.map((task) =>
+      task.id === taskId ? { ...task, completed: !task.completed } : task,
+    );
+
     onSetupChange({
       ...setupData,
-      tasks: setupData.tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
+      tasks: updatedTasks,
     });
+
+    try {
+      await updateSessionTasks(currentSession._id, updatedTasks);
+    } catch (error) {
+      console.error("Failed to update session tasks:", error);
+
+      onSetupChange({
+        ...setupData,
+        tasks: setupData.tasks,
+      });
+    }
   }
 
   return (

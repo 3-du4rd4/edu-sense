@@ -20,6 +20,18 @@ class EnvironmentRepository:
 
         return [self._serialize(reading) for reading in readings]
 
+    
+    async def get_latest_reading_by_session(
+        self,
+        session_id: str
+    ) -> dict | None:
+        reading = await self.collection.find_one(
+            {'sessionId': session_id},
+            sort=[('timestamp', -1)]
+        )
+
+        return self._serialize(reading) if reading else None
+
 
     def _serialize(self, reading: dict) -> dict:
         reading['_id'] = str(reading['_id'])

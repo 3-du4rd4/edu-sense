@@ -16,3 +16,13 @@ export async function createFacialMetrics(
 
   return response.data;
 }
+
+export async function getLatestFacialMetric(
+  sessionId: string,
+): Promise<FacialMetrics | null> {
+  const response = await api.get<FacialMetrics | null>(
+    `/facial-metrics/session/${sessionId}/latest`,
+  );
+
+  return response.data;
+}
