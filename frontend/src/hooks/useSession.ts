@@ -25,9 +25,13 @@ export function useSession() {
         setError(null);
 
         const session = await getActiveSession(userId);
+
         setActiveSession(session);
+
+        return session;
       } catch {
         setError("Erro ao buscar sessão ativa.");
+        return null;
       } finally {
         setIsLoading(false);
       }

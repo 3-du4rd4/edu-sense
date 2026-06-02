@@ -18,3 +18,13 @@ export async function createEnvironmentReading(
 
   return response.data;
 }
+
+export async function getLatestEnvironmentReading(
+  sessionId: string,
+): Promise<EnvironmentReading | null> {
+  const response = await api.get<EnvironmentReading | null>(
+    `/environment-readings/session/${sessionId}/latest`,
+  );
+
+  return response.data;
+}

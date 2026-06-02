@@ -3,6 +3,7 @@ import {
   MonitoringSession,
   StartSessionPayload,
   FinishSessionPayload,
+  SessionTask,
 } from "@/types/session";
 
 export async function startSession(
@@ -36,6 +37,18 @@ export async function getActiveSession(
       userId,
     },
   });
+
+  return response.data;
+}
+
+export async function updateSessionTasks(
+  sessionId: string,
+  tasks: SessionTask[],
+): Promise<MonitoringSession> {
+  const response = await api.patch<MonitoringSession>(
+    `/sessions/${sessionId}/tasks`,
+    { tasks },
+  );
 
   return response.data;
 }

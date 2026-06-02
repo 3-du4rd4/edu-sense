@@ -21,6 +21,18 @@ class FacialMetricsRepository:
         return [self._serialize(metric) for metric in metrics]
     
 
+    async def get_latest_metric_by_session(
+        self,
+        session_id: str
+    ) -> dict | None:
+        metric = await self.collection.find_one(
+            {'sessionId': session_id},
+            sort=[('timestamp', -1)]
+        )
+        
+        return self._serialize(metric) if metric else None
+    
+
     def _serialize(self, metric: dict) -> dict:
         metric["_id"] = str(metric["_id"])
         return metric

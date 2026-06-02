@@ -1,7 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Query
 
-from schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest
+from schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest, UpdateSessionTasksRequest
 from services.session_service import SessionService
 
 router = APIRouter(prefix="/sessions", tags=["Sessions"])
@@ -48,3 +48,18 @@ async def get_session_by_id(session_id: str):
     service = SessionService()
     
     return await service.get_session_by_id(session_id=session_id)
+
+
+@router.patch("/{session_id}/tasks", response_model=SessionResponse)
+async def update_session_tasks(
+    session_id: str,
+    data: UpdateSessionTasksRequest
+):
+    service = SessionService()
+
+    updated_session = await service.update_session_tasks(
+        session_id=session_id,
+        data=data
+    )
+
+    return updated_session

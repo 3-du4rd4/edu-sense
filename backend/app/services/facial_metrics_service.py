@@ -44,3 +44,10 @@ class FacialMetricsService:
         )
 
         return created_metric
+
+
+    async def get_latest_metric_by_session(
+        self, 
+        session_id: str
+    ) -> dict | None:
+        return await self.repository.get_latest_metric_by_session(session_id)
