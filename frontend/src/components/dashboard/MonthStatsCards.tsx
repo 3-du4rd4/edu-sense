@@ -1,14 +1,35 @@
-import { dashboardStats } from "@/mocks/dashboard";
-
 import { StatCard } from "./StatCard";
 
-export function MonthStatsCards() {
+type MonthStatsCardsProps = {
+  monthStats: {
+    totalStudyMinutes: number;
+    totalSessions: number;
+  };
+};
+
+export function MonthStatsCards({ monthStats }: MonthStatsCardsProps) {
   return (
     <div className="grid gap-4 grid-cols-2">
       <p className="font-bold text-base col-span-2">This month:</p>
-      {dashboardStats.map((stat) => (
-        <StatCard key={stat.title} title={stat.title} value={stat.value} />
-      ))}
+      <StatCard
+        title="hours studied"
+        value={formatStudyTime(monthStats.totalStudyMinutes)}
+      />
+
+      <StatCard
+        title="study sessions"
+        value={String(monthStats.totalSessions)}
+      />
     </div>
   );
+}
+
+function formatStudyTime(totalMinutes: number) {
+  if (totalMinutes < 60) {
+    return "0";
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+
+  return `${hours}`;
 }
