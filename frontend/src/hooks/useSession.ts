@@ -4,6 +4,8 @@ import {
   finishSession,
   getActiveSession,
   startSession,
+  pauseSession,
+  resumeSession,
 } from "@/services/sessionService";
 import { useSessionStore } from "@/stores/sessionStore";
 import { FinishSessionPayload, StartSessionPayload } from "@/types/session";
@@ -82,6 +84,46 @@ export function useSession() {
     [setActiveSession, setIsLoading, setError, activeSession],
   );
 
+  const handlePauseSession = useCallback(async () => {
+    if (!activeSession) return null;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const session = await pauseSession(activeSession._id);
+
+      setActiveSession(session);
+
+      return session;
+    } catch {
+      setError("Erro ao pausar sessão.");
+      throw new Error("Erro ao pausar sessão.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [activeSession, setActiveSession, setError, setIsLoading]);
+
+  const handleResumeSession = useCallback(async () => {
+    if (!activeSession) return null;
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const session = await resumeSession(activeSession._id);
+
+      setActiveSession(session);
+
+      return session;
+    } catch {
+      setError("Erro ao retomar sessão.");
+      throw new Error("Erro ao retomar sessão.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [activeSession, setActiveSession, setError, setIsLoading]);
+
   return {
     activeSession,
     isLoading,
@@ -89,5 +131,7 @@ export function useSession() {
     loadActiveSession,
     startSession: handleStartSession,
     finishSession: handleFinishSession,
+    pauseSession: handlePauseSession,
+    resumeSession: handleResumeSession,
   };
 }

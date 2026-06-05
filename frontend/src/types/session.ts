@@ -42,6 +42,7 @@ export type MonitoringSession = {
   status: "active" | "finished" | "paused";
   features: SessionFeatures;
   points: SessionPoints;
+  pauseIntervals: PauseInterval[];
 };
 
 export type StartSessionPayload = {
@@ -54,4 +55,9 @@ export type StartSessionPayload = {
 
 export type FinishSessionPayload = {
   tasks: SessionTask[];
+};
+
+export type PauseInterval = {
+  pausedAt: string;
+  resumedAt: string | null;
 };

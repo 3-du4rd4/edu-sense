@@ -21,7 +21,7 @@ class SessionRepository:
     async def get_active_session_by_user_id(self, user_id: str) -> Optional[dict]:
         session = await self.collection.find_one({
             "userId": user_id,
-            "status": "active"
+            "status": {"$in": ["active", "paused"]}
         })
         
         if not session:
@@ -48,7 +48,8 @@ class SessionRepository:
             duration_seconds: int,
             summary: dict,
             points: dict,
-            tasks: list[dict]
+            tasks: list[dict],
+            pause_intervals: list[dict]
         ) -> Optional[dict]:
         await self.collection.update_one(
             {"_id": ObjectId(session_id)},
@@ -59,7 +60,8 @@ class SessionRepository:
                     "durationSeconds": duration_seconds,
                     "summary": summary,
                     "points": points,
-                    "tasks": tasks
+                    "tasks": tasks,
+                    "pauseIntervals": pause_intervals
                 }
             }
         )
@@ -94,6 +96,50 @@ class SessionRepository:
             {
                 "$set": {
                     "tasks": tasks
+                }
+            }
+        )
+
+        return await self.get_by_id(session_id)
+    
+
+    async def pause_session(
+        self,
+        session_id: str,
+        paused_at: datetime
+    ) -> dict | None:
+        await self.collection.update_one(
+            {"_id": ObjectId(session_id)},
+            {
+                "$set": {
+                    "status": "paused",
+                },
+                "$push": {
+                    "pauseIntervals": {
+                        "pausedAt": paused_at,
+                        "resumedAt": None
+                    }
+                }
+            }
+        )
+
+        return await self.get_by_id(session_id)
+    
+
+    async def resume_session(
+        self,
+        session_id: str,
+        resumed_at: datetime
+    ) -> dict | None:
+        await self.collection.update_one(
+            {
+                "_id": ObjectId(session_id),
+                "pauseIntervals.resumedAt": None
+            },
+            {
+                "$set": {
+                    "status": "active",
+                    "pauseIntervals.$.resumedAt": resumed_at
                 }
             }
         )

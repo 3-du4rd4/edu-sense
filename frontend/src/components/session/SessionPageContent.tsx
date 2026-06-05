@@ -28,8 +28,14 @@ export function SessionPageContent() {
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("mode");
 
-  const { activeSession, loadActiveSession, startSession, finishSession } =
-    useSession();
+  const {
+    activeSession,
+    loadActiveSession,
+    startSession,
+    finishSession,
+    pauseSession,
+    resumeSession,
+  } = useSession();
 
   const setLatestReading = useEnvironmentStore(
     (state) => state.setLatestReading,
@@ -191,6 +197,60 @@ export function SessionPageContent() {
     }
   }
 
+  async function pauseSessionFlow() {
+    if (!currentSession) return;
+
+    const optimisticSession: MonitoringSession = {
+      ...currentSession,
+      status: "paused",
+      pauseIntervals: [
+        ...(currentSession.pauseIntervals ?? []),
+        {
+          pausedAt: new Date().toISOString(),
+          resumedAt: null,
+        },
+      ],
+    };
+
+    setCurrentSession(optimisticSession);
+
+    try {
+      const session = await pauseSession();
+
+      if (session) {
+        setCurrentSession(session);
+      }
+    } catch (error) {
+      console.error(error);
+      setCurrentSession(currentSession);
+    }
+  }
+
+  async function resumeSessionFlow() {
+    if (!currentSession) return;
+
+    const optimisticSession: MonitoringSession = {
+      ...currentSession,
+      status: "active",
+      pauseIntervals: closeLastPauseInterval(
+        currentSession.pauseIntervals ?? [],
+        new Date().toISOString(),
+      ),
+    };
+
+    setCurrentSession(optimisticSession);
+
+    try {
+      const session = await resumeSession();
+
+      if (session) {
+        setCurrentSession(session);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   if (isRecoveringSession) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center text-sm text-muted-foreground">
@@ -212,6 +272,8 @@ export function SessionPageContent() {
       onReset={resetSessionFlow}
       onCancelStart={cancelStartSessionFlow}
       onCancelSetup={resetSessionFlow}
+      onPause={pauseSessionFlow}
+      onResume={resumeSessionFlow}
     />
   );
 }
@@ -230,4 +292,22 @@ function buildSetupDataFromSession(
     cameraEnabled: session.features.cameraEnabled,
     sensorsEnabled: session.features.sensorsEnabled,
   };
+}
+
+function closeLastPauseInterval(
+  pauseIntervals: MonitoringSession["pauseIntervals"],
+  resumedAt: string,
+) {
+  return pauseIntervals.map((interval, index) => {
+    const isLast = index === pauseIntervals.length - 1;
+
+    if (!isLast || interval.resumedAt) {
+      return interval;
+    }
+
+    return {
+      ...interval,
+      resumedAt,
+    };
+  });
 }

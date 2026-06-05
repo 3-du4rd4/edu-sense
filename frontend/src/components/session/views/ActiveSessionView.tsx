@@ -13,6 +13,8 @@ type ActiveSessionViewProps = {
   currentSession: MonitoringSession | null;
   onSetupChange: (data: SessionSetupData) => void;
   onFinish: () => void;
+  onPause: () => void;
+  onResume: () => void;
 };
 
 export function ActiveSessionView({
@@ -20,30 +22,33 @@ export function ActiveSessionView({
   currentSession,
   onSetupChange,
   onFinish,
+  onPause,
+  onResume,
 }: ActiveSessionViewProps) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
     if (!currentSession?.startTime) return;
 
-    function updateElapsedSeconds() {
-      const startTime = parseBackendDate(currentSession!.startTime).getTime();
-      const now = Date.now();
+    console.log("Timer status:", currentSession?.status);
+    console.log("Timer pauses:", currentSession?.pauseIntervals);
 
-      const elapsed = Math.floor((now - startTime) / 1000);
+    function updateElapsedSeconds() {
+      if (!currentSession) return;
+
+      const elapsed = calculateEffectiveElapsedSeconds(currentSession);
 
       setElapsedSeconds(Math.max(elapsed, 0));
     }
 
     updateElapsedSeconds();
 
+    if (currentSession.status === "paused") return;
+
     const interval = setInterval(updateElapsedSeconds, 1000);
 
-    console.log("Active currentSession:", currentSession);
-    console.log("Active startTime:", currentSession?.startTime);
-
     return () => clearInterval(interval);
-  }, [currentSession?.startTime]);
+  }, [currentSession]);
 
   async function toggleTask(taskId: string) {
     if (!currentSession?._id) return;
@@ -75,7 +80,10 @@ export function ActiveSessionView({
         cameraConnected={setupData.cameraEnabled}
         sensorsConnected={setupData.sensorsEnabled}
         elapsedSeconds={elapsedSeconds}
+        isPaused={currentSession?.status === "paused"}
         onFinish={onFinish}
+        onPause={onPause}
+        onResume={onResume}
       />
 
       <SessionIllustrationStage />
@@ -92,6 +100,34 @@ export function ActiveSessionView({
       )}
     </div>
   );
+}
+
+function calculateEffectiveElapsedSeconds(session: MonitoringSession) {
+  const startTime = parseBackendDate(session.startTime).getTime();
+  const now = Date.now();
+
+  const totalElapsedSeconds = Math.floor((now - startTime) / 1000);
+  const pausedSeconds = calculatePausedSeconds(session.pauseIntervals ?? []);
+
+  return Math.max(totalElapsedSeconds - pausedSeconds, 0);
+}
+
+function calculatePausedSeconds(
+  pauseIntervals: MonitoringSession["pauseIntervals"],
+) {
+  const now = Date.now();
+
+  return pauseIntervals.reduce((total, interval) => {
+    const pausedAt = parseBackendDate(interval.pausedAt).getTime();
+
+    const resumedAt = interval.resumedAt
+      ? parseBackendDate(interval.resumedAt).getTime()
+      : now;
+
+    const intervalSeconds = Math.floor((resumedAt - pausedAt) / 1000);
+
+    return total + Math.max(intervalSeconds, 0);
+  }, 0);
 }
 
 function parseBackendDate(date: string) {

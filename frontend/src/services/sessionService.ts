@@ -52,3 +52,23 @@ export async function updateSessionTasks(
 
   return response.data;
 }
+
+export async function pauseSession(
+  sessionId: string,
+): Promise<MonitoringSession> {
+  const response = await api.post<MonitoringSession>(
+    `/sessions/${sessionId}/pause`,
+  );
+
+  return response.data;
+}
+
+export async function resumeSession(
+  sessionId: string,
+): Promise<MonitoringSession> {
+  const response = await api.post<MonitoringSession>(
+    `/sessions/${sessionId}/resume`,
+  );
+
+  return response.data;
+}
