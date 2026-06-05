@@ -6,7 +6,10 @@ type ActiveSessionTopBarProps = {
   cameraConnected: boolean;
   sensorsConnected: boolean;
   elapsedSeconds: number;
+  isPaused: boolean;
   onFinish: () => void;
+  onPause: () => void;
+  onResume: () => void;
 };
 
 export function ActiveSessionTopBar({
@@ -14,6 +17,9 @@ export function ActiveSessionTopBar({
   sensorsConnected,
   elapsedSeconds,
   onFinish,
+  onPause,
+  onResume,
+  isPaused,
 }: ActiveSessionTopBarProps) {
   return (
     <header className="grid grid-cols-3 items-center">
@@ -29,7 +35,12 @@ export function ActiveSessionTopBar({
       </div>
 
       <div className="justify-self-end">
-        <ActiveSessionActions onFinish={onFinish} />
+        <ActiveSessionActions
+          onFinish={onFinish}
+          onPause={onPause}
+          onResume={onResume}
+          isPaused={isPaused}
+        />
       </div>
     </header>
   );

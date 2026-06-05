@@ -65,7 +65,9 @@ class SessionService:
                     "completedTasks": 0,
                     "focusBonus": 0
                 }
-            }
+            },
+
+            "pauseIntervals": []
         }
 
         created_session = await self.repository.create_session(session_data=session_data)
@@ -92,10 +94,10 @@ class SessionService:
                 detail="Monitoring session not found"
             )
 
-        if session["status"] != "active":
+        if session["status"] not in ["active", "paused"]:
             raise HTTPException(
                 status_code=400, 
-                detail="Monitoring session is not active"
+                detail="Monitoring session is not active or paused"
             )
         
         end_time = datetime.now(timezone.utc)
@@ -103,8 +105,15 @@ class SessionService:
 
         if start_time.tzinfo is None:
             start_time = start_time.replace(tzinfo=timezone.utc)
+
+        pause_intervals = close_open_pause_interval(
+            pause_intervals=session.get("pauseIntervals", []),
+            end_time=end_time,
+        )
             
-        duration_seconds = int((end_time - start_time).total_seconds())
+        total_duration_seconds = int((end_time - start_time).total_seconds())
+        paused_seconds = calculate_paused_seconds(pause_intervals)
+        duration_seconds = max(total_duration_seconds - paused_seconds, 0)
 
         readings = await self.environment_repository.get_readings_by_session(session_id=session_id)
 
@@ -115,6 +124,7 @@ class SessionService:
         summary = self.summary_service.calculate_session_summary(
             environment_readings=readings,
             facial_metrics=facial_metrics,
+            paused_intervals=pause_intervals
         )
 
         final_tasks = [task.model_dump() for task in data.tasks]
@@ -135,7 +145,8 @@ class SessionService:
             duration_seconds=duration_seconds,
             summary=summary,
             points=points,
-            tasks=final_tasks
+            tasks=final_tasks,
+            pause_intervals=pause_intervals
         )
 
         await websocket_manager.send_to_user(
@@ -209,3 +220,115 @@ class SessionService:
             )
 
         return updated_session
+    
+
+    async def pause_session(self, session_id: str) -> dict:
+        session = await self.repository.get_by_id(session_id=session_id)
+
+        if not session:
+            raise HTTPException(
+                status_code=404, 
+                detail="Monitoring session not found"
+            )
+
+        if session["status"] != "active":
+            raise HTTPException(
+                status_code=400, 
+                detail="Only active sessions can be paused"
+            )
+
+        paused_at = datetime.now(timezone.utc)
+
+        updated_session = await self.repository.pause_session(
+            session_id=session_id,
+            paused_at=paused_at
+        )
+
+        if not updated_session:
+            raise HTTPException(
+                status_code=404,
+                detail="Monitoring session not found after pause",
+            )
+        
+        await websocket_manager.send_to_user(
+            user_id=updated_session["userId"],
+            event=WebSocketEvent.SESSION_PAUSED,
+            payload=updated_session
+        )
+
+        return updated_session
+    
+
+    async def resume_session(self, session_id: str) -> dict:
+        session = await self.repository.get_by_id(session_id=session_id)
+
+        if not session:
+            raise HTTPException(
+                status_code=404, 
+                detail="Monitoring session not found"
+            )
+
+        if session["status"] != "paused":
+            raise HTTPException(
+                status_code=400, 
+                detail="Only paused sessions can be resumed"
+            )
+
+        resumed_at = datetime.now(timezone.utc)
+
+        updated_session = await self.repository.resume_session(
+            session_id=session_id,
+            resumed_at=resumed_at
+        )
+
+        if not updated_session:
+            raise HTTPException(
+                status_code=404,
+                detail="Monitoring session not found after resume",
+            )
+        
+        await websocket_manager.send_to_user(
+            user_id=updated_session["userId"],
+            event=WebSocketEvent.SESSION_RESUMED,
+            payload=updated_session
+        )
+
+        return updated_session
+
+
+def close_open_pause_interval(
+        pause_intervals: list[dict],
+        end_time: datetime
+    ) -> list[dict]:
+        updated_intervals = []
+
+        for interval in pause_intervals:
+            updated_interval = interval.copy()
+
+            if updated_interval.get("resumedAt") is None:
+                updated_interval["resumedAt"] = end_time
+
+            updated_intervals.append(updated_interval)
+
+        return updated_intervals
+    
+
+def calculate_paused_seconds(pause_intervals: list[dict]) -> int:
+    total = 0
+
+    for interval in pause_intervals:
+        paused_at = interval.get("pausedAt")
+        resumed_at = interval.get("resumedAt")
+
+        if not paused_at or not resumed_at:
+            continue
+
+        if paused_at.tzinfo is None:
+            paused_at = paused_at.replace(tzinfo=timezone.utc)
+
+        if resumed_at.tzinfo is None:
+            resumed_at = resumed_at.replace(tzinfo=timezone.utc)
+
+        total += int((resumed_at - paused_at).total_seconds())
+
+    return total

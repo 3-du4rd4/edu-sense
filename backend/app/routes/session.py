@@ -63,3 +63,17 @@ async def update_session_tasks(
     )
 
     return updated_session
+
+
+@router.post("/{session_id}/pause", response_model=SessionResponse)
+async def pause_session(session_id: str):
+    service = SessionService()
+    
+    return await service.pause_session(session_id=session_id)
+
+
+@router.post("/{session_id}/resume", response_model=SessionResponse)
+async def resume_session(session_id: str):
+    service = SessionService()
+    
+    return await service.resume_session(session_id=session_id)

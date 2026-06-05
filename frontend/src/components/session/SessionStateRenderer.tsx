@@ -19,6 +19,8 @@ type SessionStateRendererProps = {
   onReset: () => void;
   onCancelStart: () => void;
   onCancelSetup: () => void;
+  onPause: () => void;
+  onResume: () => void;
 };
 
 export function SessionStateRenderer({
@@ -33,6 +35,8 @@ export function SessionStateRenderer({
   onReset,
   onCancelStart,
   onCancelSetup,
+  onPause,
+  onResume,
 }: SessionStateRendererProps) {
   if (state === "configuring") {
     return (
@@ -56,6 +60,8 @@ export function SessionStateRenderer({
         currentSession={currentSession}
         onSetupChange={onSetupChange}
         onFinish={onFinish}
+        onPause={onPause}
+        onResume={onResume}
       />
     );
   }

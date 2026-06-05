@@ -42,6 +42,11 @@ class SessionSummary(BaseModel):
     focus: Optional[float] = None
 
 
+class PauseInterval(BaseModel):
+    pausedAt: datetime
+    resumedAt: Optional[datetime] = None
+
+
 class FinishSessionRequest(BaseModel):
     tasks: list[SessionTask] = Field(default_factory=list)
 
@@ -58,8 +63,9 @@ class SessionResponse(BaseModel):
     timeGoal: Optional[int] = None
     studyMode: Literal["normal", "focus", "reading"] = "normal"
     features: SessionFeatures
-    status: str
+    status: Literal["active", "paused", "finished"]
     points: SessionPoints
+    pauseIntervals: list[PauseInterval] = Field(default_factory=list)
 
     model_config = {
         "populate_by_name": True
