@@ -46,7 +46,6 @@ export type MonitoringSession = {
 };
 
 export type StartSessionPayload = {
-  userId: string;
   timeGoal?: number | null;
   studyMode: StudyMode;
   tasks: SessionTask[];

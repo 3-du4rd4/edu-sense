@@ -5,16 +5,20 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { createEnvironmentReading } from "@/services/environmentService";
 import { createFacialMetrics } from "@/services/facialMetricsService";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 export function RealtimeSimulatorPanel() {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
   async function sendEnvironmentUpdate() {
+    if (!userId) return;
+
     await createEnvironmentReading({
-      userId: TEST_USER_ID,
+      userId: userId,
       temperature: randomBetween(24, 34),
       light: randomBetween(250, 900),
       noise: randomBetween(30, 80),
@@ -22,11 +26,13 @@ export function RealtimeSimulatorPanel() {
   }
 
   async function sendFacialMetricsUpdate() {
+    if (!userId) return;
+
     const eyesClosed = Math.random() < 0.15;
     const yawning = Math.random() < 0.1;
 
     await createFacialMetrics({
-      userId: TEST_USER_ID,
+      userId: userId,
       ear: eyesClosed ? randomBetween(0.12, 0.18) : randomBetween(0.22, 0.34),
       mar: yawning ? randomBetween(0.6, 0.85) : randomBetween(0.15, 0.35),
       eyesClosed,

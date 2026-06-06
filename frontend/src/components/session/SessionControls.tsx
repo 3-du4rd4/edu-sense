@@ -1,21 +1,32 @@
 "use client";
 
 import { useSession } from "@/hooks/useSession";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 export function SessionControls() {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
   const { activeSession, isLoading, error, startSession, finishSession } =
     useSession();
 
   async function handleStart() {
+    if (!userId) return;
+
     await startSession({
-      userId: TEST_USER_ID,
       timeGoal: 25,
+      studyMode: "normal",
+      tasks: [],
       features: {
         cameraEnabled: true,
         sensorsEnabled: true,
       },
+    });
+  }
+
+  async function handleFinish() {
+    await finishSession({
+      tasks: activeSession?.tasks ?? [],
     });
   }
 
@@ -26,13 +37,13 @@ export function SessionControls() {
       <div className="flex gap-3">
         <button
           onClick={handleStart}
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opcaity-50"
+          className="rounded-lg bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
         >
           Iniciar Sessão
         </button>
 
         <button
-          onClick={finishSession}
+          onClick={handleFinish}
           disabled={isLoading || !activeSession}
           className="rounded-lg bg-red-600 px-4 py-2 text-white disabled:opacity-50"
         >

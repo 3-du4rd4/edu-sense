@@ -24,7 +24,6 @@ export function useSessionHistory({
       setError(null);
 
       const data = await getUserSessions({
-        userId,
         status: "finished",
         limit,
       });
@@ -38,8 +37,10 @@ export function useSessionHistory({
   }, [userId, limit]);
 
   useEffect(() => {
+    if (!userId) return;
+
     loadSessions();
-  }, [loadSessions]);
+  }, [loadSessions, userId]);
 
   return {
     sessions,

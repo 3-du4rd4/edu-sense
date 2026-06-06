@@ -1,15 +1,38 @@
 "use client";
 
+import Link from "next/link";
+import { LogOut, Settings } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getPageHeaderConfig } from "@/lib/get-page-header-config";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
+import { useAuthStore } from "@/stores/authStore";
+import { useAuth } from "@/hooks/useAuth";
 
 export function SiteHeader() {
+  const user = useAuthStore((state) => state.user);
+  const { logout } = useAuth();
+
+  const router = useRouter();
   const pathname = usePathname();
   const config = getPageHeaderConfig(pathname);
+
+  function handleLogout() {
+    logout();
+
+    router.replace("/signin");
+  }
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -28,18 +51,50 @@ export function SiteHeader() {
               <Link href="/sessions?mode=setup">Start session</Link>
             </Button>
           )}
-          <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
-            <a
-              href="https://github.com/shadcn-ui/ui/tree/main/apps/v4/app/(examples)/dashboard"
-              rel="noopener noreferrer"
-              target="_blank"
-              className="dark:text-foreground"
-            >
-              GitHub
-            </a>
-          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="rounded-full h-8 w-8 !bg-green-500 text-xs">
+                {getInitials(user?.name)}
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>
+                <div className="flex flex-col">
+                  <span>{user?.name}</span>
+                  <span className="text-xs font-normal text-muted-foreground">
+                    {user?.email}
+                  </span>
+                </div>
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem onClick={() => router.push("/settings")}>
+                <Settings className="mr-2 size-4" />
+                Settings
+              </DropdownMenuItem>
+
+              <DropdownMenuItem onClick={handleLogout}>
+                <LogOut className="mr-2 size-4" />
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
   );
+}
+
+function getInitials(name?: string) {
+  if (!name) return "U";
+
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }

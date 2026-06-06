@@ -1,5 +1,6 @@
 "use client";
 
+import { useAuthStore } from "@/stores/authStore";
 import { useDashboard } from "@/hooks/useDashboard";
 import { CalendarCard } from "./CalendarCard";
 import { GreetingCard } from "./GreetingCard";
@@ -8,10 +9,11 @@ import { LastStudySessionCard } from "./LastStudySessionCard";
 import { MonthStatsCards } from "./MonthStatsCards";
 import { StudyChartCard } from "./StudyChartCard";
 
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
-
 export function DashboardContent() {
-  const { data, isLoading, error } = useDashboard(TEST_USER_ID);
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
+  const { data, isLoading, error } = useDashboard(userId);
 
   if (isLoading) {
     return (

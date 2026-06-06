@@ -22,8 +22,12 @@ class SessionService:
         self.points_service = PointsService()
 
 
-    async def start_session(self, data: StartSessionRequest) -> dict:
-        active_session = await self.repository.get_active_session_by_user_id(data.userId)
+    async def start_session(
+        self, 
+        data: StartSessionRequest,
+        user_id: str
+    ) -> dict:
+        active_session = await self.repository.get_active_session_by_user_id(user_id=user_id)
         
         if active_session:
             raise HTTPException(
@@ -34,7 +38,7 @@ class SessionService:
         now = datetime.now(timezone.utc)
 
         session_data = {
-            "userId": data.userId,
+            "userId": user_id,
             "startTime": now,
             "endTime": None,
             "durationSeconds": None,
@@ -73,7 +77,7 @@ class SessionService:
         created_session = await self.repository.create_session(session_data=session_data)
 
         await websocket_manager.send_to_user(
-            user_id=data.userId,
+            user_id=user_id,
             event=WebSocketEvent.SESSION_STARTED,
             payload=created_session
         )

@@ -5,16 +5,18 @@ import { EnvironmentStatusCard } from "../idle/EnvironmentStatusCard";
 import { SessionHistoryTable } from "../idle/SessionHistoryTable";
 import { Separator } from "@/components/ui/separator";
 import { useSessionHistory } from "@/hooks/useSessionHistory";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 type IdleViewProps = {
   onGoToSetup: () => void;
 };
 
 export function IdleView({ onGoToSetup }: IdleViewProps) {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
   const { sessions, isLoading, error } = useSessionHistory({
-    userId: TEST_USER_ID,
+    userId: userId ?? "",
     limit: 5,
   });
 

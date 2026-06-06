@@ -29,14 +29,8 @@ export async function finishSession(
   return response.data;
 }
 
-export async function getActiveSession(
-  userId: string,
-): Promise<MonitoringSession | null> {
-  const response = await api.get<MonitoringSession | null>("/sessions/active", {
-    params: {
-      userId,
-    },
-  });
+export async function getActiveSession(): Promise<MonitoringSession | null> {
+  const response = await api.get<MonitoringSession | null>("/sessions/active");
 
   return response.data;
 }

@@ -9,7 +9,7 @@ export function useDashboardCalendar({
   userId,
   month,
 }: {
-  userId: string;
+  userId?: string;
   month: string;
 }) {
   const [data, setData] = useState<DashboardCalendarData | null>(null);
@@ -17,8 +17,12 @@ export function useDashboardCalendar({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!userId) return;
+
     async function loadCalendarData() {
       try {
+        if (!userId) return;
+
         setIsLoading(true);
         setError(null);
 
