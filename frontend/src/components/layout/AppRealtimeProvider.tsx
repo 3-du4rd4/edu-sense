@@ -4,16 +4,20 @@ import { useEffect } from "react";
 
 import { useSession } from "@/hooks/useSession";
 import { useWebSocket } from "@/hooks/useWebSocket";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 export function AppRealtimeProvider() {
+  const user = useAuthStore((state) => state.user);
   const { loadActiveSession } = useSession();
 
-  useWebSocket(TEST_USER_ID);
+  const userId = user?._id;
+
+  useWebSocket(userId);
 
   useEffect(() => {
-    loadActiveSession(TEST_USER_ID);
+    if (!userId) return;
+
+    loadActiveSession(userId);
   }, [loadActiveSession]);
 
   return null;

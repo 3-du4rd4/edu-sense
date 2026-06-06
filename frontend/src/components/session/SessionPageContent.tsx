@@ -11,8 +11,7 @@ import { getLatestEnvironmentReading } from "@/services/environmentService";
 import { getLatestFacialMetric } from "@/services/facialMetricsService";
 import { useEnvironmentStore } from "@/stores/environmentStore";
 import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 const initialSetupData: SessionSetupData = {
   tasks: [],
@@ -25,6 +24,9 @@ const initialSetupData: SessionSetupData = {
 const MIN_STARTING_DURATION_MS = 4000;
 
 export function SessionPageContent() {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("mode");
 
@@ -65,9 +67,12 @@ export function SessionPageContent() {
   useEffect(() => {
     async function recoverActiveSession() {
       try {
-        const session = await loadActiveSession(TEST_USER_ID);
+        if (!userId) {
+          setIsRecoveringSession(false);
+          return;
+        }
 
-        console.log("Recovered session:", session);
+        const session = await loadActiveSession(userId);
 
         if (session) {
           setCurrentSession(session);
@@ -96,8 +101,9 @@ export function SessionPageContent() {
     setState("starting");
 
     try {
+      if (!userId) return;
+
       const startPromise = startSession({
-        userId: TEST_USER_ID,
         timeGoal: setupData.timeGoalMinutes,
         studyMode: setupData.studyMode,
         tasks: setupData.tasks,

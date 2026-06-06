@@ -1,16 +1,20 @@
 from typing import Optional
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Depends
 
 from schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest, UpdateSessionTasksRequest
 from services.session_service import SessionService
+from dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/sessions", tags=["Sessions"])
 
 
 @router.post("/start", response_model=SessionResponse)
-async def start_session(data: StartSessionRequest):
+async def start_session(
+    data: StartSessionRequest,
+    current_user: dict = Depends(get_current_user)
+):
     service = SessionService()
-    return await service.start_session(data=data)
+    return await service.start_session(data=data, user_id=current_user["_id"])
 
 
 @router.post("/{session_id}/finish", response_model=SessionResponse)
@@ -23,21 +27,23 @@ async def finish_session(
 
 
 @router.get("/active", response_model=Optional[SessionResponse])
-async def get_active_session(userId: str = Query(..., description="The ID of the user to check for an active session")):
+async def get_active_session(
+    current_user: dict = Depends(get_current_user)
+):
     service = SessionService()
-    return await service.get_active_session(userId)
+    return await service.get_active_session(user_id=current_user["_id"])
 
 
-@router.get("/user/{userId}", response_model=list[SessionResponse])
+@router.get("/history", response_model=list[SessionResponse])
 async def get_user_sessions(
-    userId: str,
+    current_user: dict = Depends(get_current_user),
     status: Optional[str] = Query(default=None),
     limit: int = Query(default=20, ge=1, le=100)
 ):
     service = SessionService()
 
     return await service.get_user_sessions(
-        user_id=userId,
+        user_id=current_user["_id"],
         status=status,
         limit=limit
     )

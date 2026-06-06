@@ -26,7 +26,7 @@ export function useSession() {
         setIsLoading(true);
         setError(null);
 
-        const session = await getActiveSession(userId);
+        const session = await getActiveSession();
 
         setActiveSession(session);
 

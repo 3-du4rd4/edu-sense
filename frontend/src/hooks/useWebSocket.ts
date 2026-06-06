@@ -8,7 +8,7 @@ import { useSessionStore } from "@/stores/sessionStore";
 import { WebSocketMessage } from "@/types/websocket";
 import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
 
-export function useWebSocket(userId: string) {
+export function useWebSocket(userId?: string) {
   const socketRef = useRef<WebSocket | null>(null);
 
   const setActiveSession = useSessionStore((state) => state.setActiveSession);

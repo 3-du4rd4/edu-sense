@@ -7,20 +7,22 @@ import { useDashboardCalendar } from "@/hooks/useDashboardCalendar";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { useMemo, useState } from "react";
-
-const TEST_USER_ID = process.env.NEXT_PUBLIC_TEST_USER_ID ?? "user_test_1";
+import { useAuthStore } from "@/stores/authStore";
 
 function hasDate(date: Date, dates: Date[]) {
   return dates.some((item) => isSameDay(item, date));
 }
 
 export function CalendarCard() {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+
   const [monthDate, setMonthDate] = useState(new Date());
 
   const month = useMemo(() => formatMonth(monthDate), [monthDate]);
 
   const { data, isLoading, error } = useDashboardCalendar({
-    userId: TEST_USER_ID,
+    userId: userId,
     month,
   });
 
