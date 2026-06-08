@@ -7,11 +7,13 @@ import { SessionStateRenderer } from "./SessionStateRenderer";
 import { SessionResultData, SessionSetupData, SessionUIState } from "./types";
 import { useSession } from "@/hooks/useSession";
 import { MonitoringSession } from "@/types/session";
-import { getLatestEnvironmentReading } from "@/services/environmentService";
 import { getLatestFacialMetric } from "@/services/facialMetricsService";
+import { getLatestEnvironmentReading } from "@/services/environmentService";
+
+import { useAuthStore } from "@/stores/authStore";
+import { useSettingsStore } from "@/stores/settingsStore";
 import { useEnvironmentStore } from "@/stores/environmentStore";
 import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
-import { useAuthStore } from "@/stores/authStore";
 
 const initialSetupData: SessionSetupData = {
   tasks: [],
@@ -26,6 +28,12 @@ const MIN_STARTING_DURATION_MS = 4000;
 export function SessionPageContent() {
   const user = useAuthStore((state) => state.user);
   const userId = user?._id;
+
+  const {
+    defaultTimeGoalMinutes,
+    cameraEnabledByDefault,
+    sensorsEnabledByDefault,
+  } = useSettingsStore();
 
   const searchParams = useSearchParams();
   const initialMode = searchParams.get("mode");
@@ -84,7 +92,13 @@ export function SessionPageContent() {
           return;
         }
 
-        setState(initialMode === "setup" ? "configuring" : "idle");
+        if (initialMode === "setup") {
+          setSetupData(buildInitialSetupDataFromSettings());
+          setState("configuring");
+          return;
+        }
+
+        setState("idle");
       } finally {
         setIsRecoveringSession(false);
       }
@@ -93,7 +107,19 @@ export function SessionPageContent() {
     recoverActiveSession();
   }, [loadActiveSession, initialMode]);
 
+  function buildInitialSetupDataFromSettings(): SessionSetupData {
+    return {
+      tasks: [],
+      timeGoalMinutes:
+        defaultTimeGoalMinutes > 0 ? defaultTimeGoalMinutes : null,
+      studyMode: "normal",
+      cameraEnabled: cameraEnabledByDefault,
+      sensorsEnabled: sensorsEnabledByDefault,
+    };
+  }
+
   function goToSetup() {
+    setSetupData(buildInitialSetupDataFromSettings());
     setState("configuring");
   }
 
