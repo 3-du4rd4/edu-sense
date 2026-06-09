@@ -8,6 +8,7 @@ import { TaskSetupSection } from "../setup/TaskSetupSection";
 import { TimeGoalSection } from "../setup/TimeGoalSection";
 import { SessionSetupData, StudyMode } from "../types";
 import Image from "next/image";
+import { useWebcam } from "@/hooks/useWebcam";
 
 type SetupViewProps = {
   setupData: SessionSetupData;
@@ -22,6 +23,8 @@ export function SetupView({
   onStart,
   onCancel,
 }: SetupViewProps) {
+  const { requestPermission, status, error } = useWebcam();
+
   function updateStudyMode(studyMode: StudyMode) {
     onSetupChange({
       ...setupData,
@@ -29,10 +32,20 @@ export function SetupView({
     });
   }
 
-  function updateCameraEnabled(cameraEnabled: boolean) {
+  async function updateCameraEnabled(cameraEnabled: boolean) {
+    if (!cameraEnabled) {
+      onSetupChange({
+        ...setupData,
+        cameraEnabled: false,
+      });
+      return;
+    }
+
+    const allowed = await requestPermission();
+
     onSetupChange({
       ...setupData,
-      cameraEnabled,
+      cameraEnabled: allowed,
     });
   }
 
@@ -101,6 +114,8 @@ export function SetupView({
             onChange={updateStudyMode}
           />
           <MonitoringOptionsSection
+            cameraStatus={status}
+            cameraError={error}
             cameraEnabled={setupData.cameraEnabled}
             sensorsEnabled={setupData.sensorsEnabled}
             onCameraChange={updateCameraEnabled}
@@ -130,6 +145,7 @@ export function SetupView({
 
               <Button
                 onClick={onStart}
+                disabled={status === "requesting"}
                 className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
               >
                 Start session

@@ -28,7 +28,6 @@ class SessionTask(BaseModel):
 
 
 class StartSessionRequest(BaseModel):
-    userId: str
     timeGoal: Optional[int] = None
     studyMode: Literal["normal", "focus", "reading"] = "normal"
     tasks: Optional[list[SessionTask]] = Field(default_factory=list)

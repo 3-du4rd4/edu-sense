@@ -5,6 +5,8 @@ import { Switch } from "@/components/ui/switch";
 type MonitoringOptionsSectionProps = {
   cameraEnabled: boolean;
   sensorsEnabled: boolean;
+  cameraStatus?: string;
+  cameraError?: string | null;
   onCameraChange: (value: boolean) => void;
   onSensorsChange: (value: boolean) => void;
 };
@@ -12,6 +14,8 @@ type MonitoringOptionsSectionProps = {
 export function MonitoringOptionsSection({
   cameraEnabled,
   sensorsEnabled,
+  cameraStatus,
+  cameraError,
   onCameraChange,
   onSensorsChange,
 }: MonitoringOptionsSectionProps) {
@@ -32,6 +36,8 @@ export function MonitoringOptionsSection({
           checked={cameraEnabled}
           onCheckedChange={onCameraChange}
           readyMessages={["webcam ready"]}
+          cameraStatus={cameraStatus}
+          cameraError={cameraError}
         />
 
         <MonitoringOption
@@ -56,6 +62,8 @@ type MonitoringOptionProps = {
   checked: boolean;
   readyMessages?: string[];
   onCheckedChange: (value: boolean) => void;
+  cameraStatus?: string;
+  cameraError?: string | null;
 };
 
 function MonitoringOption({
@@ -64,6 +72,8 @@ function MonitoringOption({
   checked,
   onCheckedChange,
   readyMessages,
+  cameraStatus,
+  cameraError,
 }: MonitoringOptionProps) {
   return (
     <div className="flex items-center gap-6 flex-wrap">
@@ -83,6 +93,18 @@ function MonitoringOption({
             </div>
           ))}
         </div>
+      )}
+
+      {cameraStatus === "denied" && (
+        <p className="text-xs text-red-500">Camera permission was denied.</p>
+      )}
+
+      {cameraStatus === "unavailable" && (
+        <p className="text-xs text-red-500">No camera device was found.</p>
+      )}
+
+      {cameraError && cameraStatus === "error" && (
+        <p className="text-xs text-red-500">{cameraError}</p>
       )}
     </div>
   );

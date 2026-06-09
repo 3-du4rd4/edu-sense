@@ -28,6 +28,8 @@ export function SiteHeader() {
   const pathname = usePathname();
   const config = getPageHeaderConfig(pathname);
 
+  const shouldShowUserMenu = !pathname.startsWith("/sessions");
+
   function handleLogout() {
     logout();
 
@@ -52,36 +54,38 @@ export function SiteHeader() {
             </Button>
           )}
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="rounded-full h-8 w-8 !bg-green-500 text-xs">
-                {getInitials(user?.name)}
-              </Button>
-            </DropdownMenuTrigger>
+          {shouldShowUserMenu && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="rounded-full h-8 w-8 !bg-green-500 text-xs">
+                  {getInitials(user?.name)}
+                </Button>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>
-                <div className="flex flex-col">
-                  <span>{user?.name}</span>
-                  <span className="text-xs font-normal text-muted-foreground">
-                    {user?.email}
-                  </span>
-                </div>
-              </DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col">
+                    <span>{user?.name}</span>
+                    <span className="text-xs font-normal text-muted-foreground">
+                      {user?.email}
+                    </span>
+                  </div>
+                </DropdownMenuLabel>
 
-              <DropdownMenuSeparator />
+                <DropdownMenuSeparator />
 
-              <DropdownMenuItem onClick={() => router.push("/settings")}>
-                <Settings className="mr-2 size-4" />
-                Settings
-              </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <Settings className="mr-2 size-4" />
+                  Settings
+                </DropdownMenuItem>
 
-              <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 size-4" />
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 size-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </div>
     </header>
