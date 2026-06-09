@@ -7,6 +7,7 @@ import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
 import { MonitoringSession } from "@/types/session";
 import { RealtimeSimulatorPanel } from "../dev/RealtimeSimulatorPanel";
 import { updateSessionTasks } from "@/services/sessionService";
+import { useWebcam } from "@/hooks/useWebcam";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
@@ -25,13 +26,11 @@ export function ActiveSessionView({
   onPause,
   onResume,
 }: ActiveSessionViewProps) {
+  const { status: webcamStatus, startWebcam, stopWebcam } = useWebcam();
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
     if (!currentSession?.startTime) return;
-
-    console.log("Timer status:", currentSession?.status);
-    console.log("Timer pauses:", currentSession?.pauseIntervals);
 
     function updateElapsedSeconds() {
       if (!currentSession) return;
@@ -49,6 +48,27 @@ export function ActiveSessionView({
 
     return () => clearInterval(interval);
   }, [currentSession]);
+
+  useEffect(() => {
+    const shouldUseCamera =
+      setupData.cameraEnabled && currentSession?.status === "active";
+
+    if (!shouldUseCamera) {
+      stopWebcam();
+      return;
+    }
+
+    startWebcam();
+
+    return () => {
+      stopWebcam();
+    };
+  }, [
+    setupData.cameraEnabled,
+    startWebcam,
+    stopWebcam,
+    currentSession?.status,
+  ]);
 
   async function toggleTask(taskId: string) {
     if (!currentSession?._id) return;
@@ -77,7 +97,7 @@ export function ActiveSessionView({
   return (
     <div className="relative min-h-[calc(100vh-8rem)] space-y-6">
       <ActiveSessionTopBar
-        cameraConnected={setupData.cameraEnabled}
+        cameraConnected={webcamStatus === "allowed"}
         sensorsConnected={setupData.sensorsEnabled}
         elapsedSeconds={elapsedSeconds}
         isPaused={currentSession?.status === "paused"}
