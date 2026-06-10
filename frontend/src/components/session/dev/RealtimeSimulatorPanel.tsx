@@ -20,7 +20,7 @@ export function RealtimeSimulatorPanel() {
     await createEnvironmentReading({
       userId: userId,
       temperature: randomBetween(24, 34),
-      light: randomBetween(250, 900),
+      light: randomBetween(250, 950),
       noise: randomBetween(30, 80),
     });
   }

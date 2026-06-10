@@ -10,4 +10,4 @@ class WebSocketEvent(StrEnum):
     FACIAL_METRICS_UPDATE = "facial_metrics_update"
     SENSOR_UPDATE = "sensor_update"
     VISION_UPDATE = "vision_update"
-    ALERT_CREATED = "alert_created"
+    NOTIFICATION_CREATED = "notification_created"

@@ -8,7 +8,8 @@ from routes import (
     facial_metrics, 
     environment, 
     dashboard, 
-    auth
+    auth,
+    notification
 )
 from db.mongo import connect_to_mongo, close_mongo_connection
 from mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
@@ -42,4 +43,5 @@ app.include_router(session.router)
 app.include_router(websocket.router)
 app.include_router(dashboard.router)
 app.include_router(environment.router)
+app.include_router(notification.router)
 app.include_router(facial_metrics.router)
