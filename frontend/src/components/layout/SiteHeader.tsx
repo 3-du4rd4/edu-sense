@@ -19,6 +19,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getPageHeaderConfig } from "@/lib/get-page-header-config";
 import { useAuthStore } from "@/stores/authStore";
 import { useAuth } from "@/hooks/useAuth";
+import { NotificationDropdown } from "@/components/notification/NotificationDropdown";
 
 export function SiteHeader() {
   const user = useAuthStore((state) => state.user);
@@ -53,6 +54,8 @@ export function SiteHeader() {
               <Link href="/sessions?mode=setup">Start session</Link>
             </Button>
           )}
+
+          <NotificationDropdown />
 
           {shouldShowUserMenu && (
             <DropdownMenu>

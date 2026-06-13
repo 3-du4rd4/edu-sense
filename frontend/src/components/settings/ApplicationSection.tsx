@@ -6,13 +6,36 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 
+import { Bell } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { useSettingsStore } from "@/stores/settingsStore";
+
 export function ApplicationSection() {
   const router = useRouter();
   const { logout } = useAuth();
 
+  const { browserNotificationsEnabled, setBrowserNotificationsEnabled } =
+    useSettingsStore();
+
   function handleLogout() {
     logout();
     router.replace("/signin");
+  }
+
+  async function handleBrowserNotificationsChange(checked: boolean) {
+    if (!checked) {
+      setBrowserNotificationsEnabled(false);
+      return;
+    }
+
+    if (!("Notification" in window)) {
+      setBrowserNotificationsEnabled(false);
+      return;
+    }
+
+    const permission = await Notification.requestPermission();
+
+    setBrowserNotificationsEnabled(permission === "granted");
   }
 
   return (
@@ -23,6 +46,24 @@ export function ApplicationSection() {
       </p>
 
       <div className="mt-6 flex flex-col gap-4">
+        <div className="flex items-center justify-between gap-6 rounded-2xl border p-4">
+          <div className="flex items-center gap-3">
+            <Bell className="size-5 text-muted-foreground" />
+
+            <div>
+              <p className="text-sm font-medium">Browser notifications</p>
+              <p className="text-xs text-muted-foreground">
+                Receive alerts when the app is running in the background.
+              </p>
+            </div>
+          </div>
+
+          <Switch
+            checked={browserNotificationsEnabled}
+            onCheckedChange={handleBrowserNotificationsChange}
+          />
+        </div>
+
         <div className="flex items-center justify-between gap-6 rounded-2xl border p-4">
           <div className="flex items-center gap-3">
             <Monitor className="size-5 text-muted-foreground" />

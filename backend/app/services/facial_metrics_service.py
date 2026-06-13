@@ -45,7 +45,7 @@ class FacialMetricsService:
             payload=created_metric
         )
 
-        await self._check_environment_notifications(
+        await self._check_facial_notifications(
             user_id=data.userId,
             session_id=created_metric["sessionId"],
             eyes_closed=created_metric["eyesClosed"],
