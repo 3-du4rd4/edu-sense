@@ -19,8 +19,8 @@ export function RealtimeSimulatorPanel() {
 
     await createEnvironmentReading({
       userId: userId,
-      temperature: randomBetween(24, 34),
-      light: randomBetween(250, 900),
+      temperature: randomBetween(30, 34),
+      light: randomBetween(250, 950),
       noise: randomBetween(30, 80),
     });
   }
@@ -51,7 +51,7 @@ export function RealtimeSimulatorPanel() {
 
     intervalRef.current = setInterval(() => {
       sendBoth().catch(console.error);
-    }, 3000);
+    }, 20000);
   }
 
   function stopSimulation() {

@@ -7,6 +7,11 @@ import { useEnvironmentStore } from "@/stores/environmentStore";
 import { useSessionStore } from "@/stores/sessionStore";
 import { WebSocketMessage } from "@/types/websocket";
 import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
+import { useNotificationStore } from "@/stores/notificationStore";
+import { useSettingsStore } from "@/stores/settingsStore";
+
+import { toast } from "sonner";
+import { markNotificationAsRead } from "@/services/notificationService";
 
 export function useWebSocket(userId?: string) {
   const socketRef = useRef<WebSocket | null>(null);
@@ -41,6 +46,36 @@ export function useWebSocket(userId?: string) {
         if (message.event === "facial_metrics_update") {
           setLatestMetrics(message.payload);
         }
+
+        if (message.event === "notification_created") {
+          const isAppVisible = document.visibilityState === "visible";
+
+          console.log("notification visibility", {
+            isAppVisible,
+            visibilityState: document.visibilityState,
+          });
+
+          useNotificationStore.getState().addNotification({
+            ...message.payload,
+            read: isAppVisible,
+          });
+
+          if (isAppVisible) {
+            markNotificationAsRead(message.payload._id).catch(console.error);
+
+            toast.warning(message.payload.title, {
+              description: message.payload.message,
+              classNames: {
+                description: "!text-foreground",
+              },
+            });
+          } else {
+            showBrowserNotification(
+              message.payload.title,
+              message.payload.message,
+            );
+          }
+        }
       },
     );
 
@@ -51,4 +86,24 @@ export function useWebSocket(userId?: string) {
       socketRef.current = null;
     };
   }, [userId, setActiveSession, setLatestReading, setLatestMetrics]);
+}
+
+function showBrowserNotification(title: string, message: string) {
+  const browserNotificationsEnabled =
+    useSettingsStore.getState().browserNotificationsEnabled;
+
+  console.log("browser notification debug", {
+    browserNotificationsEnabled,
+    hasNotification: "Notification" in window,
+    permission: "Notification" in window ? Notification.permission : null,
+  });
+
+  if (!browserNotificationsEnabled) return;
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+
+  new Notification(title, {
+    body: message,
+    icon: "/vercel.svg",
+  });
 }

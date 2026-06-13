@@ -4,6 +4,7 @@ import { AppSidebar } from "@/components/layout/AppSidebar";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AppRealtimeProvider } from "@/components/layout/AppRealtimeProvider";
 import { RequireAuth } from "@/components/auth/RequireAuth";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,6 +18,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         }
       >
         <AppRealtimeProvider />
+
+        <Toaster />
 
         <AppSidebar variant="inset" />
 
