@@ -82,6 +82,11 @@ class SessionService:
             payload=created_session
         )
 
+        await websocket_manager.send_to_vision(
+            event=WebSocketEvent.SESSION_STARTED,
+            payload=created_session,
+        )
+
         return created_session
 
 
@@ -157,6 +162,11 @@ class SessionService:
             user_id=finished_session["userId"],
             event=WebSocketEvent.SESSION_FINISHED,
             payload=finished_session
+        )
+
+        await websocket_manager.send_to_vision(
+            event=WebSocketEvent.SESSION_FINISHED,
+            payload=finished_session,
         )
 
         return finished_session
@@ -260,6 +270,11 @@ class SessionService:
             payload=updated_session
         )
 
+        await websocket_manager.send_to_vision(
+            event=WebSocketEvent.SESSION_PAUSED,
+            payload=updated_session,
+        )
+
         return updated_session
     
 
@@ -295,6 +310,10 @@ class SessionService:
             user_id=updated_session["userId"],
             event=WebSocketEvent.SESSION_RESUMED,
             payload=updated_session
+        )
+        await websocket_manager.send_to_vision(
+            event=WebSocketEvent.SESSION_RESUMED,
+            payload=updated_session,
         )
 
         return updated_session

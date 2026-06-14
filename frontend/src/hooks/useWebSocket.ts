@@ -50,11 +50,6 @@ export function useWebSocket(userId?: string) {
         if (message.event === "notification_created") {
           const isAppVisible = document.visibilityState === "visible";
 
-          console.log("notification visibility", {
-            isAppVisible,
-            visibilityState: document.visibilityState,
-          });
-
           useNotificationStore.getState().addNotification({
             ...message.payload,
             read: isAppVisible,
@@ -91,12 +86,6 @@ export function useWebSocket(userId?: string) {
 function showBrowserNotification(title: string, message: string) {
   const browserNotificationsEnabled =
     useSettingsStore.getState().browserNotificationsEnabled;
-
-  console.log("browser notification debug", {
-    browserNotificationsEnabled,
-    hasNotification: "Notification" in window,
-    permission: "Notification" in window ? Notification.permission : null,
-  });
 
   if (!browserNotificationsEnabled) return;
   if (!("Notification" in window)) return;

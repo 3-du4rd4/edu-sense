@@ -15,3 +15,15 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
             
     except WebSocketDisconnect:
         websocket_manager.disconnect(websocket, user_id)
+
+
+@router.websocket("/ws/vision")
+async def vision_websocket_endpoint(websocket: WebSocket):
+    await websocket_manager.connect_vision(websocket)
+
+    try:
+        while True:
+            await websocket.receive_text()
+            
+    except WebSocketDisconnect:
+        websocket_manager.disconnect_vision(websocket)

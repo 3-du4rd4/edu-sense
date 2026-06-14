@@ -34,7 +34,8 @@ class FacialMetricsService:
             "mar": data.mar,
             "eyesClosed": data.eyesClosed,
             "yawning": data.yawning,
-            "timestamp": datetime.now(timezone.utc)
+            "timestamp": datetime.now(timezone.utc),
+            "features": data.features.model_dump() if data.features else None
         }
 
         created_metric = await self.repository.create_metric(metric_data)
