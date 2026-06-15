@@ -1,3 +1,4 @@
+import time
 import asyncio
 from datetime import datetime, timezone
 
@@ -11,6 +12,8 @@ from services.temporal_window_service import TemporalWindowService
 
 class VisionServiceApp:
     def __init__(self):
+        self.last_publish_time = 0
+        self.last_event_time = 0
         self.current_session = None
         self.is_running_capture = False
         self.capture_task = None
@@ -140,8 +143,36 @@ class VisionServiceApp:
 
         self.webcam_service.stop()
         self.temporal_window_service.clear()
+        self.last_publish_time = 0
+        self.last_event_time = 0
 
         print("Vision capture stopped")
+
+    
+    def should_publish(self, metrics: dict) -> bool:
+        now = time.time()
+
+        has_event = metrics["eyesClosed"] or metrics["yawning"]
+
+        if has_event:
+            self.last_event_time = now
+
+        is_inside_event_window = (
+            self.last_event_time > 0
+            and now - self.last_event_time <= settings.EVENT_COOLDOWN_SECONDS
+        )
+
+        interval = (
+            settings.EVENT_PUBLISH_INTERVAL_SECONDS
+            if is_inside_event_window
+            else settings.NORMAL_PUBLISH_INTERVAL_SECONDS
+        )
+
+        if now - self.last_publish_time < interval:
+            return False
+
+        self.last_publish_time = now
+        return True
 
 
     async def capture_loop(self):
@@ -161,6 +192,10 @@ class VisionServiceApp:
 
             if metrics:
                 self.temporal_window_service.add_sample(metrics)
+
+                if not self.should_publish(metrics):
+                    await asyncio.sleep(settings.CAPTURE_INTERVAL_SECONDS)
+                    continue
 
                 features = (
                     self.temporal_window_service.build_features()

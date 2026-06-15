@@ -32,8 +32,6 @@ class MqttPublisher:
 
         self.client.publish(topic, message)
 
-        print(f"Published facial metrics: {message}")
-
 
     def disconnect(self):
         self.client.loop_stop()

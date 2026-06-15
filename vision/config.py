@@ -27,6 +27,18 @@ class Settings:
     TEMPORAL_WINDOW_SECONDS = int(
         os.getenv("TEMPORAL_WINDOW_SECONDS", "30")
     )
+    
+    NORMAL_PUBLISH_INTERVAL_SECONDS = float(
+    os.getenv("NORMAL_PUBLISH_INTERVAL_SECONDS", "60")
+    )
+
+    EVENT_PUBLISH_INTERVAL_SECONDS = float(
+        os.getenv("EVENT_PUBLISH_INTERVAL_SECONDS", "5")
+    )
+
+    EVENT_COOLDOWN_SECONDS = float(
+        os.getenv("EVENT_COOLDOWN_SECONDS", "15")
+    )
 
 
 settings = Settings()
