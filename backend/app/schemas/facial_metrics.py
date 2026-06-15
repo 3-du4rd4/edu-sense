@@ -16,10 +16,12 @@ class FacialFeatures(BaseModel):
 
 class FacialMetricsRequest(BaseModel):
     userId: str
+    sessionId: str
     ear: float
     mar: float
     eyesClosed: bool
     yawning: bool
+    timestamp: datetime | None = None
     features: FacialFeatures | None = None
 
 

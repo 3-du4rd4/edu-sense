@@ -75,12 +75,22 @@ class WebSocketManager:
     async def send_to_vision(self, event: str, payload: dict):
         disconnected_connections = []
 
-        for connection in self.vision_connections:
+        print(f"Sending event to vision: {event}")
+
+        connections = self.active_connections.get("vision", [])
+
+        for connection in connections:
+            print(f"Vision connections: {len(connections)}")
+
             try:
-                await connection.send_json({
-                    "event": event,
-                    "payload": payload,
-                })
+                await connection.send_json(
+                    jsonable_encoder({
+                        "event": event,
+                        "payload": payload,
+                    })
+                )
+
+                print(f"Sending event to vision: {event}")
             except Exception:
                 disconnected_connections.append(connection)
 
