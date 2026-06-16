@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { SessionSetupData } from "../types";
 import { ActiveSessionDock } from "../active/ActiveSessionDock";
@@ -7,7 +7,7 @@ import { ActiveSessionTopBar } from "../active/ActiveSessionTop";
 import { MonitoringSession } from "@/types/session";
 import { RealtimeSimulatorPanel } from "../dev/RealtimeSimulatorPanel";
 import { updateSessionTasks } from "@/services/sessionService";
-import { useWebcam } from "@/hooks/useWebcam";
+import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
@@ -26,7 +26,7 @@ export function ActiveSessionView({
   onPause,
   onResume,
 }: ActiveSessionViewProps) {
-  const { status: webcamStatus, startWebcam, stopWebcam } = useWebcam();
+  const latestMetrics = useFacialMetricsStore((state) => state.latestMetrics);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   useEffect(() => {
@@ -49,26 +49,15 @@ export function ActiveSessionView({
     return () => clearInterval(interval);
   }, [currentSession]);
 
-  useEffect(() => {
-    const shouldUseCamera =
-      setupData.cameraEnabled && currentSession?.status === "active";
+  const cameraConnected = useMemo(() => {
+    if (!setupData.cameraEnabled) return false;
+    if (!latestMetrics?.timestamp) return false;
 
-    if (!shouldUseCamera) {
-      stopWebcam();
-      return;
-    }
+    const latestMetricTime = new Date(latestMetrics.timestamp).getTime();
+    const now = Date.now();
 
-    startWebcam();
-
-    return () => {
-      stopWebcam();
-    };
-  }, [
-    setupData.cameraEnabled,
-    startWebcam,
-    stopWebcam,
-    currentSession?.status,
-  ]);
+    return now - latestMetricTime < 5000;
+  }, [setupData.cameraEnabled, latestMetrics?.timestamp]);
 
   async function toggleTask(taskId: string) {
     if (!currentSession?._id) return;
@@ -97,7 +86,7 @@ export function ActiveSessionView({
   return (
     <div className="relative min-h-[calc(100vh-8rem)] space-y-6">
       <ActiveSessionTopBar
-        cameraConnected={webcamStatus === "allowed"}
+        cameraConnected={cameraConnected}
         sensorsConnected={setupData.sensorsEnabled}
         elapsedSeconds={elapsedSeconds}
         isPaused={currentSession?.status === "paused"}

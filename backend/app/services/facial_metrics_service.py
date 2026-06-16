@@ -18,9 +18,7 @@ class FacialMetricsService:
 
 
     async def create_metric(self, data: FacialMetricsRequest) -> dict:
-        active_session = await self.session_repository.get_active_session_by_user_id(
-            data.userId
-        )
+        active_session = await self.session_repository.get_by_id(data.sessionId)
 
         if not active_session:
             raise HTTPException(
@@ -29,12 +27,13 @@ class FacialMetricsService:
             )
 
         metric_data = {
-            "sessionId": active_session["_id"],
+            "sessionId": data.sessionId,
             "ear": data.ear,
             "mar": data.mar,
             "eyesClosed": data.eyesClosed,
             "yawning": data.yawning,
-            "timestamp": datetime.now(timezone.utc)
+            "timestamp": data.timestamp or datetime.now(timezone.utc),
+            "features": data.features.model_dump() if data.features else None
         }
 
         created_metric = await self.repository.create_metric(metric_data)

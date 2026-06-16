@@ -8,6 +8,7 @@ from fastapi.encoders import jsonable_encoder
 class WebSocketManager:
     def __init__(self):
         self.active_connections: dict[str, list[WebSocket]] = defaultdict(list)
+        self.vision_connections = []
 
 
     async def connect(self, websocket: WebSocket, user_id: str):
@@ -57,6 +58,44 @@ class WebSocketManager:
     async def broadcast(self, event: str, payload: dict[str, Any]):
         for user_id in list(self.active_connections.keys()):
             await self.send_to_user(user_id, event, payload)
+
+    
+    async def connect_vision(self, websocket):
+        await websocket.accept()
+        self.vision_connections.append(websocket)
+        print("Vision service connected")
+
+
+    def disconnect_vision(self, websocket):
+        if websocket in self.vision_connections:
+            self.vision_connections.remove(websocket)
+        print("Vision service disconnected")
+
+
+    async def send_to_vision(self, event: str, payload: dict):
+        disconnected_connections = []
+
+        print(f"Sending event to vision: {event}")
+
+        connections = self.active_connections.get("vision", [])
+
+        for connection in connections:
+            print(f"Vision connections: {len(connections)}")
+
+            try:
+                await connection.send_json(
+                    jsonable_encoder({
+                        "event": event,
+                        "payload": payload,
+                    })
+                )
+
+                print(f"Sending event to vision: {event}")
+            except Exception:
+                disconnected_connections.append(connection)
+
+        for connection in disconnected_connections:
+            self.disconnect_vision(connection)
 
 
 websocket_manager = WebSocketManager()

@@ -46,6 +46,7 @@ async def handle_environment_message(topic: str, payload: bytes):
 
 
 async def handle_facial_metrics_message(topic: str, payload: bytes):
+    
     user_id = extract_user_id_from_topic(topic)
 
     if not user_id:
@@ -54,6 +55,7 @@ async def handle_facial_metrics_message(topic: str, payload: bytes):
 
     try:
         data = json.loads(payload.decode())
+
         facial_metrics_payload = FacialMetricsRequest(
             userId=user_id,
             **data
