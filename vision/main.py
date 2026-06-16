@@ -25,6 +25,8 @@ class VisionServiceApp:
         self.face_metrics_service = FaceMetricsService(
             ear_threshold=settings.EAR_THRESHOLD,
             mar_threshold=settings.MAR_THRESHOLD,
+            eyes_closed_consecutive_seconds=settings.EYES_CLOSED_CONSECUTIVE_SECONDS,
+            yawning_consecutive_seconds=settings.YAWNING_CONSECUTIVE_SECONDS
         )
 
         self.mqtt_publisher = MqttPublisher(

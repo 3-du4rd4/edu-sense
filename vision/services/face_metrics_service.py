@@ -15,9 +15,16 @@ class FaceMetricsService:
         self,
         ear_threshold: float,
         mar_threshold: float,
+        eyes_closed_consecutive_seconds: int,
+        yawning_consecutive_seconds: int,
     ):
         self.ear_threshold = ear_threshold
         self.mar_threshold = mar_threshold
+        self.eyes_closed_consecutive_seconds = eyes_closed_consecutive_seconds
+        self.yawning_consecutive_seconds = yawning_consecutive_seconds
+
+        self.eyes_closed_counter = 0
+        self.yawning_counter = 0
 
         self.face_mesh = mp.solutions.face_mesh.FaceMesh(
             static_image_mode=False,
@@ -53,11 +60,27 @@ class FaceMetricsService:
 
         mar = round(self._calculate_mar(landmarks, MOUTH_LANDMARKS), 4)
 
+        is_eyes_below_threshold = ear < self.ear_threshold
+        is_mouth_above_threshold = mar > self.mar_threshold
+
+        if is_eyes_below_threshold:
+            self.eyes_closed_counter += 1
+        else:
+            self.eyes_closed_counter = 0
+
+        if is_mouth_above_threshold:
+            self.yawning_counter += 1
+        else:
+            self.yawning_counter = 0
+
+        eyes_closed = self.eyes_closed_counter >= self.eyes_closed_consecutive_seconds
+        yawning = self.yawning_counter >= self.yawning_consecutive_seconds
+
         return {
             "ear": ear,
             "mar": mar,
-            "eyesClosed": ear < self.ear_threshold,
-            "yawning": mar > self.mar_threshold,
+            "eyesClosed": eyes_closed,
+            "yawning": yawning,
         }
 
 

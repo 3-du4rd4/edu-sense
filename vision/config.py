@@ -40,5 +40,13 @@ class Settings:
         os.getenv("EVENT_COOLDOWN_SECONDS", "15")
     )
 
+    EYES_CLOSED_CONSECUTIVE_SECONDS = int(
+        os.getenv("EYES_CLOSED_CONSECUTIVE_SECONDS", "3")
+    )
+
+    YAWNING_CONSECUTIVE_SECONDS = int(
+        os.getenv("YAWNING_CONSECUTIVE_SECONDS", "3")
+    )
+
 
 settings = Settings()
