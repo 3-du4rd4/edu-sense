@@ -8,6 +8,7 @@ from services.mqtt_publisher import MqttPublisher
 from services.session_ws_client import SessionWebSocketClient
 from services.webcam_service import WebcamService
 from services.temporal_window_service import TemporalWindowService
+from services.fatigue_classifier_service import FatigueClassifierService
 
 
 class VisionServiceApp:
@@ -41,6 +42,10 @@ class VisionServiceApp:
 
         self.temporal_window_service = TemporalWindowService(
             window_size_seconds=settings.TEMPORAL_WINDOW_SECONDS
+        )
+
+        self.fatigue_classifier_service = FatigueClassifierService(
+            model_path=settings.FATIGUE_MODEL_PATH,
         )
 
 
@@ -205,6 +210,12 @@ class VisionServiceApp:
                     else None
                 )
 
+                prediction = (
+                    self.fatigue_classifier_service.predict(features)
+                    if features
+                    else None
+                )
+
                 payload = {
                     "sessionId": self.current_session["_id"],
                     "ear": metrics["ear"],
@@ -216,6 +227,9 @@ class VisionServiceApp:
 
                 if features:
                     payload["features"] = features
+
+                if prediction:
+                    payload["prediction"] = prediction
 
                 self.mqtt_publisher.publish_facial_metrics(
                     user_id=self.current_session["userId"],
