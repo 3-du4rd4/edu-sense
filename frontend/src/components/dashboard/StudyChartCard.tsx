@@ -22,7 +22,7 @@ type StudyChartCardProps = {
 export function StudyChartCard({ chart }: StudyChartCardProps) {
   const data = chart.dailyStudyMinutes.map((item) => ({
     date: formatChartDate(item.date),
-    hours: item.minutes,
+    minutes: item.minutes,
   }));
 
   return (
