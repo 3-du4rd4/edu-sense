@@ -11,6 +11,7 @@ import {
 } from "recharts";
 
 import { DashboardData } from "@/types/dashboard";
+import { formatStudyMinutes } from "@/lib/format-duration";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -21,7 +22,7 @@ type StudyChartCardProps = {
 export function StudyChartCard({ chart }: StudyChartCardProps) {
   const data = chart.dailyStudyMinutes.map((item) => ({
     date: formatChartDate(item.date),
-    hours: Number((item.minutes / 60).toFixed(2)),
+    hours: item.minutes,
   }));
 
   return (
@@ -29,7 +30,7 @@ export function StudyChartCard({ chart }: StudyChartCardProps) {
       <CardHeader>
         <CardTitle>Study performance</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Hours studied during this month
+          Time studied during this month
         </p>
       </CardHeader>
 
@@ -62,17 +63,20 @@ export function StudyChartCard({ chart }: StudyChartCardProps) {
                   tickLine={false}
                   axisLine={false}
                   fontSize={12}
-                  tickFormatter={(value) => `${value}h`}
+                  tickFormatter={(value) => formatStudyMinutes(value)}
                 />
 
                 <Tooltip
-                  formatter={(value) => [`${value}h`, "Studied"]}
+                  formatter={(value) => [
+                    formatStudyMinutes(Number(value)),
+                    "Studied",
+                  ]}
                   labelFormatter={(label) => `${label}`}
                 />
 
                 <Area
                   type="monotone"
-                  dataKey="hours"
+                  dataKey="minutes"
                   stroke="#22c55e"
                   strokeWidth={3}
                   fill="url(#studyHours)"
