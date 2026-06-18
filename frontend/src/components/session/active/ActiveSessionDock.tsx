@@ -79,6 +79,36 @@ export function ActiveSessionDock({
                   />
                 </div>
               )}
+
+              {latestFacialMetrics?.prediction && (
+                <div className="space-y-1 border-t pt-2 text-xs">
+                  <TooltipRow
+                    label="Focus score"
+                    value={`${latestFacialMetrics.prediction.focusScore ?? "-"}%`}
+                  />
+
+                  <TooltipRow
+                    label="Fatigue risk"
+                    value={
+                      latestFacialMetrics.prediction.fatigueProbability != null
+                        ? `${Math.round(
+                            latestFacialMetrics.prediction.fatigueProbability *
+                              100,
+                          )}%`
+                        : "-"
+                    }
+                  />
+
+                  <TooltipRow
+                    label="Fatigue detected"
+                    value={
+                      latestFacialMetrics.prediction.fatigueDetected
+                        ? "Yes"
+                        : "No"
+                    }
+                  />
+                </div>
+              )}
             </div>
           }
         />
