@@ -14,6 +14,13 @@ class FacialFeatures(BaseModel):
     yawnCount: int | None = None
 
 
+class FacialPrediction(BaseModel):
+    modelName: str | None = None
+    fatigueProbability: float | None = None
+    fatigueDetected: bool | None = None
+    focusScore: float | None = None
+
+
 class FacialMetricsRequest(BaseModel):
     userId: str
     sessionId: str
@@ -23,6 +30,7 @@ class FacialMetricsRequest(BaseModel):
     yawning: bool
     timestamp: datetime | None = None
     features: FacialFeatures | None = None
+    prediction: FacialPrediction | None = None
 
 
 class FacialMetricsResponse(BaseModel):
@@ -34,6 +42,7 @@ class FacialMetricsResponse(BaseModel):
     yawning: bool
     timestamp: datetime
     features: FacialFeatures | None = None
+    prediction: FacialPrediction | None = None
 
     model_config = {
         "populate_by_name": True

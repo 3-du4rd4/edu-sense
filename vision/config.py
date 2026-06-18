@@ -48,5 +48,18 @@ class Settings:
         os.getenv("YAWNING_CONSECUTIVE_SECONDS", "3")
     )
 
+    DATASET_WINDOW_STEP_SECONDS = int(
+        os.getenv("DATASET_WINDOW_STEP_SECONDS", "5")
+    )
+
+    FATIGUE_MODEL_PATH = os.getenv(
+        "FATIGUE_MODEL_PATH",
+        "models/fatigue_model.joblib",
+    )
+
+    FATIGUE_THRESHOLD = float(
+        os.getenv("FATIGUE_THRESHOLD", "0.7")
+    )
+
 
 settings = Settings()

@@ -33,7 +33,8 @@ class FacialMetricsService:
             "eyesClosed": data.eyesClosed,
             "yawning": data.yawning,
             "timestamp": data.timestamp or datetime.now(timezone.utc),
-            "features": data.features.model_dump() if data.features else None
+            "features": data.features.model_dump() if data.features else None,
+            "prediction": data.prediction.model_dump() if data.prediction else None,
         }
 
         created_metric = await self.repository.create_metric(metric_data)
@@ -49,6 +50,7 @@ class FacialMetricsService:
             session_id=created_metric["sessionId"],
             eyes_closed=created_metric["eyesClosed"],
             yawning=created_metric["yawning"],
+            prediction=created_metric.get("prediction")
         )
 
         return created_metric
@@ -67,29 +69,45 @@ class FacialMetricsService:
         session_id: str,
         eyes_closed: bool,
         yawning: bool,
+        prediction: dict | None = None
     ) -> None:
-        if eyes_closed:
-            await self.notification_service.create_if_allowed(
-                user_id=user_id,
-                session_id=session_id,
-                type="facial",
-                severity="warning",
-                source="eyesClosed",
-                title="Eyes closed detected",
-                message="You seem to be closing your eyes. Consider taking a short break.",
-                value=eyes_closed,
-                threshold=True,
-            )
+        # if eyes_closed:
+        #     await self.notification_service.create_if_allowed(
+        #         user_id=user_id,
+        #         session_id=session_id,
+        #         type="facial",
+        #         severity="warning",
+        #         source="eyesClosed",
+        #         title="Eyes closed detected",
+        #         message="You seem to be closing your eyes. Consider taking a short break.",
+        #         value=eyes_closed,
+        #         threshold=True,
+        #     )
 
-        if yawning:
+        # if yawning:
+        #     await self.notification_service.create_if_allowed(
+        #         user_id=user_id,
+        #         session_id=session_id,
+        #         type="facial",
+        #         severity="warning",
+        #         source="yawning",
+        #         title="Yawning detected",
+        #         message="Signs of tiredness were detected. A short pause may help you recover focus.",
+        #         value=yawning,
+        #         threshold=True,
+        #     )
+
+        if prediction and prediction.get("fatigueDetected"):
+            fatigue_probability = prediction.get("fatigueProbability")
+
             await self.notification_service.create_if_allowed(
                 user_id=user_id,
                 session_id=session_id,
                 type="facial",
                 severity="warning",
-                source="yawning",
-                title="Yawning detected",
-                message="Signs of tiredness were detected. A short pause may help you recover focus.",
-                value=yawning,
-                threshold=True,
+                source="fatigue",
+                title="Signs of fatigue detected",
+                message="Your facial indicators suggest tiredness. Consider taking a short break.",
+                value=fatigue_probability,
+                threshold=0.7,
             )

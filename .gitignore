@@ -4,3 +4,6 @@ venv/
 .env
 
 node_modules/
+
+vision/training/dataset_videos/
+vision/training/results/

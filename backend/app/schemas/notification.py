@@ -12,6 +12,7 @@ NotificationSource = Literal[
     "noise",
     "eyesClosed",
     "yawning",
+    "fatigue",
 ]
 
 
