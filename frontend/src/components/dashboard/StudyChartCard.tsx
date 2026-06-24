@@ -37,9 +37,7 @@ export function StudyChartCard({ chart }: StudyChartCardProps) {
       <CardContent>
         <div className="h-72">
           {data.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              No study data available yet.
-            </div>
+            <ChartEmptyState />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
@@ -102,4 +100,23 @@ function formatChartDate(date: string) {
     day: "2-digit",
     month: "2-digit",
   }).format(new Date(`${date}T00:00:00`));
+}
+
+function ChartEmptyState() {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 text-center border rounded-3xl ring-2 ring-foreground/10 p-3 !pt-0">
+      <img
+        src="/illustrations/edusense-no-data.svg"
+        alt="No data"
+        className="min-h-0 flex-1 w-full object-contain"
+      />
+
+      <div>
+        <p className="text-sm font-medium">No study data yet</p>
+        <p className="text-xs text-muted-foreground">
+          Start a session to see your progress here.
+        </p>
+      </div>
+    </div>
+  );
 }
