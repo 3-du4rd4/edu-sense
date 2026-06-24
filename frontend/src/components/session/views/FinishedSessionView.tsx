@@ -25,7 +25,7 @@ export function FinishedSessionView({
   if (!resultData) {
     return (
       <div className="rounded-3xl border bg-card p-6">
-        Session result not available.
+        Resultado da sessão indisponível.
       </div>
     );
   }
@@ -33,10 +33,10 @@ export function FinishedSessionView({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Well done!</h1>
+        <h1 className="text-3xl font-bold">Muito bem!</h1>
         <p className="mt-2 max-w-2xl text-base font-medium text-muted-foreground">
-          Your study session was finished successfully. Here is a resume of what
-          you did.
+          Sua sessão de estudo foi concluída com sucesso. Aqui está um resumo do
+          que você fez.
         </p>
       </div>
 
@@ -83,7 +83,7 @@ export function FinishedSessionView({
           onClick={onContinue}
           className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
         >
-          Continue
+          Continuar
         </Button>
       </section>
     </div>

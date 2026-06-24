@@ -30,17 +30,17 @@ export function ActiveSessionDock({
   const temperature =
     latestReading?.temperature !== undefined
       ? `${latestReading.temperature}°C`
-      : "No reading yet";
+      : "Nenhuma leitura ainda";
 
   const light =
     latestReading?.light !== undefined
       ? `${latestReading.light}`
-      : "No reading yet";
+      : "Nenhuma leitura ainda";
 
   const noise =
     latestReading?.noise !== undefined
       ? `${latestReading.noise}`
-      : "No reading yet";
+      : "Nenhuma leitura ainda";
 
   const focus = getFocusStatus(latestFacialMetrics);
 
@@ -55,7 +55,7 @@ export function ActiveSessionDock({
           tooltipContent={
             <div className="space-y-2">
               <div>
-                <p className="text-xs font-medium">Focus</p>
+                <p className="text-xs font-medium">Foco</p>
                 <p className="text-xs text-muted-foreground">{focus.tooltip}</p>
               </div>
 
@@ -70,12 +70,12 @@ export function ActiveSessionDock({
                     value={latestFacialMetrics.mar.toFixed(2)}
                   />
                   <TooltipRow
-                    label="Eyes closed"
-                    value={latestFacialMetrics.eyesClosed ? "Yes" : "No"}
+                    label="Olhos fechados"
+                    value={latestFacialMetrics.eyesClosed ? "Sim" : "Não"}
                   />
                   <TooltipRow
-                    label="Yawning"
-                    value={latestFacialMetrics.yawning ? "Yes" : "No"}
+                    label="Bocejo"
+                    value={latestFacialMetrics.yawning ? "Sim" : "Não"}
                   />
                 </div>
               )}
@@ -83,12 +83,12 @@ export function ActiveSessionDock({
               {latestFacialMetrics?.prediction && (
                 <div className="space-y-1 border-t pt-2 text-xs">
                   <TooltipRow
-                    label="Focus score"
+                    label="Pontuação de foco"
                     value={`${latestFacialMetrics.prediction.focusScore ?? "-"}%`}
                   />
 
                   <TooltipRow
-                    label="Fatigue risk"
+                    label="Risco de fadiga"
                     value={
                       latestFacialMetrics.prediction.fatigueProbability != null
                         ? `${Math.round(
@@ -100,11 +100,11 @@ export function ActiveSessionDock({
                   />
 
                   <TooltipRow
-                    label="Fatigue detected"
+                    label="Fatiga detectada"
                     value={
                       latestFacialMetrics.prediction.fatigueDetected
-                        ? "Yes"
-                        : "No"
+                        ? "Sim"
+                        : "Não"
                     }
                   />
                 </div>
@@ -117,19 +117,19 @@ export function ActiveSessionDock({
 
         <MetricTooltipItem
           icon={Thermometer}
-          label="Temperature"
+          label="Temperatura"
           value={temperature}
         />
 
-        <MetricTooltipItem icon={Lightbulb} label="Light" value={light} />
+        <MetricTooltipItem icon={Lightbulb} label="Luz" value={light} />
 
-        <MetricTooltipItem icon={Volume2} label="Noise" value={noise} />
+        <MetricTooltipItem icon={Volume2} label="Ruído" value={noise} />
 
         <div className="h-5 w-px bg-border" />
 
         <MetricTooltipItem
           icon={Goal}
-          label="Time goal"
+          label="Meta de tempo"
           span={
             timeGoalMinutes
               ? getRemainingGoalText(timeGoalMinutes, elapsedSeconds)
@@ -140,7 +140,9 @@ export function ActiveSessionDock({
             Math.floor(elapsedSeconds / 60) >= timeGoalMinutes
           }
           value={
-            timeGoalMinutes ? formatMinutes(timeGoalMinutes) : "No time goal"
+            timeGoalMinutes
+              ? formatMinutes(timeGoalMinutes)
+              : "Nenhuma meta definida"
           }
         />
 
@@ -158,10 +160,10 @@ function getRemainingGoalText(goalMinutes: number, elapsedSeconds: number) {
   const remainingMinutes = goalMinutes - elapsedMinutes;
 
   if (remainingMinutes <= 0) {
-    return `${formatMinutes(goalMinutes)} achieved`;
+    return `${formatMinutes(goalMinutes)} alcançado`;
   }
 
-  return `${formatMinutes(remainingMinutes)} left`;
+  return `${formatMinutes(remainingMinutes)} restante`;
 }
 
 function formatMinutes(totalMinutes: number) {
@@ -185,20 +187,20 @@ function getFocusStatus(
   if (!metrics) {
     return {
       active: false,
-      tooltip: "No facial metrics yet",
+      tooltip: "Nenhuma métrica facial ainda",
     };
   }
 
   if (metrics.eyesClosed || metrics.yawning) {
     return {
       active: false,
-      tooltip: "Possible fatigue detected",
+      tooltip: "Possível fadiga detectada",
     };
   }
 
   return {
     active: true,
-    tooltip: "Good focus",
+    tooltip: "Bom nível de foco",
   };
 }
 

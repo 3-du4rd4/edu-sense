@@ -26,7 +26,7 @@ export function SignupForm() {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      setFormError("Passwords do not match.");
+      setFormError("Senhas não coincidem.");
       return;
     }
 
@@ -44,11 +44,11 @@ export function SignupForm() {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
       <div>
-        <h1 className="text-4xl font-semibold">Get Started Now</h1>
+        <h1 className="text-4xl font-semibold">Comece Agora</h1>
       </div>
 
       <div className="space-y-5">
-        <Field label="Full name">
+        <Field label="Nome completo">
           <div className="relative">
             <User className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -61,7 +61,7 @@ export function SignupForm() {
           </div>
         </Field>
 
-        <Field label="Email address">
+        <Field label="Email">
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -75,7 +75,7 @@ export function SignupForm() {
           </div>
         </Field>
 
-        <Field label="Password">
+        <Field label="Senha">
           <PasswordInput
             value={password}
             onChange={setPassword}
@@ -84,7 +84,7 @@ export function SignupForm() {
           />
         </Field>
 
-        <Field label="Confirm password">
+        <Field label="Confirmar senha">
           <PasswordInput
             value={confirmPassword}
             onChange={setConfirmPassword}
@@ -104,16 +104,16 @@ export function SignupForm() {
           className="w-full rounded-full bg-[#45C4F9] text-black hover:bg-[#38b7ec]"
           disabled={isLoading}
         >
-          {isLoading ? "Creating account..." : "Create account"}
+          {isLoading ? "Criando conta..." : "Criar conta"}
         </Button>
       </div>
 
       <div className="h-px bg-border" />
 
       <p className="text-xs">
-        <span className="text-muted-foreground">Already have an account? </span>
+        <span className="text-muted-foreground">Já tem uma conta? </span>
         <Link href="/signin" className="font-semibold hover:underline ml-1">
-          Sign in
+          Entrar
         </Link>
       </p>
     </form>

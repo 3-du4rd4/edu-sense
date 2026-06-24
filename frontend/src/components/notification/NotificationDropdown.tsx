@@ -48,7 +48,7 @@ export function NotificationDropdown() {
 
       <DropdownMenuContent align="end" className="w-96">
         <div className="flex items-center justify-between px-2 py-1.5">
-          <DropdownMenuLabel className="p-0">Notifications</DropdownMenuLabel>
+          <DropdownMenuLabel className="p-0">Notificações</DropdownMenuLabel>
 
           {unreadCount > 0 && (
             <button
@@ -56,7 +56,7 @@ export function NotificationDropdown() {
               onClick={handleMarkAllAsRead}
               className="text-xs text-muted-foreground hover:underline"
             >
-              Mark all as read
+              Marcar todas como lidas
             </button>
           )}
         </div>
@@ -66,7 +66,7 @@ export function NotificationDropdown() {
         <div className="max-h-96 overflow-y-auto">
           {notifications.length === 0 ? (
             <p className="p-4 text-sm text-muted-foreground">
-              No notifications yet.
+              Nenhuma notificação encontrada.
             </p>
           ) : (
             notifications.map((notification) => (

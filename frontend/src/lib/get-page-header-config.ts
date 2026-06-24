@@ -13,13 +13,13 @@ export function getPageHeaderConfig(pathname: string): HeaderConfig {
 
   if (pathname.startsWith("/sessions")) {
     return {
-      title: "Study Session",
+      title: "Sessão de Estudo",
     };
   }
 
   if (pathname.startsWith("/settings")) {
     return {
-      title: "Settings",
+      title: "Configurações",
     };
   }
 

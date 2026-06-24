@@ -93,6 +93,6 @@ function showBrowserNotification(title: string, message: string) {
 
   new Notification(title, {
     body: message,
-    icon: "/vercel.svg",
+    icon: "/brand/edusense-icon.svg",
   });
 }

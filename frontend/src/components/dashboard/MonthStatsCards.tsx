@@ -10,14 +10,14 @@ type MonthStatsCardsProps = {
 export function MonthStatsCards({ monthStats }: MonthStatsCardsProps) {
   return (
     <div className="grid gap-4 grid-cols-2">
-      <p className="font-bold text-base col-span-2">This month:</p>
+      <p className="font-bold text-base col-span-2">Este mês:</p>
       <StatCard
-        title="hours studied"
+        title="horas estudadas"
         value={formatStudyTime(monthStats.totalStudyMinutes)}
       />
 
       <StatCard
-        title="study sessions"
+        title="sessões de estudo"
         value={String(monthStats.totalSessions)}
       />
     </div>

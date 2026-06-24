@@ -78,8 +78,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="temperature",
-                title="High temperature",
-                message="The room temperature is above the recommended level.",
+                title="Temperatura alta",
+                message="A temperatura da sala está acima do nível recomendado.",
                 value=temperature,
                 threshold=30,
             )
@@ -91,8 +91,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="light",
-                title="High light level",
-                message="The light level is above the recommended range.",
+                title="Nível de luz alto",
+                message="O nível de luz está acima do intervalo recomendado.",
                 value=light,
                 threshold=900,
             )
@@ -104,8 +104,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="noise",
-                title="High noise level",
-                message="Noise is above the recommended level for studying.",
+                title="Nível de ruído alto",
+                message="O nível de ruído está acima do nível recomendado para estudo.",
                 value=noise,
                 threshold=65,
             )

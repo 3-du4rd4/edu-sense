@@ -140,7 +140,7 @@ export function SetupView({
                 onClick={onCancel}
                 className="rounded-full"
               >
-                Cancel
+                Cancelar
               </Button>
 
               <Button
@@ -148,7 +148,7 @@ export function SetupView({
                 disabled={status === "requesting"}
                 className="rounded-full bg-[#FD6D3E] text-foreground font-semibold px-4"
               >
-                Start session
+                Começar sessão
               </Button>
             </div>
           </div>

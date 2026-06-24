@@ -23,12 +23,10 @@ export default function SigninPage() {
 
       <section className="relative flex items-center justify-center p-8">
         <div className="absolute right-8 top-8 text-xs">
-          <span className="text-muted-foreground">
-            Do not have an account?{" "}
-          </span>
+          <span className="text-muted-foreground">Não tem uma conta? </span>
 
           <Link href="/signup" className="font-semibold hover:underline ml-1">
-            Sign up
+            Cadastre-se
           </Link>
         </div>
 

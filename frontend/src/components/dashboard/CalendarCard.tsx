@@ -42,7 +42,9 @@ export function CalendarCard() {
     <Card className="relative overflow-visible rounded-3xl ring-2 ring-[#76DF64]">
       <CardContent className="flex items-center justify-center p-2">
         {isLoading && (
-          <p className="text-sm text-muted-foreground">Loading calendar...</p>
+          <p className="text-sm text-muted-foreground">
+            Carregando calendário...
+          </p>
         )}
 
         {!isLoading && error && <p className="text-sm text-red-500">{error}</p>}

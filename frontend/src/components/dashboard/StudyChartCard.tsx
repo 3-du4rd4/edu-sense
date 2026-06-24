@@ -28,9 +28,9 @@ export function StudyChartCard({ chart }: StudyChartCardProps) {
   return (
     <Card className="rounded-3xl">
       <CardHeader>
-        <CardTitle>Study performance</CardTitle>
+        <CardTitle>Desempenho de estudo</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Time studied during this month
+          Tempo estudado durante este mês
         </p>
       </CardHeader>
 
@@ -112,9 +112,9 @@ function ChartEmptyState() {
       />
 
       <div>
-        <p className="text-sm font-medium">No study data yet</p>
+        <p className="text-sm font-medium">Nenhum dado de estudo ainda</p>
         <p className="text-xs text-muted-foreground">
-          Start a session to see your progress here.
+          Comece uma sessão para ver seu progresso aqui.
         </p>
       </div>
     </div>

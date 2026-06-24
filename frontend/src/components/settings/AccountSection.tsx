@@ -10,14 +10,14 @@ export function AccountSection() {
 
   return (
     <section className="rounded-3xl border bg-card p-6">
-      <h2 className="text-lg font-semibold">Account</h2>
+      <h2 className="text-lg font-semibold">Conta</h2>
       <p className="text-sm text-muted-foreground">
-        Your basic account information.
+        Suas informações básicas de conta.
       </p>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Name</label>
+          <label className="text-sm font-medium">Nome</label>
           <div className="relative">
             <User className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input value={user?.name ?? ""} readOnly className="pl-10" />

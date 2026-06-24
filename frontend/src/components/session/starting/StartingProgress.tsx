@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, Loader2 } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
 
 const steps = [
-  "Preparing your study space",
-  "Checking monitoring settings",
-  "Starting focus environment",
-  "Almost ready",
+  "Preparando seu espaço de estudo",
+  "Verificando configurações de monitoramento",
+  "Iniciando ambiente de foco",
+  "Quase pronto",
 ];
 
 export function StartingProgress() {

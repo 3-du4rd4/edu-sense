@@ -138,7 +138,7 @@ class DashboardService:
             return [
                 {
                     "type": "consistency",
-                    "description": "Complete a study session to unlock personalized insights."
+                    "description": "Complete uma sessão de estudo para desbloquear insights personalizados."
                 }
             ]
         
@@ -155,7 +155,7 @@ class DashboardService:
 
             insights.append({
                 "type": "focus",
-                "description": f"Your best focus average this month was {best_focus}%."
+                "description": f"Seu melhor desempenho de foco este mês foi de {best_focus}%."
             })
 
         noise_values = [
@@ -169,12 +169,12 @@ class DashboardService:
 
             insights.append({
                 "type": "environment",
-                "description": f"Your average noise level this month was {average_noise} dB."
+                "description": f"O nível médio de ruído este mês foi de {average_noise} dB."
             })
 
         insights.append({
             "type": "productivity",
-            "description": f"You completed {len(sessions)} study sessions this month.",
+            "description": f"Você completou {len(sessions)} sessões de estudo este mês.",
         })
 
         return insights[:3]
@@ -184,7 +184,7 @@ class DashboardService:
         if not sessions:
             return [
                 {
-                    "description": "Start with a 25-minute session to build momentum."
+                    "description": "Comece com uma sessão de 25 minutos para construir momentum."
                 }
             ]
         
@@ -198,8 +198,8 @@ class DashboardService:
 
         if focus_values and (sum(focus_values) / len(focus_values)) < 70:
             tips.append({
-                "title": "Improve your focus",
-                "description": "Try studying in shorter blocks with small breaks between sessions.",
+                "title": "Melhore seu foco",
+                "description": "Tente estudar em blocos menores com pequenas pausas entre as sessões.",
             })
 
         noise_values = [
@@ -210,13 +210,13 @@ class DashboardService:
 
         if noise_values and (sum(noise_values) / len(noise_values)) > 60:
             tips.append({
-                "title": "Reduce noise",
-                "description": "Your environment seems noisy. Try using headphones or choosing a quieter place.",
+                "title": "Reduza o ruído",
+                "description": "Seu ambiente parece ruoso. Tente usar fones de ouvido ou escolher um lugar mais silencioso.",
             })
 
         tips.append({
-            "title": "Keep your streak",
-            "description": "Studying a little every day helps keep your progress consistent.",
+            "title": "Mantenha sua sequência",
+            "description": "Estudar um pouco todos os dias ajuda a manter seu progresso consistente.",
         })
 
         return tips[:3]

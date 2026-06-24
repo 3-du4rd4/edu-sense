@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { insightItems, studyTips } from "@/mocks/dashboard";
 
 import { MessageSquareHeart, SquareStar } from "lucide-react";
 
@@ -28,10 +27,10 @@ export function InsightsCard({ insights, tips, score }: InsightsCardProps) {
               Insights
             </TabsTrigger>
             <TabsTrigger value="score" className="rounded-full">
-              Score
+              Pontuação
             </TabsTrigger>
             <TabsTrigger value="tips" className="rounded-full">
-              Tips
+              Dicas
             </TabsTrigger>
           </TabsList>
 
@@ -164,12 +163,10 @@ function ScoreContent({ score }: { score: DashboardData["score"] }) {
         {score.level}
       </div>
 
-      <p className="mt-4 text-lg font-semibold">
-        {score.totalPoints} total points
-      </p>
+      <p className="mt-4 text-lg font-semibold">{score.totalPoints} pontos</p>
 
       <p className="mt-1 max-w-xs text-sm text-muted-foreground">
-        Keep studying to increase your level and unlock more progress.
+        Continue estudando para aumentar seu nível e desbloquear mais progresso.
       </p>
 
       <Badge className="mt-4 rounded-full">

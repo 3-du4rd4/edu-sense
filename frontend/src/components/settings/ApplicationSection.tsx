@@ -40,9 +40,9 @@ export function ApplicationSection() {
 
   return (
     <section className="rounded-3xl border bg-card p-6">
-      <h2 className="text-lg font-semibold">Application</h2>
+      <h2 className="text-lg font-semibold">Aplicação</h2>
       <p className="text-sm text-muted-foreground">
-        General application information.
+        Informações gerais sobre a aplicação.
       </p>
 
       <div className="mt-6 flex flex-col gap-4">
@@ -51,9 +51,9 @@ export function ApplicationSection() {
             <Bell className="size-5 text-muted-foreground" />
 
             <div>
-              <p className="text-sm font-medium">Browser notifications</p>
+              <p className="text-sm font-medium">Notificações do navegador</p>
               <p className="text-xs text-muted-foreground">
-                Receive alerts when the app is running in the background.
+                Receba alertas quando o app estiver rodando em segundo plano.
               </p>
             </div>
           </div>
@@ -69,15 +69,15 @@ export function ApplicationSection() {
             <Monitor className="size-5 text-muted-foreground" />
 
             <div>
-              <p className="text-sm font-medium">Theme</p>
+              <p className="text-sm font-medium">Tema</p>
               <p className="text-xs text-muted-foreground">
-                System default for now.
+                Padrão do sistema por enquanto.
               </p>
             </div>
           </div>
 
           <span className="rounded-full bg-muted px-3 py-1 text-xs font-medium">
-            System
+            Sistema
           </span>
         </div>
 
@@ -86,9 +86,9 @@ export function ApplicationSection() {
             <Info className="size-5 text-muted-foreground" />
 
             <div>
-              <p className="text-sm font-medium">Version</p>
+              <p className="text-sm font-medium">Versão</p>
               <p className="text-xs text-muted-foreground">
-                Current prototype version.
+                Versão atual do protótipo.
               </p>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function ApplicationSection() {
           className="rounded-full text-red-500 hover:text-red-600 self-end"
         >
           <LogOut className="mr-2 size-4" />
-          Logout
+          Sair
         </Button>
       </div>
     </section>

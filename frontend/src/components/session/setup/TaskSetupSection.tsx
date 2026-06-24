@@ -54,9 +54,10 @@ export function TaskSetupSection({
   return (
     <section className="flex flex-col gap-4 items-start px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Tasks</h2>
+        <h2 className="text-base font-semibold">Tarefas</h2>
         <p className="text-sm text-muted-foreground font-medium">
-          if you already know what you want to do today you can track them here
+          se você já sabe o que deseja fazer hoje, pode acompanhar suas tarefas
+          aqui
         </p>
       </div>
 
@@ -130,7 +131,7 @@ export function TaskSetupSection({
                     handleAddTask();
                   }
                 }}
-                placeholder="new task..."
+                placeholder="nova tarefa..."
                 className="rounded-full text-sm h-7"
               />
 
@@ -141,7 +142,7 @@ export function TaskSetupSection({
                 className="rounded-full bg-muted text-muted-foreground hover:bg-muted-foreground/15"
               >
                 <Plus className="mr-1" />
-                add
+                adicionar
               </Button>
 
               <Button
@@ -153,7 +154,7 @@ export function TaskSetupSection({
                 }}
                 className="rounded-full text-red-500 text-xs hover:text-red-500"
               >
-                cancel
+                cancelar
               </Button>
             </>
           ) : (
@@ -164,7 +165,7 @@ export function TaskSetupSection({
               onClick={() => setIsAdding(true)}
             >
               <Plus className="mr-1" />
-              click to add a task
+              clique para adicionar uma tarefa
             </Button>
           )}
         </div>

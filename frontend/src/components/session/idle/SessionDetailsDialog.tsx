@@ -28,31 +28,31 @@ export function SessionDetailsDialog({
 
       <DialogContent className="max-w-3xl rounded-3xl">
         <DialogHeader>
-          <DialogTitle>Session details</DialogTitle>
+          <DialogTitle>Detalhes da sessão</DialogTitle>
           <DialogDescription>
-            Session started on {formatDate(session.startTime)}.
+            Sessão iniciada em {formatDate(session.startTime)}.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-8 max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-thumb]:rounded-full">
           <div className="grid gap-3 sm:grid-cols-3">
             <DetailCard
-              label="Duration"
+              label="Duração"
               value={formatDuration(session.durationSeconds ?? 0)}
             />
             <DetailCard
-              label="Focus"
+              label="Foco"
               value={formatMetric(session.summary.focus, "%")}
             />
             <DetailCard
-              label="Points"
+              label="Pontos"
               value={`+${session.points.earned} pts`}
             />
           </div>
 
           <section>
             <h3 className="text-xs font-semibold uppercase text-muted-foreground">
-              Environment averages
+              Médias do ambiente
             </h3>
 
             <div className="mt-3 flex flex-wrap gap-3">
@@ -73,12 +73,14 @@ export function SessionDetailsDialog({
 
           <section>
             <h3 className="text-xs font-semibold uppercase text-muted-foreground">
-              Tasks
+              Tarefas
             </h3>
 
             <div className="mt-3 space-y-2">
               {session.tasks.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No tasks added.</p>
+                <p className="text-sm text-muted-foreground">
+                  Nenhuma tarefa adicionada.
+                </p>
               ) : (
                 session.tasks.map((task, index) => (
                   <div
@@ -102,28 +104,28 @@ export function SessionDetailsDialog({
 
           <section>
             <h3 className="text-xs font-semibold uppercase text-muted-foreground">
-              Points breakdown
+              Distribuição de pontos
             </h3>
 
             <div className="mt-3 overflow-hidden rounded-lg border">
               <div className="divide-y">
                 <BreakdownRow
-                  label="Session completed"
+                  label="Sessão concluída"
                   value={session.points.breakdown.sessionCompleted}
                 />
 
                 <BreakdownRow
-                  label="Time goal achieved"
+                  label="Meta de tempo alcançada"
                   value={session.points.breakdown.timeGoalAchieved}
                 />
 
                 <BreakdownRow
-                  label="Completed tasks"
+                  label="Tarefas concluídas"
                   value={session.points.breakdown.completedTasks}
                 />
 
                 <BreakdownRow
-                  label="Focus bonus"
+                  label="Bônus de foco"
                   value={session.points.breakdown.focusBonus}
                   highlight={session.points.breakdown.focusBonus > 0}
                 />

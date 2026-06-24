@@ -28,7 +28,7 @@ async def mark_all_notifications_as_read(
 
     await service.mark_all_as_read(user_id=current_user["_id"])
 
-    return {"message": "Notifications marked as read"}
+    return {"message": "Notificações marcadas como lidas"}
 
 
 @router.patch("/{notification_id}/read", response_model=NotificationResponse | None)
