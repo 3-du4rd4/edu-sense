@@ -1,3 +1,4 @@
+import ssl
 import json
 
 import paho.mqtt.client as mqtt
@@ -8,12 +9,29 @@ class MqttPublisher:
         self, 
         broker: str, 
         port: int,
-        topic: str
+        topic: str,
+        username: str,
+        password: str
     ):
         self.broker = broker
         self.port = port
         self.topic = topic
-        self.client = mqtt.Client()
+        self.username = username
+        self.password = password
+
+        self.client = mqtt.Client(
+            client_id="vision-service",
+        )
+
+        self.client.username_pw_set(
+            self.username,
+            self.password
+        )
+
+        self.client.tls_set(
+            cert_reqs=ssl.CERT_REQUIRED,
+            tls_version=ssl.PROTOCOL_TLS,
+        )
 
 
     def connect(self):

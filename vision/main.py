@@ -34,6 +34,8 @@ class VisionServiceApp:
             broker=settings.MQTT_BROKER,
             port=settings.MQTT_PORT,
             topic=settings.MQTT_TOPIC_FACIAL_METRICS,
+            username=settings.MQTT_USERNAME,
+            password=settings.MQTT_PASSWORD
         )
 
         self.ws_client = SessionWebSocketClient(

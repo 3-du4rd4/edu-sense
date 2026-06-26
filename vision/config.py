@@ -10,12 +10,15 @@ class Settings:
         "ws://localhost:8000/ws/vision",
     )
 
-    MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
-    MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
+    MQTT_BROKER = os.getenv("MQTT_BROKER")
+    MQTT_PORT = int(os.getenv("MQTT_PORT"))
     MQTT_TOPIC_FACIAL_METRICS = os.getenv(
         "MQTT_TOPIC_FACIAL_METRICS",
         "study/facial-metrics",
     )
+
+    MQTT_USERNAME = os.getenv("MQTT_USERNAME")
+    MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 
     CAMERA_INDEX = int(os.getenv("CAMERA_INDEX", "0"))
     CAPTURE_INTERVAL_SECONDS = float(
