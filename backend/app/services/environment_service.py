@@ -19,12 +19,10 @@ class EnvironmentService:
         self,
         data: EnvironmentReadingRequest,
     ) -> dict | None:
-        active_session = await self.session_repository.get_active_session_by_user_id(
-            data.userId
-        )
+        active_session = await self.session_repository.get_active_session()
 
         if not active_session:
-            print(f"No active session found for user_id: {data.userId}")
+            print(f"No active session found")
             return None
         
         reading_data = {
@@ -38,13 +36,13 @@ class EnvironmentService:
         created_reading = await self.environment_repository.create_reading(reading_data)
 
         await websocket_manager.send_to_user(
-            user_id=data.userId,
+            user_id=active_session["userId"],
             event=WebSocketEvent.ENVIRONMENT_UPDATE,
             payload=created_reading
         )
 
         await self._check_environment_notifications(
-            user_id=data.userId,
+            user_id=active_session["userId"],
             session_id=created_reading["sessionId"],
             temperature=created_reading["temperature"],
             noise=created_reading["noise"],

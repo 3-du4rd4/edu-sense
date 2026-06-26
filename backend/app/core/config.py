@@ -8,12 +8,12 @@ class Settings:
     MONGO_DB_NAME = os.getenv("MONGO_DB_NAME")
 
     MQTT_BROKER = os.getenv("MQTT_BROKER")
-    MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
+    MQTT_PORT = int(os.getenv("MQTT_PORT"))
     MQTT_TOPIC_ENVIRONMENT = os.getenv("MQTT_TOPIC_ENVIRONMENT")
     MQTT_TOPIC_FACIAL_METRICS = os.getenv("MQTT_TOPIC_FACIAL_METRICS")
-    MQTT_USERNAME: str | None = None
-    MQTT_PASSWORD: str | None = None
-    
+    MQTT_USERNAME = os.getenv("MQTT_USERNAME")
+    MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
+
     APP_NAME = os.getenv("APP_NAME", "App")
     DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 

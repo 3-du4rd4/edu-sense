@@ -171,7 +171,7 @@ function ScoreContent({ score }: { score: DashboardData["score"] }) {
 
       <Badge className="mt-4 rounded-full">
         {score.pointsToNextLevel > 0
-          ? `${score.pointsToNextLevel} pts to next level`
+          ? `${score.pointsToNextLevel} pts para o próximo nível`
           : "New level reached"}
       </Badge>
     </div>

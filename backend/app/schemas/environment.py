@@ -11,7 +11,6 @@ class EnvironmentPayload(BaseModel):
 
 
 class EnvironmentReadingRequest(BaseModel):
-    userId: str
     temperature: float
     light: float
     noise: float
