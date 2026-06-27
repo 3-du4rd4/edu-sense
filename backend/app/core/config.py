@@ -14,11 +14,16 @@ class Settings:
     MQTT_USERNAME = os.getenv("MQTT_USERNAME")
     MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 
-    APP_NAME = os.getenv("APP_NAME", "App")
+    APP_NAME = os.getenv("APP_NAME")
     DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 
     JWT_SECRET = os.getenv("JWT_SECRET")
     JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
     JWT_EXPIRES_MINUTES = int(os.getenv("JWT_EXPIRES_MINUTES"))
+
+    FRONTEND_URLS: list[str] = [
+        url.strip()
+        for url in os.getenv("FRONTEND_URLS", "").split(",")
+    ]
 
 settings = Settings()

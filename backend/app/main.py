@@ -13,12 +13,13 @@ from routes import (
 )
 from db.mongo import connect_to_mongo, close_mongo_connection
 from mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
+from core.config import settings
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=settings.FRONTEND_URLS,
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
