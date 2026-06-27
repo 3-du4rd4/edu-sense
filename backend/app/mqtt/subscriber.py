@@ -1,8 +1,8 @@
 import asyncio
 
-from core.config import settings
-from mqtt.client import get_mqtt_client
-from mqtt.handlers import handle_environment_message, handle_facial_metrics_message
+from app.core.config import settings
+from app.mqtt.client import get_mqtt_client
+from app.mqtt.handlers import handle_environment_message, handle_facial_metrics_message
 
 
 mqtt_task: asyncio.Task | None = None

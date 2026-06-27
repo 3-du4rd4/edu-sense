@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from collections import defaultdict
 
-from repositories.session_repository import SessionRepository
+from app.repositories.session_repository import SessionRepository
 
 
 POINTS_PER_LEVEL = 200

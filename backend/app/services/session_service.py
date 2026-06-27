@@ -3,14 +3,14 @@ from typing import Optional
 
 from fastapi import HTTPException
 
-from repositories.session_repository import SessionRepository
-from schemas.session import StartSessionRequest, FinishSessionRequest, UpdateSessionTasksRequest
-from websocket.events import WebSocketEvent
-from websocket.manager import websocket_manager
-from repositories.environment_repository import EnvironmentRepository
-from repositories.facial_metrics_repository import FacialMetricsRepository
-from services.points_service import PointsService
-from services.session_summary_service import SessionSummaryService
+from app.repositories.session_repository import SessionRepository
+from app.schemas.session import StartSessionRequest, FinishSessionRequest, UpdateSessionTasksRequest
+from app.websocket.events import WebSocketEvent
+from app.websocket.manager import websocket_manager
+from app.repositories.environment_repository import EnvironmentRepository
+from app.repositories.facial_metrics_repository import FacialMetricsRepository
+from app.services.points_service import PointsService
+from app.services.session_summary_service import SessionSummaryService
 
 
 class SessionService:

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta, timezone
 
-from repositories.notification_repository import NotificationRepository
-from websocket.events import WebSocketEvent
-from websocket.manager import websocket_manager
+from app.repositories.notification_repository import NotificationRepository
+from app.websocket.events import WebSocketEvent
+from app.websocket.manager import websocket_manager
 
 
 NOTIFICATION_COOLDOWN_SECONDS = 120
