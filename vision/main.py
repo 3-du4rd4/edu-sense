@@ -161,10 +161,22 @@ class VisionServiceApp:
     def should_publish(self, metrics: dict) -> bool:
         now = time.time()
 
-        has_event = metrics["eyesClosed"] or metrics["yawning"]
+        has_event = (
+            metrics["eyesClosed"]
+            or metrics["yawning"]
+        )
 
         if has_event:
+            was_outside_window = (
+                self.last_event_time == 0
+                or now - self.last_event_time > settings.EVENT_COOLDOWN_SECONDS
+            )
+
             self.last_event_time = now
+
+            if was_outside_window:
+                self.last_publish_time = now
+                return True
 
         is_inside_event_window = (
             self.last_event_time > 0
@@ -177,11 +189,11 @@ class VisionServiceApp:
             else settings.NORMAL_PUBLISH_INTERVAL_SECONDS
         )
 
-        if now - self.last_publish_time < interval:
-            return False
+        if now - self.last_publish_time >= interval:
+            self.last_publish_time = now
+            return True
 
-        self.last_publish_time = now
-        return True
+        return False
 
 
     async def capture_loop(self):
