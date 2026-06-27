@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Query, Depends
 
-from dependencies.auth import get_current_user
+from app.dependencies.auth import get_current_user
 
-from schemas.dashboard import (
+from app.schemas.dashboard import (
     DashboardCalendarResponse,
     DashboardResponse,
 )
     
-from services.dashboard_service import DashboardService
+from app.services.dashboard_service import DashboardService
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 

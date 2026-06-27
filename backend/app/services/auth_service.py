@@ -1,13 +1,13 @@
 from fastapi import HTTPException, status
 from pymongo.errors import DuplicateKeyError
 
-from core.security import (
+from app.core.security import (
     create_access_token,
     hash_password,
     verify_password
 )
-from repositories.user_repository import UserRepository
-from schemas.auth import LoginRequest, SignupRequest
+from app.repositories.user_repository import UserRepository
+from app.schemas.auth import LoginRequest, SignupRequest
 
 
 class AuthService:

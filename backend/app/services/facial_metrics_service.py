@@ -2,12 +2,12 @@ from datetime import datetime, timezone
 
 from fastapi import HTTPException
 
-from repositories.facial_metrics_repository import FacialMetricsRepository
-from repositories.session_repository import SessionRepository
-from schemas.facial_metrics import FacialMetricsRequest
-from websocket.events import WebSocketEvent
-from websocket.manager import websocket_manager
-from services.notification_service import NotificationService
+from app.repositories.facial_metrics_repository import FacialMetricsRepository
+from app.repositories.session_repository import SessionRepository
+from app.schemas.facial_metrics import FacialMetricsRequest
+from app.websocket.events import WebSocketEvent
+from app.websocket.manager import websocket_manager
+from app.services.notification_service import NotificationService
 
 
 class FacialMetricsService:

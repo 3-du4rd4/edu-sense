@@ -3,8 +3,8 @@ from datetime import datetime
 
 import paho.mqtt.client as mqtt
 
-from core.config import settings
-from services.database import insert_data
+from app.core.config import settings
+from app.services.database import insert_data
 
 
 def on_connect(client, userdata, flags, rc):

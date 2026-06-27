@@ -2,11 +2,11 @@ import json
 
 from pydantic import ValidationError
 
-from schemas.environment import EnvironmentPayload
-from services.environment_service import EnvironmentService
+from app.schemas.environment import EnvironmentPayload
+from app.services.environment_service import EnvironmentService
 
-from schemas.facial_metrics import FacialMetricsRequest
-from services.facial_metrics_service import FacialMetricsService
+from app.schemas.facial_metrics import FacialMetricsRequest
+from app.services.facial_metrics_service import FacialMetricsService
 
 
 def extract_user_id_from_topic(topic: str) -> str | None:

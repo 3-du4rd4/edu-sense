@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from schemas.environment import (
+from app.schemas.environment import (
     EnvironmentReadingRequest,
     EnvironmentReadingResponse,
 )
-from services.environment_service import EnvironmentService
+from app.services.environment_service import EnvironmentService
 
 router = APIRouter(prefix="/environment-readings", tags=["Environment Readings"])
 
