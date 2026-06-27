@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends
 
-from dependencies.auth import get_current_user
-from schemas.auth import (
+from app.dependencies.auth import get_current_user
+from app.schemas.auth import (
     AuthResponse,
     LoginRequest,
     SignupRequest,
     UserResponse,
 )
-from services.auth_service import AuthService
+from app.services.auth_service import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 

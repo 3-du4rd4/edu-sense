@@ -1,7 +1,7 @@
 import ssl
 import aiomqtt
 
-from core.config import settings
+from app.core.config import settings
 
 ssl_context = ssl.create_default_context()
 

@@ -1,9 +1,9 @@
 from typing import Optional
 from fastapi import APIRouter, Query, Depends
 
-from schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest, UpdateSessionTasksRequest
-from services.session_service import SessionService
-from dependencies.auth import get_current_user
+from app.schemas.session import StartSessionRequest, SessionResponse, FinishSessionRequest, UpdateSessionTasksRequest
+from app.services.session_service import SessionService
+from app.dependencies.auth import get_current_user
 
 router = APIRouter(prefix="/sessions", tags=["Sessions"])
 

@@ -1,11 +1,11 @@
 from datetime import datetime, timezone
 
-from repositories.environment_repository import EnvironmentRepository
-from repositories.session_repository import SessionRepository
-from schemas.environment import EnvironmentReadingRequest
-from websocket.events import WebSocketEvent
-from websocket.manager import websocket_manager
-from services.notification_service import NotificationService
+from app.repositories.environment_repository import EnvironmentRepository
+from app.repositories.session_repository import SessionRepository
+from app.schemas.environment import EnvironmentReadingRequest
+from app.websocket.events import WebSocketEvent
+from app.websocket.manager import websocket_manager
+from app.services.notification_service import NotificationService
 
 
 class EnvironmentService:

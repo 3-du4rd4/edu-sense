@@ -3,7 +3,7 @@ from typing import Optional
 
 from bson import ObjectId
 
-from db.mongo import get_database
+from app.db.mongo import get_database
 
 
 class UserRepository:
