@@ -27,7 +27,6 @@ export function useDashboardCalendar({
         setError(null);
 
         const calendarData = await getDashboardCalendarData({
-          userId,
           month,
         });
 
