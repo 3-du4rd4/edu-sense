@@ -11,30 +11,30 @@ export function SessionSummaryMetrics({
   return (
     <section className="space-y-6">
       <SummaryRow
-        title="Duration"
-        description={`your session was ${formatTimeGoal(resultData.durationMinutes)} long`}
+        title="Duração"
+        description={`sua sessão durou ${formatTimeGoal(resultData.durationMinutes)}`}
         icon={Goal}
       />
 
       <SummaryRow
-        title="Focus"
-        description="during the session overall your focus was"
+        title="Foco"
+        description="durante a sessão, seu foco foi de"
         value={
           resultData.focusAverage !== null
             ? `${resultData.focusAverage}%`
-            : "Not available"
+            : "Não disponível"
         }
         valueClassName="text-green-500"
       />
 
       <div className="flex flex-wrap items-center gap-6">
         <div>
-          <h2 className="text-base font-semibold">Monitoring</h2>
+          <h2 className="text-base font-semibold">Monitoramento</h2>
         </div>
 
         <p className="text-sm text-muted-foreground">
-          you can verify a media of the environment variables during your
-          session
+          você pode verificar a média das variáveis do ambiente durante sua
+          sessão
         </p>
       </div>
 
@@ -44,7 +44,7 @@ export function SessionSummaryMetrics({
           value={
             resultData.temperatureAverage !== null
               ? `${resultData.temperatureAverage}°C`
-              : "Not available"
+              : "Não disponível"
           }
         />
 
@@ -53,7 +53,7 @@ export function SessionSummaryMetrics({
           value={
             resultData.lightAverage !== null
               ? `${resultData.lightAverage} lux`
-              : "Not available"
+              : "Não disponível"
           }
         />
 
@@ -62,7 +62,7 @@ export function SessionSummaryMetrics({
           value={
             resultData.noiseAverage !== null
               ? `${resultData.noiseAverage} dB`
-              : "Not available"
+              : "Não disponível"
           }
         />
       </div>
@@ -125,12 +125,12 @@ function Metric({
 }
 
 function formatTimeGoal(minutes: number) {
-  if (minutes < 60) return `${minutes} minutes`;
+  if (minutes < 60) return `${minutes} minutos`;
 
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
 
-  if (remainingMinutes === 0) return `${hours} hours`;
+  if (remainingMinutes === 0) return `${hours} horas`;
 
   return `${hours}h ${remainingMinutes}min`;
 }

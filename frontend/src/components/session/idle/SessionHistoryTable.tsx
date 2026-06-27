@@ -32,10 +32,10 @@ export function SessionHistoryTable({
   return (
     <section>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Session historic</h2>
+        <h2 className="text-xl font-semibold">Histórico de sessões</h2>
 
         <button className="text-xs text-muted-foreground underline-offset-4 hover:underline">
-          View all
+          Ver todas
         </button>
       </div>
 
@@ -44,18 +44,18 @@ export function SessionHistoryTable({
           <TableHeader className="bg-[#F896A8]">
             <TableRow className=" hover:bg-[#F896A8]">
               <TableHead className="text-center text-xs font-semibold">
-                Date
+                Data
               </TableHead>
               <TableHead className="text-center text-xs font-semibold">
-                Duration
+                Duração
               </TableHead>
               <TableHead className="text-center text-xs font-semibold">
-                Focus
+                Foco
               </TableHead>
               <TableHead className="text-center text-xs font-semibold">
-                Environment
+                Ambiente
               </TableHead>
-              <TableHead className="text-xs font-semibold">Tasks</TableHead>
+              <TableHead className="text-xs font-semibold">Tarefas</TableHead>
               <TableHead />
             </TableRow>
           </TableHeader>
@@ -64,7 +64,7 @@ export function SessionHistoryTable({
             {isLoading && (
               <TableRow>
                 <TableCell colSpan={6} className="py-4 text-center text-xs">
-                  Loading sessions...
+                  Carregando sessões...
                 </TableCell>
               </TableRow>
             )}
@@ -86,7 +86,7 @@ export function SessionHistoryTable({
                   colSpan={6}
                   className="py-4 text-center text-xs text-muted-foreground"
                 >
-                  No sessions found.
+                  Nenhuma sessão encontrada.
                 </TableCell>
               </TableRow>
             )}
@@ -194,7 +194,7 @@ function formatMetric(value: number | null | undefined, suffix: string) {
 }
 
 function formatTasks(session: MonitoringSession) {
-  if (!session.tasks.length) return "No tasks";
+  if (!session.tasks.length) return "Nenhuma tarefa";
 
   const completed = session.tasks.filter((task) => task.completed).length;
 

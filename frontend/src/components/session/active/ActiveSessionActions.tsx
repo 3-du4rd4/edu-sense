@@ -23,7 +23,7 @@ export function ActiveSessionActions({
           className="rounded-full bg-[#FDBC28] text-black hover:bg-[#FDBC28] px-4 py-1 text-xs"
         >
           <PlayCircle className="size-4" />
-          Resume
+          Retomar
         </Button>
       ) : (
         <Button
@@ -31,7 +31,7 @@ export function ActiveSessionActions({
           className="rounded-full bg-[#FDBC28] text-black hover:bg-[#FDBC28] px-4 py-1 text-xs"
         >
           <PauseCircle className="size-4" />
-          Pause
+          Pausar
         </Button>
       )}
 
@@ -40,7 +40,7 @@ export function ActiveSessionActions({
         className="rounded-full bg-[#76DF64] text-black hover:bg-[#76DF64] px-4 py-1 text-xs"
       >
         <Flag className="size-4" />
-        Finish
+        Finalizar
       </Button>
     </div>
   );

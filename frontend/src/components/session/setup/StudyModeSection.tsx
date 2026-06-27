@@ -8,19 +8,19 @@ const modes = [
   {
     value: "normal",
     label: "Normal",
-    description: "Balanced monitoring for regular study.",
+    description: "Monitoramento equilibrado para estudos regulares.",
     icon: BookOpen,
   },
   {
     value: "focus",
     label: "Focus",
-    description: "More attention to focus and distractions.",
+    description: "Mais atenção ao foco e distrações.",
     icon: Brain,
   },
   {
     value: "reading",
     label: "Reading",
-    description: "Gentler tracking for reading sessions.",
+    description: "Monitoramento mais suave para sessões de leitura.",
     icon: Coffee,
   },
 ] satisfies {
@@ -39,9 +39,9 @@ export function StudyModeSection({ value, onChange }: StudyModeSectionProps) {
   return (
     <section className="flex flex-col gap-4 items-start px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Study mode</h2>
+        <h2 className="text-base font-semibold">Modo de estudo</h2>
         <p className="text-sm text-muted-foreground font-medium">
-          select the mode that best suits your situation
+          selecione o modo que melhor se adapta à sua situação
         </p>
       </div>
 

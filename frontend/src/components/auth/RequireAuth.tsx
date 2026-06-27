@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAuth } from "@/hooks/useAuth";
+import { LoaderCircle } from "lucide-react";
 
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -39,7 +40,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   if (isCheckingAuth || !isAuthenticated) {
     return (
       <div className="flex min-h-screen items-center justify-center text-sm text-muted-foreground">
-        Loading...
+        <LoaderCircle className="h-4 w-4 animate-spin" />
       </div>
     );
   }

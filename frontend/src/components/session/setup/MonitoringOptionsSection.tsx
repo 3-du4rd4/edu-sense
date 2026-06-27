@@ -22,33 +22,33 @@ export function MonitoringOptionsSection({
   return (
     <section className="flex flex-col gap-4 items-start px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Monitoring</h2>
+        <h2 className="text-base font-semibold">Monitoramento</h2>
         <p className="text-sm text-muted-foreground font-medium">
-          enable wheter you want the session to use the tools to improve study
-          follow-up
+          habilite se deseja que a sessão utilize as ferramentas para melhorar o
+          acompanhamento do estudo
         </p>
       </div>
 
       <div className="px-4 space-y-4">
         <MonitoringOption
-          title="Enable webcam face monitoring"
-          description="Use webcam to estimate focus and fatigue indicators."
+          title="Habilitar monitoramento por webcam"
+          description="Use a webcam para estimar indicadores de foco e fadiga."
           checked={cameraEnabled}
           onCheckedChange={onCameraChange}
-          readyMessages={["webcam ready"]}
+          readyMessages={["webcam pronta"]}
           cameraStatus={cameraStatus}
           cameraError={cameraError}
         />
 
         <MonitoringOption
-          title="Enable environmental sensors monitoring"
-          description="Use IoT sensors to monitor light, noise and temperature."
+          title="Habilitar monitoramento por sensores ambientais"
+          description="Use sensores IoT para monitorar luz, ruído e temperatura."
           checked={sensorsEnabled}
           onCheckedChange={onSensorsChange}
           readyMessages={[
-            "Temperature sensor connected",
-            "Light sensor connected",
-            "Noise sensor connected",
+            "Sensor de temperatura conectado",
+            "Sensor de luz conectado",
+            "Sensor de ruído conectado",
           ]}
         />
       </div>
@@ -96,11 +96,13 @@ function MonitoringOption({
       )}
 
       {cameraStatus === "denied" && (
-        <p className="text-xs text-red-500">Camera permission was denied.</p>
+        <p className="text-xs text-red-500">Permissão da câmera foi negada.</p>
       )}
 
       {cameraStatus === "unavailable" && (
-        <p className="text-xs text-red-500">No camera device was found.</p>
+        <p className="text-xs text-red-500">
+          Nenhum dispositivo de câmera foi encontrado.
+        </p>
       )}
 
       {cameraError && cameraStatus === "error" && (

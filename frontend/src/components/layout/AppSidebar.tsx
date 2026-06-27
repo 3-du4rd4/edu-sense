@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-  BadgeQuestionMarkIcon,
   LampDeskIcon,
   LayoutDashboardIcon,
   SlidersHorizontalIcon,
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 
 import { NavMain } from "./nav-main";
-import { NavSecondary } from "./nav-secondary";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,29 +31,29 @@ const data = {
       iconColor: "text-[#FDBC28]",
     },
     {
-      title: "Study session",
+      title: "Sessão de Estudo",
       url: "/sessions",
       icon: LampDeskIcon,
       activeClassName: "bg-[#FD6D3E]/15",
       iconColor: "text-[#FD6D3E]",
     },
     {
-      title: "Settings",
+      title: "Configurações",
       url: "/settings",
       icon: SlidersHorizontalIcon,
       activeClassName: "bg-[#45C8FF]/15",
       iconColor: "text-[#45C8FF]",
     },
   ],
-  navSecondary: [
-    {
-      title: "Get Help",
-      url: "/help",
-      icon: BadgeQuestionMarkIcon,
-      activeClassName: "bg-[#76DF64]/15",
-      iconColor: "text-[#76DF64]",
-    },
-  ],
+  // navSecondary: [
+  //   {
+  //     title: "Get Help",
+  //     url: "/help",
+  //     icon: BadgeQuestionMarkIcon,
+  //     activeClassName: "bg-[#76DF64]/15",
+  //     iconColor: "text-[#76DF64]",
+  //   },
+  // ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -81,7 +79,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
 
       <SidebarFooter>
@@ -92,7 +89,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             width={140}
             height={32}
           />
-          <span>Study wellbeing monitor</span>
+          <span>Monitor de bem-estar estudantil</span>
         </div>
       </SidebarFooter>
     </Sidebar>

@@ -31,7 +31,7 @@ export function useWebcam() {
   const requestPermission = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
       setStatus("unavailable");
-      setError("Webcam is not available in this browser.");
+      setError("Câmera não disponível neste navegador.");
       return false;
     }
 
@@ -53,18 +53,18 @@ export function useWebcam() {
 
       if (error instanceof DOMException && error.name === "NotAllowedError") {
         setStatus("denied");
-        setError("Camera permission was denied.");
+        setError("Permissão da câmera foi negada.");
         return false;
       }
 
       if (error instanceof DOMException && error.name === "NotFoundError") {
         setStatus("unavailable");
-        setError("No camera device was found.");
+        setError("Nenhum dispositivo de câmera foi encontrado.");
         return false;
       }
 
       setStatus("error");
-      setError("Could not access camera.");
+      setError("Não foi possível acessar a câmera.");
       return false;
     }
   }, []);
@@ -72,7 +72,7 @@ export function useWebcam() {
   const startWebcam = useCallback(async () => {
     if (!navigator.mediaDevices?.getUserMedia) {
       setStatus("unavailable");
-      setError("Webcam is not available in this browser.");
+      setError("Câmera não disponível neste navegador.");
       return null;
     }
 
@@ -94,18 +94,18 @@ export function useWebcam() {
 
       if (error instanceof DOMException && error.name === "NotAllowedError") {
         setStatus("denied");
-        setError("Camera permission was denied.");
+        setError("Permissão da câmera foi negada.");
         return null;
       }
 
       if (error instanceof DOMException && error.name === "NotFoundError") {
         setStatus("unavailable");
-        setError("No camera device was found.");
+        setError("Nenhum dispositivo de câmera foi encontrado.");
         return null;
       }
 
       setStatus("error");
-      setError("Could not access camera.");
+      setError("Não foi possível acessar a câmera.");
       return null;
     }
   }, []);

@@ -19,15 +19,11 @@ def extract_user_id_from_topic(topic: str) -> str | None:
 
 
 async def handle_environment_message(topic: str, payload: bytes):
-    user_id = extract_user_id_from_topic(topic)
-
-    if not user_id:
-        print(f"Invalid topic format: {topic}")
-        return
-
     try:
         data = json.loads(payload.decode())
         environment_payload = EnvironmentPayload(**data)
+
+        print(f"Received environment payload on topic {topic}: {environment_payload}")
 
     except json.JSONDecodeError:
         print(f"Invalid JSON payload received on topic {topic}")
@@ -40,8 +36,7 @@ async def handle_environment_message(topic: str, payload: bytes):
     service = EnvironmentService()
 
     await service.process_environment_reading(
-        user_id=user_id,
-        payload=environment_payload
+        data=environment_payload
     )
 
 

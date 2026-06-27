@@ -14,12 +14,12 @@ import {
 import { useState } from "react";
 
 const presets = [
-  { label: "25 minutes", value: "25", minutes: 25 },
-  { label: "30 minutes", value: "30", minutes: 30 },
-  { label: "50 minutes", value: "50", minutes: 50 },
-  { label: "1 hour", value: "60", minutes: 60 },
-  { label: "2 hours", value: "120", minutes: 120 },
-  { label: "Custom", value: "custom", minutes: null },
+  { label: "25 minutos", value: "25", minutes: 25 },
+  { label: "30 minutos", value: "30", minutes: 30 },
+  { label: "50 minutos", value: "50", minutes: 50 },
+  { label: "1 hora", value: "60", minutes: 60 },
+  { label: "2 horas", value: "120", minutes: 120 },
+  { label: "Personalizada", value: "custom", minutes: null },
 ];
 
 type TimeGoalSectionProps = {
@@ -77,19 +77,19 @@ export function TimeGoalSection({
   return (
     <section className="px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Time goal</h2>
+        <h2 className="text-base font-semibold">Meta de tempo</h2>
 
         <p className="text-sm text-muted-foreground font-medium">
-          you can define a time goal for your study session
+          você pode definir uma meta de tempo para sua sessão de estudo
         </p>
 
         <Select value={selectedOption} onValueChange={handleSelectChange}>
           <SelectTrigger className="w-fit gap-2 rounded-full border-none bg-[#76DF64] px-4 py-2 text-xs font-medium focus:ring-0 focus:ring-offset-0 [&>svg]:text-current">
             <Goal className="size-4" />
-            <SelectValue placeholder="No time goal selected">
+            <SelectValue placeholder="Nenhuma meta selecionada">
               {timeGoalMinutes
                 ? formatTimeGoal(timeGoalMinutes)
-                : "No time goal selected"}
+                : "Nenhuma meta selecionada"}
             </SelectValue>
 
             {timeGoalMinutes && (
@@ -150,7 +150,7 @@ export function TimeGoalSection({
 
 function formatTimeGoal(minutes: number) {
   if (minutes < 60) {
-    return `${minutes} minutes`;
+    return `${minutes} minutos`;
   }
 
   const hours = Math.floor(minutes / 60);

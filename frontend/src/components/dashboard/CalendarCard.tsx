@@ -1,16 +1,15 @@
 "use client";
 
-import { isSameDay } from "date-fns";
+import { useMemo, useState } from "react";
 
 import { Calendar } from "@/components/ui/calendar";
-import { useDashboardCalendar } from "@/hooks/useDashboardCalendar";
-
 import { Card, CardContent } from "@/components/ui/card";
-import { useMemo, useState } from "react";
+import { useDashboardCalendar } from "@/hooks/useDashboardCalendar";
+import { toDateKey } from "@/lib/date-utils";
 import { useAuthStore } from "@/stores/authStore";
 
-function hasDate(date: Date, dates: Date[]) {
-  return dates.some((item) => isSameDay(item, date));
+function hasDate(date: Date, dateKeys: string[]) {
+  return dateKeys.includes(toDateKey(date));
 }
 
 export function CalendarCard() {
@@ -22,27 +21,30 @@ export function CalendarCard() {
   const month = useMemo(() => formatMonth(monthDate), [monthDate]);
 
   const { data, isLoading, error } = useDashboardCalendar({
-    userId: userId,
+    userId,
     month,
   });
 
-  const studiedDates = useMemo(
-    () => (data?.studiedDates ?? []).map(parseDate),
+  const studiedDateKeys = useMemo(
+    () => data?.studiedDates ?? [],
     [data?.studiedDates],
   );
 
-  const streakDates = useMemo(
-    () => (data?.streakDates ?? []).map(parseDate),
+  const streakDateKeys = useMemo(
+    () => data?.streakDates ?? [],
     [data?.streakDates],
   );
 
   const today = new Date();
+  const todayKey = toDateKey(today);
 
   return (
     <Card className="relative overflow-visible rounded-3xl ring-2 ring-[#76DF64]">
       <CardContent className="flex items-center justify-center p-2">
         {isLoading && (
-          <p className="text-sm text-muted-foreground">Loading calendar...</p>
+          <p className="text-sm text-muted-foreground">
+            Carregando calendário...
+          </p>
         )}
 
         {!isLoading && error && <p className="text-sm text-red-500">{error}</p>}
@@ -58,13 +60,16 @@ export function CalendarCard() {
               showOutsideDays={true}
               modifiers={{
                 studied: (date) =>
-                  hasDate(date, studiedDates) && !hasDate(date, streakDates),
+                  hasDate(date, studiedDateKeys) &&
+                  !hasDate(date, streakDateKeys),
                 streak: (date) =>
-                  hasDate(date, streakDates) && !isSameDay(date, today),
+                  hasDate(date, streakDateKeys) && toDateKey(date) !== todayKey,
                 todayWithoutSession: (date) =>
-                  isSameDay(date, today) && !hasDate(date, studiedDates),
+                  toDateKey(date) === todayKey &&
+                  !hasDate(date, studiedDateKeys),
                 todayWithSession: (date) =>
-                  isSameDay(date, today) && hasDate(date, studiedDates),
+                  toDateKey(date) === todayKey &&
+                  hasDate(date, studiedDateKeys),
               }}
               modifiersClassNames={{
                 day: "w-full h-9 p-0 font-normal cursor-default hover:bg-transparent focus:bg-transparent aria-selected:bg-transparent",
@@ -94,8 +99,4 @@ function formatMonth(date: Date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
 
   return `${year}-${month}`;
-}
-
-function parseDate(date: string) {
-  return new Date(`${date}T00:00:00`);
 }

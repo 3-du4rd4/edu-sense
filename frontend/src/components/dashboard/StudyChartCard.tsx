@@ -11,6 +11,7 @@ import {
 } from "recharts";
 
 import { DashboardData } from "@/types/dashboard";
+import { formatStudyMinutes } from "@/lib/format-duration";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -21,24 +22,22 @@ type StudyChartCardProps = {
 export function StudyChartCard({ chart }: StudyChartCardProps) {
   const data = chart.dailyStudyMinutes.map((item) => ({
     date: formatChartDate(item.date),
-    hours: Number((item.minutes / 60).toFixed(2)),
+    minutes: item.minutes,
   }));
 
   return (
     <Card className="rounded-3xl">
       <CardHeader>
-        <CardTitle>Study performance</CardTitle>
+        <CardTitle>Desempenho de estudo</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Hours studied during this month
+          Tempo estudado durante este mês
         </p>
       </CardHeader>
 
       <CardContent>
         <div className="h-72">
           {data.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-              No study data available yet.
-            </div>
+            <ChartEmptyState />
           ) : (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data}>
@@ -62,17 +61,20 @@ export function StudyChartCard({ chart }: StudyChartCardProps) {
                   tickLine={false}
                   axisLine={false}
                   fontSize={12}
-                  tickFormatter={(value) => `${value}h`}
+                  tickFormatter={(value) => formatStudyMinutes(value)}
                 />
 
                 <Tooltip
-                  formatter={(value) => [`${value}h`, "Studied"]}
+                  formatter={(value) => [
+                    formatStudyMinutes(Number(value)),
+                    "Studied",
+                  ]}
                   labelFormatter={(label) => `${label}`}
                 />
 
                 <Area
                   type="monotone"
-                  dataKey="hours"
+                  dataKey="minutes"
                   stroke="#22c55e"
                   strokeWidth={3}
                   fill="url(#studyHours)"
@@ -98,4 +100,23 @@ function formatChartDate(date: string) {
     day: "2-digit",
     month: "2-digit",
   }).format(new Date(`${date}T00:00:00`));
+}
+
+function ChartEmptyState() {
+  return (
+    <div className="flex h-full flex-col items-center justify-center gap-3 text-center border rounded-3xl ring-2 ring-foreground/10 p-3 !pt-0">
+      <img
+        src="/illustrations/edusense-no-data.svg"
+        alt="No data"
+        className="min-h-0 flex-1 w-full object-contain"
+      />
+
+      <div>
+        <p className="text-sm font-medium">Nenhum dado de estudo ainda</p>
+        <p className="text-xs text-muted-foreground">
+          Comece uma sessão para ver seu progresso aqui.
+        </p>
+      </div>
+    </div>
+  );
 }

@@ -30,6 +30,17 @@ class SessionRepository:
         return self._serialize(session)
     
 
+    async def get_active_session(self) -> Optional[dict]:
+        session = await self.collection.find_one({
+            "status": {"$in": ["active", "paused"]}
+        })
+        
+        if not session:
+            return None
+        
+        return self._serialize(session)
+    
+
     async def get_by_id(self, session_id: str) -> Optional[dict]:
         session = await self.collection.find_one({
             "_id": ObjectId(session_id)

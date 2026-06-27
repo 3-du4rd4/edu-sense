@@ -19,12 +19,10 @@ class EnvironmentService:
         self,
         data: EnvironmentReadingRequest,
     ) -> dict | None:
-        active_session = await self.session_repository.get_active_session_by_user_id(
-            data.userId
-        )
+        active_session = await self.session_repository.get_active_session()
 
         if not active_session:
-            print(f"No active session found for user_id: {data.userId}")
+            print(f"No active session found")
             return None
         
         reading_data = {
@@ -38,13 +36,13 @@ class EnvironmentService:
         created_reading = await self.environment_repository.create_reading(reading_data)
 
         await websocket_manager.send_to_user(
-            user_id=data.userId,
+            user_id=active_session["userId"],
             event=WebSocketEvent.ENVIRONMENT_UPDATE,
             payload=created_reading
         )
 
         await self._check_environment_notifications(
-            user_id=data.userId,
+            user_id=active_session["userId"],
             session_id=created_reading["sessionId"],
             temperature=created_reading["temperature"],
             noise=created_reading["noise"],
@@ -78,8 +76,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="temperature",
-                title="High temperature",
-                message="The room temperature is above the recommended level.",
+                title="Temperatura alta",
+                message="A temperatura da sala está acima do nível recomendado.",
                 value=temperature,
                 threshold=30,
             )
@@ -91,8 +89,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="light",
-                title="High light level",
-                message="The light level is above the recommended range.",
+                title="Nível de luz alto",
+                message="O nível de luz está acima do intervalo recomendado.",
                 value=light,
                 threshold=900,
             )
@@ -104,8 +102,8 @@ class EnvironmentService:
                 type="environment",
                 severity="warning",
                 source="noise",
-                title="High noise level",
-                message="Noise is above the recommended level for studying.",
+                title="Nível de ruído alto",
+                message="O nível de ruído está acima do nível recomendado para estudo.",
                 value=noise,
                 threshold=65,
             )

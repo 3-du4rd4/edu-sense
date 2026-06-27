@@ -106,8 +106,8 @@ class FacialMetricsService:
                 type="facial",
                 severity="warning",
                 source="fatigue",
-                title="Signs of fatigue detected",
-                message="Your facial indicators suggest tiredness. Consider taking a short break.",
+                title="Sinais de fadiga detectados",
+                message="Seus indicadores faciais sugerem que você pode estar cansado. Considere fazer uma pausa para descansar e recuperar o foco.",
                 value=fatigue_probability,
                 threshold=0.7,
             )

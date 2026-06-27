@@ -23,16 +23,16 @@ export function ConnectionStatus({
         label="Webcam"
         description={
           cameraConnected
-            ? "Webcam is active and working."
-            : "Webcam is not active or permission was denied."
+            ? "Webcam está ativa e funcionando."
+            : "Webcam não está ativa ou permissão foi negada."
         }
       />
 
       <StatusIcon
         icon={Radio}
         connected={sensorsConnected}
-        label="Sensors"
-        description="Sensors are connected"
+        label="Sensores"
+        description="Sensores estão conectados"
       />
     </div>
   );
@@ -61,7 +61,7 @@ function StatusIcon({
             className={`size-1.5 rounded-full ${
               connected ? "bg-[#76DF64]" : "bg-[#FD6D3E]"
             }`}
-            aria-label={`${label} ${connected ? "connected" : "disconnected"}`}
+            aria-label={`${label} ${connected ? "conectado" : "desconectado"}`}
           />
         </div>
       </TooltipTrigger>

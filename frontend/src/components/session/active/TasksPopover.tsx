@@ -36,16 +36,16 @@ export function TasksPopover({ tasks, onToggleTask }: TasksPopoverProps) {
 
       <PopoverContent align="end" className="max-w-sm p-3">
         <div>
-          <h3 className="text-sm font-semibold">Session tasks</h3>
+          <h3 className="text-sm font-semibold">Tarefas da sessão</h3>
           <p className="text-xs text-muted-foreground">
-            Check tasks as you complete them
+            Marque as tarefas conforme você as completa
           </p>
         </div>
 
         <div className="mt-2 space-y-3">
           {tasks.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              No tasks for this session.
+              nenhuma tarefa para esta sessão
             </p>
           ) : (
             tasks.map((task) => (

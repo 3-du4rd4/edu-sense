@@ -10,10 +10,10 @@ export function PointsEarnedCard({ points, level }: PointsEarnedCardProps) {
         {level}
       </div>
 
-      <p className="text-sm font-semibold">Congratulations!</p>
+      <p className="text-sm font-semibold">Parabéns!</p>
 
       <div className="mt-2 flex items-center justify-center gap-2">
-        <p className="text-sm font-semibold">You won</p>
+        <p className="text-sm font-semibold">Você ganhou</p>
         <span className="text-xl font-bold text-[#F896A8]">+ {points} pts</span>
       </div>
     </section>

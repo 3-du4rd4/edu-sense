@@ -12,7 +12,7 @@ export function CompletedTasksSummary({ tasks }: CompletedTasksSummaryProps) {
   return (
     <section className="flex flex-col gap-4 items-start px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Tasks</h2>
+        <h2 className="text-base font-semibold">Tarefas</h2>
 
         <div className="h-1.5 w-40 rounded-full bg-muted">
           <div

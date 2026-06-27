@@ -12,10 +12,10 @@ export function DurationSection({
   return (
     <section className="px-6 py-2">
       <div className="flex items-center gap-6 flex-wrap">
-        <h2 className="text-base font-semibold">Duration</h2>
+        <h2 className="text-base font-semibold">Duração</h2>
 
         <p className="text-sm text-muted-foreground font-medium">
-          your session was {formatTime(durationMinutes)} long
+          sua sessão durou {formatTime(durationMinutes)}
         </p>
 
         {timeGoalMinutes && (
@@ -31,7 +31,7 @@ export function DurationSection({
 
 function formatTime(minutes: number) {
   if (minutes < 60) {
-    return `${minutes} minutes`;
+    return `${minutes} minutos`;
   }
 
   const hours = Math.floor(minutes / 60);

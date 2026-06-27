@@ -51,7 +51,7 @@ export function SiteHeader() {
         <div className="ml-auto flex items-center gap-2">
           {config.showStartSessionButton && (
             <Button asChild className="rounded-full">
-              <Link href="/sessions?mode=setup">Start session</Link>
+              <Link href="/sessions?mode=setup">Começar sessão</Link>
             </Button>
           )}
 
@@ -79,12 +79,12 @@ export function SiteHeader() {
 
                 <DropdownMenuItem onClick={() => router.push("/settings")}>
                   <Settings className="mr-2 size-4" />
-                  Settings
+                  Configurações
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 size-4" />
-                  Logout
+                  Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

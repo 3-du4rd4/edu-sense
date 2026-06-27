@@ -30,11 +30,11 @@ export function SigninForm() {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-8">
       <div>
-        <h1 className="text-4xl font-semibold">Sign in</h1>
+        <h1 className="text-4xl font-semibold">Entrar</h1>
       </div>
 
       <div className="space-y-5">
-        <div>
+        {/* <div>
           <p className="mb-3 text-sm font-medium">Sign in with Open account</p>
 
           <div className="grid grid-cols-2 gap-3">
@@ -48,12 +48,12 @@ export function SigninForm() {
           </div>
         </div>
 
-        <div className="h-px bg-border" />
+        <div className="h-px bg-border" /> */}
 
         <div>
-          <p className="mb-3 text-sm font-medium">
+          {/* <p className="mb-3 text-sm font-medium">
             Or continue with email address
-          </p>
+          </p> */}
 
           <div className="space-y-5">
             <div className="relative">
@@ -94,7 +94,7 @@ export function SigninForm() {
                 className="mt-2 block ml-auto text-xs text-muted-foreground"
                 disabled
               >
-                Forgot password?
+                Esqueceu a senha?
               </button>
             </div>
 
@@ -105,7 +105,7 @@ export function SigninForm() {
               className="w-full rounded-full bg-[#45C4F9] text-black hover:bg-[#38b7ec]"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Start studying"}
+              {isLoading ? "Entrando..." : "Começar a estudar"}
             </Button>
           </div>
         </div>

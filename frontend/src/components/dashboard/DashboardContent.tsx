@@ -17,14 +17,16 @@ export function DashboardContent() {
 
   if (isLoading) {
     return (
-      <div className="text-sm text-muted-foreground">Loading dashboard...</div>
+      <div className="text-sm text-muted-foreground">
+        Carregando dashboard...
+      </div>
     );
   }
 
   if (error || !data) {
     return (
       <div className="text-sm text-red-500">
-        {error ?? "Dashboard data not available."}
+        {error ?? "Dados do dashboard não disponíveis"}
       </div>
     );
   }

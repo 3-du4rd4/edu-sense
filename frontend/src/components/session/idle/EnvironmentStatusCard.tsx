@@ -16,12 +16,12 @@ export function EnvironmentStatusCard() {
 
   return (
     <section>
-      <h2 className="text-xl font-semibold">Environment status</h2>
+      <h2 className="text-xl font-semibold">Status do Ambiente</h2>
 
       <div className="ml-4">
         <p className="mt-1 text-sm text-muted-foreground">
-          Before you start, let&apos;s check out the environment&apos;s
-          conditions
+          Antes de iniciar a sessão, verifique se o ambiente está adequado para
+          o estudo
         </p>
 
         <div className="mt-5 flex items-center gap-12 flex-wrap">
@@ -35,23 +35,23 @@ export function EnvironmentStatusCard() {
 
             <div className="space-y-2 text-sm">
               <EnvironmentMetric
-                label="Temperature"
+                label="Temperatura"
                 value={`${reading.temperature} °C`}
-                status="a little high"
+                status="um pouco alta"
                 variant="warning"
               />
 
               <EnvironmentMetric
-                label="Light"
+                label="Luz"
                 value={`${reading.light} lx`}
-                status="perfect"
+                status="perfeita"
                 variant="success"
               />
 
               <EnvironmentMetric
-                label="Noise"
+                label="Ruído"
                 value={`${reading.noise}`}
-                status="very high"
+                status="muito alto"
                 variant="danger"
               />
             </div>
@@ -59,8 +59,7 @@ export function EnvironmentStatusCard() {
 
           <div className="flex items-center">
             <div className="rounded-xl bg-[#FDBC28]/15 px-6 py-4 text-sm font-medium text-center">
-              Your environment is almost perfect! The noise is just a little
-              high.
+              Seu ambiente está quase perfeito! O ruído está um pouco alto.
             </div>
           </div>
         </div>

@@ -17,13 +17,13 @@ export function LastStudySessionCard({
       <Card className="rounded-3xl ring-2 ring-[#F896A8]">
         <CardHeader className="flex flex-row items-start justify-between">
           <CardTitle className="inline-block rounded-full bg-[#F896A8]/80 px-3 py-1 text-base font-semibold">
-            Last study session
+            Última sessão de estudo
           </CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-5">
           <div className="p-4 text-sm text-muted-foreground">
-            No study session completed yet.
+            Nenhuma sessão de estudo concluída ainda.
           </div>
         </CardContent>
       </Card>
@@ -52,7 +52,7 @@ export function LastStudySessionCard({
     <Card className="rounded-3xl ring-2 ring-[#F896A8]">
       <CardHeader className="flex flex-row items-start justify-between">
         <CardTitle className="inline-block rounded-full bg-[#F896A8]/80 px-3 py-1 text-base font-semibold">
-          Last study session
+          Última sessão de estudo
         </CardTitle>
 
         <Badge className="rounded-full bg-[#F896A8]/80">
@@ -65,9 +65,7 @@ export function LastStudySessionCard({
           <div className="text-sm font-medium">
             <p>{formatDuration(lastSession.durationSeconds)}</p>
             {lastSession.focusAverage && (
-              <p className="mt-1">
-                average focus of {lastSession.focusAverage}%
-              </p>
+              <p className="mt-1">foco médio de {lastSession.focusAverage}%</p>
             )}
           </div>
 
@@ -89,14 +87,14 @@ export function LastStudySessionCard({
 function formatDuration(durationSeconds: number) {
   const minutes = Math.round(durationSeconds / 60);
 
-  if (minutes < 60) return `${minutes}m long`;
+  if (minutes < 60) return `${minutes}m de duração`;
 
   const hours = Math.floor(minutes / 60);
   const remainingMinutes = minutes % 60;
 
-  if (remainingMinutes === 0) return `${hours}h long`;
+  if (remainingMinutes === 0) return `${hours}h de duração`;
 
-  return `${hours}h ${remainingMinutes}m long`;
+  return `${hours}h ${remainingMinutes}m de duração`;
 }
 
 function formatNullableMetric(value: number | null, suffix: string) {
