@@ -1,0 +1,101 @@
+from collections import defaultdict
+from typing import Any
+
+from fastapi import WebSocket
+from fastapi.encoders import jsonable_encoder
+
+
+class WebSocketManager:
+    def __init__(self):
+        self.active_connections: dict[str, list[WebSocket]] = defaultdict(list)
+        self.vision_connections = []
+
+
+    async def connect(self, websocket: WebSocket, user_id: str):
+        await websocket.accept()
+        self.active_connections[user_id].append(websocket)
+        print(f"WebSocket connected: {user_id}")
+        print(f"Active connections: {list(self.active_connections.keys())}")
+
+
+    def disconnect(self, websocket: WebSocket, user_id: str):
+        connections = self.active_connections.get(user_id)
+
+        if not connections:
+            return
+        
+        if websocket in connections:
+            connections.remove(websocket)
+
+        if not connections:
+            self.active_connections.pop(user_id, None)
+
+
+    async def send_to_user(self, user_id: str, event: str, payload: dict[str, Any]):
+        connections = self.active_connections.get(user_id, [])
+
+        print(f"Sending event '{event}' to user: {user_id}")
+        print(f"Connections found: {len(connections)}")
+
+        message = {
+            "event": event,
+            "payload": payload
+        }
+
+        disconnected = []
+
+        for connection in connections:
+            try:
+                await connection.send_json(jsonable_encoder(message))
+            except Exception as error:
+                print(f"Error sending websocket message: {error}")
+                disconnected.append(connection)
+
+        for connection in disconnected:
+            self.disconnect(connection, user_id)
+
+        
+    async def broadcast(self, event: str, payload: dict[str, Any]):
+        for user_id in list(self.active_connections.keys()):
+            await self.send_to_user(user_id, event, payload)
+
+    
+    async def connect_vision(self, websocket):
+        await websocket.accept()
+        self.vision_connections.append(websocket)
+        print("Vision service connected")
+
+
+    def disconnect_vision(self, websocket):
+        if websocket in self.vision_connections:
+            self.vision_connections.remove(websocket)
+        print("Vision service disconnected")
+
+
+    async def send_to_vision(self, event: str, payload: dict):
+        disconnected_connections = []
+
+        print(f"Sending event to vision: {event}")
+
+        connections = self.active_connections.get("vision", [])
+
+        for connection in connections:
+            print(f"Vision connections: {len(connections)}")
+
+            try:
+                await connection.send_json(
+                    jsonable_encoder({
+                        "event": event,
+                        "payload": payload,
+                    })
+                )
+
+                print(f"Sending event to vision: {event}")
+            except Exception:
+                disconnected_connections.append(connection)
+
+        for connection in disconnected_connections:
+            self.disconnect_vision(connection)
+
+
+websocket_manager = WebSocketManager()

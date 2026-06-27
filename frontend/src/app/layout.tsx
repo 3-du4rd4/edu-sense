@@ -1,0 +1,37 @@
+import type { Metadata } from "next";
+import { Instrument_Sans, Graduate } from "next/font/google";
+import "./globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
+
+const instrumentSans = Instrument_Sans({
+  variable: "--font-instrument-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const graduate = Graduate({
+  variable: "--font-graduate",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+export const metadata: Metadata = {
+  title: "EduSense",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html
+      lang="en"
+      className={`${instrumentSans.variable} ${graduate.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col">
+        <TooltipProvider>{children}</TooltipProvider>
+      </body>
+    </html>
+  );
+}
