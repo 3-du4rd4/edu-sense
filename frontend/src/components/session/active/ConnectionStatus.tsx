@@ -32,7 +32,11 @@ export function ConnectionStatus({
         icon={Radio}
         connected={sensorsConnected}
         label="Sensores"
-        description="Sensores estão conectados"
+        description={
+          sensorsConnected
+            ? "Sensores estão conectados e funcionando."
+            : "Sensores não estão conectados ou não estão funcionando."
+        }
       />
     </div>
   );

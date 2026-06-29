@@ -20,6 +20,11 @@ class Settings:
     MQTT_USERNAME = os.getenv("MQTT_USERNAME")
     MQTT_PASSWORD = os.getenv("MQTT_PASSWORD")
 
+    FRONTEND_URLS: list[str] = [
+        url.strip()
+        for url in os.getenv("FRONTEND_URLS", "").split(",")
+    ]
+
     CAMERA_INDEX = int(os.getenv("CAMERA_INDEX", "0"))
     CAPTURE_INTERVAL_SECONDS = float(
         os.getenv("CAPTURE_INTERVAL_SECONDS", "1")

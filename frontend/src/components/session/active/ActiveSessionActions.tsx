@@ -16,7 +16,7 @@ export function ActiveSessionActions({
   isPaused,
 }: ActiveSessionActionsProps) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-3 flex-wrap justify-end">
       {isPaused ? (
         <Button
           onClick={onResume}

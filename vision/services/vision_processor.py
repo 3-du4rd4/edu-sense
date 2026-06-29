@@ -136,7 +136,7 @@ class VisionProcessor:
             self.temporal_window_service.add_sample(metrics)
 
             if not self.should_publish(metrics):
-                await asyncio.sleep(settings.CAPTURE_INTERVAL_SECONDS)
+                return
 
             features = (
                 self.temporal_window_service.build_features()

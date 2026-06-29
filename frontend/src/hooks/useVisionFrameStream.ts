@@ -24,8 +24,21 @@ export function useVisionFrameStream({
     return 2000;
   }
 
+  function stopCamera() {
+    const stream = videoRef.current?.srcObject as MediaStream | null;
+
+    stream?.getTracks().forEach((track) => track.stop());
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  }
+
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+      stopCamera();
+      return;
+    }
 
     async function startCamera() {
       try {
@@ -35,6 +48,12 @@ export function useVisionFrameStream({
 
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
+
+          await new Promise<void>((resolve) => {
+            videoRef.current!.onloadedmetadata = () => resolve();
+          });
+
+          await videoRef.current.play();
         }
       } catch (error) {
         console.error("Error accessing camera:", error);
@@ -47,6 +66,8 @@ export function useVisionFrameStream({
       const stream = videoRef.current?.srcObject as MediaStream | null;
 
       stream?.getTracks().forEach((track) => track.stop());
+
+      stopCamera();
     };
   }, [enabled]);
 
@@ -61,7 +82,12 @@ export function useVisionFrameStream({
         }
 
         const video = videoRef.current;
-        if (!video) {
+        if (
+          !video ||
+          video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA ||
+          video.videoWidth === 0 ||
+          video.videoHeight === 0
+        ) {
           resolve();
           return;
         }
@@ -77,10 +103,10 @@ export function useVisionFrameStream({
           return;
         }
 
-        canvas.width = 640;
-        canvas.height = 480;
+        canvas.width = 320;
+        canvas.height = 240;
 
-        context.drawImage(video, 0, 0, 640, 480);
+        context.drawImage(video, 0, 0, 320, 240);
 
         canvas.toBlob(
           async (blob) => {
@@ -111,7 +137,7 @@ export function useVisionFrameStream({
             }
           },
           "image/jpeg",
-          0.7,
+          0.6,
         );
       });
     }

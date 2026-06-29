@@ -3,6 +3,7 @@ import cv2
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 
 from services.session_ws_client import SessionWebSocketClient
 from services.vision_processor import VisionProcessor
@@ -59,6 +60,14 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="EduSense Vision Service",
     lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.FRONTEND_URLS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
