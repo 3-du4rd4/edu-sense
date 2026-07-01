@@ -36,6 +36,7 @@ class MqttClient:
         self.callbacks = {}
 
         self.client.on_message = self._on_message
+        self.client.on_connect = self._on_connect
 
 
     def connect(self):
@@ -53,7 +54,7 @@ class MqttClient:
 
         self.client.loop_start()
 
-        print("Connected to MQTT broker")
+        print("MQTT loop started (waiting on_connect...)")
 
 
     def disconnect(self):
@@ -72,11 +73,7 @@ class MqttClient:
     ):
         self.callbacks[topic] = callback
 
-        self.client.subscribe(topic)
-
-        print(
-            f"Subscribed to topic: {topic}"
-        )
+        print(f"Registered subscription for topic: {topic}")
 
 
     def publish(
@@ -131,6 +128,14 @@ class MqttClient:
             print(
                 f"MQTT error: {e}"
             )
+
+        
+    def _on_connect(self, client, userdata, flags, rc):
+        print("MQTT CONNECTED")
+
+        for topic in self.callbacks.keys():
+            client.subscribe(topic)
+            print(f"Subscribed to topic: {topic}")
 
 
 mqtt_client = MqttClient(

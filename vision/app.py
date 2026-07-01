@@ -52,7 +52,6 @@ async def lifespan(app: FastAPI):
 
     finally:
         mqtt_client.disconnect()
-
         processor.face_metrics_service.close()
 
 
