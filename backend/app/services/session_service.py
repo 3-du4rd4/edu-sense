@@ -86,6 +86,7 @@ class SessionService:
         event = WebSocketEvent.SESSION_STARTED
 
         if created_session["features"]["cameraEnabled"]:
+            print("Publishing vision control message for session started")
             await publish_vision_control(
                 {
                     "event": event,
@@ -95,6 +96,7 @@ class SessionService:
             )
 
         if created_session["features"]["sensorsEnabled"]:
+            print("Publishing environment control message for session started")
             await publish_environment_control(
                 {
                     "event": event,
