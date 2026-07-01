@@ -123,7 +123,7 @@ class VisionProcessor:
         return False
     
 
-    async def process_frame(self, frame):
+    async def process_frame(self, frame, request_timestamp: str = None):
         processing_start = time.perf_counter()
 
         if not self.current_session: 
@@ -167,6 +167,7 @@ class VisionProcessor:
                 "eyesClosed": metrics["eyesClosed"],
                 "yawning": metrics["yawning"],
                 "timestamp": datetime.now(timezone.utc).isoformat(),
+                "requestTimestamp": request_timestamp,
                 "processingTimeMs": processing_time_ms,
             }
 

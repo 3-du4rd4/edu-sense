@@ -2,21 +2,15 @@ import numpy as np
 import cv2
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 
-from services.session_ws_client import SessionWebSocketClient
 from services.mqtt_client import mqtt_client
 from services.vision_processor import VisionProcessor
 from config import settings
 
 
 processor = VisionProcessor()
-
-
-# ws_client = SessionWebSocketClient(
-#     url=settings.BACKEND_WS_URL
-# )
 
 
 async def handle_session_event(
@@ -78,7 +72,8 @@ async def health():
 
 @app.post("/analyze-frame")
 async def analyze_frame(
-    frame: UploadFile = File(...)
+    frame: UploadFile = File(...),
+    requestTimestamp: str = Form(...)
 ):
     contents = await frame.read()
 
@@ -92,7 +87,7 @@ async def analyze_frame(
             "message": "Invalid image data"
         }
     
-    await processor.process_frame(image)
+    await processor.process_frame(image, request_timestamp=requestTimestamp)
 
     return {
         "success": True

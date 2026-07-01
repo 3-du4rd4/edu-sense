@@ -8,6 +8,9 @@ export type FacialMetrics = {
   features?: FacialFeatures | null;
   prediction?: FacialPrediction | null;
   timestamp: string;
+  inferenceTimeMs?: number | null;
+  processingTimeMs?: number | null;
+  requestTimestamp?: string | null;
 };
 
 export type FacialFeatures = {

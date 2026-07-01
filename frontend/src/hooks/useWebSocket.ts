@@ -12,6 +12,10 @@ import { useSettingsStore } from "@/stores/settingsStore";
 
 import { toast } from "sonner";
 import { markNotificationAsRead } from "@/services/notificationService";
+import {
+  createPerformanceMetrics,
+  CreatePerformanceMetricsPayload,
+} from "@/services/performanceMetricsService";
 
 export function useWebSocket(userId?: string) {
   const socketRef = useRef<WebSocket | null>(null);
@@ -44,7 +48,18 @@ export function useWebSocket(userId?: string) {
         }
 
         if (message.event === "facial_metrics_update") {
+          const receivedAt = Date.now();
+
+          const metrics: CreatePerformanceMetricsPayload = {
+            sessionId: message.payload.sessionId,
+            type: "facial",
+            requestTimestamp: message.payload.requestTimestamp ?? null,
+            receivedAt: new Date(receivedAt).toISOString(),
+          };
+
           setLatestMetrics(message.payload);
+
+          saveFacialPerformanceMetrics(metrics);
         }
 
         if (message.event === "notification_created") {
@@ -95,4 +110,14 @@ function showBrowserNotification(title: string, message: string) {
     body: message,
     icon: "/brand/edusense-icon.svg",
   });
+}
+
+async function saveFacialPerformanceMetrics(
+  performanceMetrics: CreatePerformanceMetricsPayload,
+) {
+  try {
+    await createPerformanceMetrics(performanceMetrics);
+  } catch (error) {
+    console.error("Erro ao salvar métricas", error);
+  }
 }

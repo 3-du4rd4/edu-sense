@@ -33,6 +33,7 @@ class FacialMetricsRequest(BaseModel):
     prediction: FacialPrediction | None = None
     inferenceTimeMs: float | None = None
     processingTimeMs: float | None = None
+    requestTimestamp: str | None = None
 
 
 class FacialMetricsResponse(BaseModel):

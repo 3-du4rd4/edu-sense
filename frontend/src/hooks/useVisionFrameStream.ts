@@ -119,6 +119,10 @@ export function useVisionFrameStream({
             const formData = new FormData();
             formData.append("frame", blob, "frame.jpg");
 
+            const requestTimestamp = Date.now();
+
+            formData.append("requestTimestamp", requestTimestamp.toString());
+
             try {
               const startTime = performance.now();
 
