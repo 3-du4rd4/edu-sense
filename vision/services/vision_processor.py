@@ -124,6 +124,9 @@ class VisionProcessor:
     
 
     async def process_frame(self, frame):
+        if not self.current_session: 
+            return
+
         metrics = self.face_metrics_service.extract_metrics(frame)
 
         if metrics:

@@ -35,31 +35,40 @@ export function EnvironmentStatusCard() {
 
             <div className="space-y-2 text-sm">
               <EnvironmentMetric
-                label="Temperatura"
-                value={`${reading.temperature} °C`}
-                status="um pouco alta"
-                variant="warning"
-              />
-
-              <EnvironmentMetric
-                label="Luz"
-                value={`${reading.light} lx`}
-                status="perfeita"
+                label="Temperatura ideal"
+                // value={`${reading.temperature} °C`}
+                // status="um pouco alta"
+                value="20–24 °C"
+                status="confortável"
                 variant="success"
               />
 
               <EnvironmentMetric
-                label="Ruído"
-                value={`${reading.noise} dB`}
-                status="muito alto"
-                variant="danger"
+                label="Iluminação recomendada"
+                // value={`${reading.light} lx`}
+                // status="perfeita"
+                value="300–500 lx"
+                status="adequada"
+                variant="success"
+              />
+
+              <EnvironmentMetric
+                // label="Ruído"
+                // value={`${reading.noise} dB`}
+                // status="muito alto"
+                label="Ruído máximo"
+                value="< 40 dB"
+                status="silencioso"
+                variant="warning"
               />
             </div>
           </div>
 
           <div className="flex items-center">
             <div className="rounded-xl bg-[#FDBC28]/15 px-6 py-4 text-sm font-medium text-center">
-              Seu ambiente está quase perfeito! O ruído está um pouco alto.
+              {/* Seu ambiente está quase perfeito! O ruído está um pouco alto. */}
+              Um ambiente silencioso, iluminado e com temperatura estável
+              melhora significativamente a concentração.
             </div>
           </div>
         </div>
