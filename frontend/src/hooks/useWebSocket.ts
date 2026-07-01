@@ -54,7 +54,10 @@ export function useWebSocket(userId?: string) {
             sessionId: message.payload.sessionId,
             type: "facial",
             requestTimestamp: message.payload.requestTimestamp ?? null,
-            receivedAt: new Date(receivedAt).toISOString(),
+            receivedAt: receivedAt.toString(),
+            latency: message.payload.requestTimestamp
+              ? receivedAt - Number(message.payload.requestTimestamp)
+              : null,
           };
 
           setLatestMetrics(message.payload);

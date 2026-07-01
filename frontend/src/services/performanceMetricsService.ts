@@ -6,6 +6,7 @@ export type CreatePerformanceMetricsPayload = {
   sessionId: string;
   requestTimestamp?: string | null;
   receivedAt?: string | null;
+  latency?: number | null;
 };
 
 export async function createPerformanceMetrics(

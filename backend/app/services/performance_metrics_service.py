@@ -25,6 +25,7 @@ class PerformanceMetricsService:
             "type": data.type,
             "requestTimestamp": data.requestTimestamp,
             "receivedAt": data.receivedAt,
+            "latency": data.latency
         }
 
         created_metric = await self.repository.create_metric(metric_data)

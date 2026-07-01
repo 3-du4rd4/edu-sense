@@ -5,6 +5,7 @@ from typing import Literal
 class PerformanceMetricsRequest(BaseModel):
     sessionId: str
     type: Literal["environment", "facial"]
+    latency: float | None = None
     receivedAt: str | None = None
     requestTimestamp: str | None = None
 
@@ -12,6 +13,7 @@ class PerformanceMetricsResponse(BaseModel):
     id: str = Field(..., alias="_id")
     sessionId: str
     type: Literal["environment", "facial"]
+    latency: float | None = None
     receivedAt: str | None = None
     requestTimestamp: str | None = None
 

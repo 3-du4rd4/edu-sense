@@ -4,4 +4,5 @@ export type PerformanceMetrics = {
   sessionId: string;
   requestTimestamp?: string | null;
   receivedAt?: string | null;
+  latency?: number | null;
 };
