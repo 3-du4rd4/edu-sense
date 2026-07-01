@@ -48,21 +48,21 @@ export function useWebSocket(userId?: string) {
         }
 
         if (message.event === "facial_metrics_update") {
-          const receivedAt = Date.now();
+          // const receivedAt = Date.now();
 
-          const metrics: CreatePerformanceMetricsPayload = {
-            sessionId: message.payload.sessionId,
-            type: "facial",
-            requestTimestamp: message.payload.requestTimestamp ?? null,
-            receivedAt: receivedAt.toString(),
-            latency: message.payload.requestTimestamp
-              ? receivedAt - Number(message.payload.requestTimestamp)
-              : null,
-          };
+          // const metrics: CreatePerformanceMetricsPayload = {
+          //   sessionId: message.payload.sessionId,
+          //   type: "facial",
+          //   requestTimestamp: message.payload.requestTimestamp ?? null,
+          //   receivedAt: receivedAt.toString(),
+          //   latency: message.payload.requestTimestamp
+          //     ? receivedAt - Number(message.payload.requestTimestamp)
+          //     : null,
+          // };
 
           setLatestMetrics(message.payload);
 
-          saveFacialPerformanceMetrics(metrics);
+          // saveFacialPerformanceMetrics(metrics);
         }
 
         if (message.event === "notification_created") {
@@ -115,12 +115,12 @@ function showBrowserNotification(title: string, message: string) {
   });
 }
 
-async function saveFacialPerformanceMetrics(
-  performanceMetrics: CreatePerformanceMetricsPayload,
-) {
-  try {
-    await createPerformanceMetrics(performanceMetrics);
-  } catch (error) {
-    console.error("Erro ao salvar métricas", error);
-  }
-}
+// async function saveFacialPerformanceMetrics(
+//   performanceMetrics: CreatePerformanceMetricsPayload,
+// ) {
+//   try {
+//     await createPerformanceMetrics(performanceMetrics);
+//   } catch (error) {
+//     console.error("Erro ao salvar métricas", error);
+//   }
+// }
