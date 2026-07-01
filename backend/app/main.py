@@ -9,7 +9,8 @@ from app.routes import (
     environment, 
     dashboard, 
     auth,
-    notification
+    notification,
+    performance_metrics
 )
 from app.mqtt.publisher import start_mqtt_publisher, stop_mqtt_publisher
 from app.db.mongo import connect_to_mongo, close_mongo_connection
@@ -49,3 +50,4 @@ app.include_router(dashboard.router)
 app.include_router(environment.router)
 app.include_router(notification.router)
 app.include_router(facial_metrics.router)
+app.include_router(performance_metrics.router)
