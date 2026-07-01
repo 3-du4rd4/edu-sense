@@ -82,20 +82,20 @@ class EnvironmentService:
                 threshold=30,
             )
 
-        if light > 900:
+        if light > 2200:
             await self.notification_service.create_if_allowed(
                 user_id=user_id,
                 session_id=session_id,
                 type="environment",
                 severity="warning",
                 source="light",
-                title="Nível de luz alto",
-                message="O nível de luz está acima do intervalo recomendado.",
+                title="Nível de luz baixo",
+                message="O nível de luz está abaixo do intervalo recomendado.",
                 value=light,
-                threshold=900,
+                threshold=2200,
             )
 
-        if noise > 65:
+        if noise > 800:
             await self.notification_service.create_if_allowed(
                 user_id=user_id,
                 session_id=session_id,
@@ -105,5 +105,5 @@ class EnvironmentService:
                 title="Nível de ruído alto",
                 message="O nível de ruído está acima do nível recomendado para estudo.",
                 value=noise,
-                threshold=65,
+                threshold=800,
             )
