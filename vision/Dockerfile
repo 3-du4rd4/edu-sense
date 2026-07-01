@@ -25,4 +25,4 @@ COPY . .
 EXPOSE 8000
 
 # Inicializa aplicação
-CMD ["python", "main.py"]
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port $PORT"]
