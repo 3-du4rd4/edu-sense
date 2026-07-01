@@ -124,6 +124,8 @@ class VisionProcessor:
     
 
     async def process_frame(self, frame):
+        processing_start = time.perf_counter()
+
         if not self.current_session: 
             return
 
@@ -141,11 +143,22 @@ class VisionProcessor:
                 else None
             )
 
-            prediction = (
-                self.fatigue_classifier_service.predict(features)
-                if features
-                else None
-            )
+            inferece_time_ms = None
+
+            if features:
+                inference_start = time.perf_counter()
+
+                prediction = self.fatigue_classifier_service.predict(features)
+
+                inference_end = time.perf_counter()
+
+                inferece_time_ms = (inference_end - inference_start) * 1000
+            else:
+                prediction = None
+
+            processing_end = time.perf_counter()
+
+            processing_time_ms = (processing_end - processing_start) * 1000
 
             payload = {
                 "sessionId": self.current_session["_id"],
@@ -154,6 +167,7 @@ class VisionProcessor:
                 "eyesClosed": metrics["eyesClosed"],
                 "yawning": metrics["yawning"],
                 "timestamp": datetime.now(timezone.utc).isoformat(),
+                "processingTimeMs": processing_time_ms,
             }
 
             if features:
@@ -161,6 +175,9 @@ class VisionProcessor:
 
             if prediction:
                 payload["prediction"] = prediction
+
+            if inferece_time_ms is not None:
+                payload["inferenceTimeMs"] = inferece_time_ms
 
             self.mqtt_publisher.publish_facial_metrics(
                 user_id=self.current_session["userId"],

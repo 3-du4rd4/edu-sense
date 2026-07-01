@@ -35,6 +35,8 @@ class FacialMetricsService:
             "timestamp": data.timestamp or datetime.now(timezone.utc),
             "features": data.features.model_dump() if data.features else None,
             "prediction": data.prediction.model_dump() if data.prediction else None,
+            "inferenceTimeMs": data.inferenceTimeMs,
+            "processingTimeMs": data.processingTimeMs,
         }
 
         created_metric = await self.repository.create_metric(metric_data)
