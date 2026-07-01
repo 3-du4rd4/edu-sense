@@ -93,15 +93,13 @@ export function TimeGoalSection({
             </SelectValue>
 
             {timeGoalMinutes && (
-              <Button
-                variant="ghost"
-                size="icon"
+              <span
+                className="inline-flex h-8 w-8 items-center justify-center rounded-md"
                 onPointerDown={(e) => e.stopPropagation()}
                 onClick={clearTimeGoal}
-                className="size-4 rounded-full hover:bg-transparent"
               >
-                <X className="size-4" />
-              </Button>
+                <X className="h-4 w-4" />
+              </span>
             )}
           </SelectTrigger>
 

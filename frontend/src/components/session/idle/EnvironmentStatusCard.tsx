@@ -50,7 +50,7 @@ export function EnvironmentStatusCard() {
 
               <EnvironmentMetric
                 label="Ruído"
-                value={`${reading.noise}`}
+                value={`${reading.noise} dB`}
                 status="muito alto"
                 variant="danger"
               />

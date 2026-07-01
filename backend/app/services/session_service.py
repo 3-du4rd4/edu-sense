@@ -11,6 +11,7 @@ from app.repositories.environment_repository import EnvironmentRepository
 from app.repositories.facial_metrics_repository import FacialMetricsRepository
 from app.services.points_service import PointsService
 from app.services.session_summary_service import SessionSummaryService
+from app.mqtt.publisher import publish_vision_control, publish_environment_control
 
 
 class SessionService:
@@ -82,10 +83,24 @@ class SessionService:
             payload=created_session
         )
 
-        await websocket_manager.send_to_vision(
-            event=WebSocketEvent.SESSION_STARTED,
-            payload=created_session,
-        )
+        event = WebSocketEvent.SESSION_STARTED
+
+        if created_session["features"]["cameraEnabled"]:
+            await publish_vision_control(
+                {
+                    "event": event,
+                    "payload": created_session,
+                },
+                retain=True,
+            )
+
+        if created_session["features"]["sensorsEnabled"]:
+            await publish_environment_control(
+                {
+                    "event": event,
+                },
+                retain=True,
+            )
 
         return created_session
 
@@ -164,10 +179,24 @@ class SessionService:
             payload=finished_session
         )
 
-        await websocket_manager.send_to_vision(
-            event=WebSocketEvent.SESSION_FINISHED,
-            payload=finished_session,
-        )
+        event = WebSocketEvent.SESSION_FINISHED
+
+        if finished_session["features"]["cameraEnabled"]:
+            await publish_vision_control(
+                {
+                    "event": event,
+                    "payload": finished_session,
+                },
+                retain=True,
+            )
+
+        if finished_session["features"]["sensorsEnabled"]:
+            await publish_environment_control(
+                {
+                    "event": event,
+                },
+                retain=True,
+            )
 
         return finished_session
     
@@ -270,10 +299,24 @@ class SessionService:
             payload=updated_session
         )
 
-        await websocket_manager.send_to_vision(
-            event=WebSocketEvent.SESSION_PAUSED,
-            payload=updated_session,
-        )
+        event = WebSocketEvent.SESSION_PAUSED
+
+        if updated_session["features"]["cameraEnabled"]:
+            await publish_vision_control(
+                {
+                    "event": event,
+                    "payload": updated_session,
+                },
+                retain=True,
+            )
+
+        if updated_session["features"]["sensorsEnabled"]:
+            await publish_environment_control(
+                {
+                    "event": event,
+                },
+                retain=True,
+            )
 
         return updated_session
     
@@ -311,10 +354,25 @@ class SessionService:
             event=WebSocketEvent.SESSION_RESUMED,
             payload=updated_session
         )
-        await websocket_manager.send_to_vision(
-            event=WebSocketEvent.SESSION_RESUMED,
-            payload=updated_session,
-        )
+        
+        event = WebSocketEvent.SESSION_RESUMED
+
+        if updated_session["features"]["cameraEnabled"]:
+            await publish_vision_control(
+                {
+                    "event": event,
+                    "payload": updated_session,
+                },
+                retain=True,
+            )
+
+        if updated_session["features"]["sensorsEnabled"]:
+            await publish_environment_control(
+                {
+                    "event": event,
+                },
+                retain=True,
+            )
 
         return updated_session
 
