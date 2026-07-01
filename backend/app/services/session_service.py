@@ -83,20 +83,22 @@ class SessionService:
             payload=created_session
         )
 
-        mqtt_payload = {
-            "event": WebSocketEvent.SESSION_STARTED,
-            "session": created_session.model_dump(),
-        }
+        event = WebSocketEvent.SESSION_STARTED
 
         if created_session["features"]["cameraEnabled"]:
             await publish_vision_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                    "payload": created_session,
+                },
                 retain=True,
             )
 
         if created_session["features"]["sensorsEnabled"]:
             await publish_environment_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                },
                 retain=True,
             )
 
@@ -177,20 +179,22 @@ class SessionService:
             payload=finished_session
         )
 
-        mqtt_payload = {
-            "event": WebSocketEvent.SESSION_FINISHED,
-            "session": finished_session.model_dump(),
-        }
+        event = WebSocketEvent.SESSION_FINISHED
 
         if finished_session["features"]["cameraEnabled"]:
             await publish_vision_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                    "payload": finished_session,
+                },
                 retain=True,
             )
 
         if finished_session["features"]["sensorsEnabled"]:
             await publish_environment_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                },
                 retain=True,
             )
 
@@ -295,20 +299,22 @@ class SessionService:
             payload=updated_session
         )
 
-        mqtt_payload = {
-            "event": WebSocketEvent.SESSION_PAUSED,
-            "session": updated_session.model_dump(),
-        }
+        event = WebSocketEvent.SESSION_PAUSED
 
         if updated_session["features"]["cameraEnabled"]:
             await publish_vision_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                    "payload": updated_session,
+                },
                 retain=True,
             )
 
         if updated_session["features"]["sensorsEnabled"]:
             await publish_environment_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                },
                 retain=True,
             )
 
@@ -349,20 +355,22 @@ class SessionService:
             payload=updated_session
         )
         
-        mqtt_payload = {
-            "event": WebSocketEvent.SESSION_RESUMED,
-            "session": updated_session.model_dump(),
-        }
+        event = WebSocketEvent.SESSION_RESUMED
 
         if updated_session["features"]["cameraEnabled"]:
             await publish_vision_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                    "payload": updated_session,
+                },
                 retain=True,
             )
 
         if updated_session["features"]["sensorsEnabled"]:
             await publish_environment_control(
-                mqtt_payload,
+                {
+                    "event": event,
+                },
                 retain=True,
             )
 

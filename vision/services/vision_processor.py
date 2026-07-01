@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime, timezone
 
 from config import settings
-from services.mqtt_publisher import MqttPublisher
+from services.mqtt_client import mqtt_client
 from services.face_metrics_service import FaceMetricsService
 from services.temporal_window_service import TemporalWindowService
 from services.fatigue_classifier_service import FatigueClassifierService
@@ -23,13 +23,7 @@ class VisionProcessor:
             yawning_consecutive_seconds=settings.YAWNING_CONSECUTIVE_SECONDS
         )
 
-        self.mqtt_publisher = MqttPublisher(
-            broker=settings.MQTT_BROKER,
-            port=settings.MQTT_PORT,
-            topic=settings.MQTT_TOPIC_FACIAL_METRICS,
-            username=settings.MQTT_USERNAME,
-            password=settings.MQTT_PASSWORD
-        )
+        self.mqtt_publisher = mqtt_client
 
         self.temporal_window_service = TemporalWindowService(
             window_size_seconds=settings.TEMPORAL_WINDOW_SECONDS

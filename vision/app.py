@@ -6,15 +6,17 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from services.session_ws_client import SessionWebSocketClient
+from services.mqtt_client import mqtt_client
 from services.vision_processor import VisionProcessor
 from config import settings
 
 
 processor = VisionProcessor()
 
-ws_client = SessionWebSocketClient(
-    url=settings.BACKEND_WS_URL
-)
+
+# ws_client = SessionWebSocketClient(
+#     url=settings.BACKEND_WS_URL
+# )
 
 
 async def handle_session_event(
@@ -38,23 +40,20 @@ async def handle_session_event(
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    processor.mqtt_publisher.connect()
-
-    ws_task = None
+    mqtt_client.connect()
 
     try:
-        ws_task = __import__("asyncio").create_task(
-            ws_client.listen(handle_session_event)
+        mqtt_client.subscribe(
+            topic=settings.MQTT_TOPIC_CONTROL_VISION,
+            callback=handle_session_event
         )
 
         yield
 
     finally:
-        if ws_task:
-            ws_task.cancel()
+        mqtt_client.disconnect()
 
         processor.face_metrics_service.close()
-        processor.mqtt_publisher.disconnect()
 
 
 app = FastAPI(
