@@ -1,8 +1,8 @@
 import json
 from fastapi.encoders import jsonable_encoder
 
-from core.config import settings
-from mqtt.client import get_mqtt_client
+from app.core.config import settings
+from app.mqtt.client import get_mqtt_client
 
 publisher = None
 
