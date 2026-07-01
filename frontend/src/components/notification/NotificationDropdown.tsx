@@ -69,9 +69,9 @@ export function NotificationDropdown() {
               Nenhuma notificação encontrada.
             </p>
           ) : (
-            notifications.map((notification) => (
+            notifications.map((notification, index) => (
               <button
-                key={notification._id}
+                key={index}
                 type="button"
                 onClick={() => handleMarkAsRead(notification._id)}
                 className="flex w-full gap-3 border-b p-3 text-left transition hover:bg-muted/60"

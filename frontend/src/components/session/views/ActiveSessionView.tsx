@@ -8,6 +8,7 @@ import { MonitoringSession } from "@/types/session";
 import { RealtimeSimulatorPanel } from "../dev/RealtimeSimulatorPanel";
 import { updateSessionTasks } from "@/services/sessionService";
 import { useFacialMetricsStore } from "@/stores/facialMetricsStore";
+import { useVisionFrameStream } from "@/hooks/useVisionFrameStream";
 
 type ActiveSessionViewProps = {
   setupData: SessionSetupData;
@@ -59,6 +60,11 @@ export function ActiveSessionView({
     return now - latestMetricTime < 5000;
   }, [setupData.cameraEnabled, latestMetrics?.timestamp]);
 
+  const { videoRef } = useVisionFrameStream({
+    enabled: setupData.cameraEnabled && currentSession?.status === "active",
+    visionUrl: process.env.NEXT_PUBLIC_VISION_URL || "",
+  });
+
   async function toggleTask(taskId: string) {
     if (!currentSession?._id) return;
 
@@ -85,6 +91,8 @@ export function ActiveSessionView({
 
   return (
     <div className="relative min-h-[calc(100vh-8rem)] space-y-6">
+      <video ref={videoRef} autoPlay playsInline muted className="hidden" />
+
       <ActiveSessionTopBar
         cameraConnected={cameraConnected}
         sensorsConnected={setupData.sensorsEnabled}

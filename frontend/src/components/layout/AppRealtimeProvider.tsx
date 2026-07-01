@@ -42,7 +42,7 @@ export function AppRealtimeProvider() {
     if (!userId) return;
 
     loadActiveSession(userId);
-  }, [loadActiveSession]);
+  }, [userId, loadActiveSession]);
 
   return null;
 }

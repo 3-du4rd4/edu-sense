@@ -11,6 +11,7 @@ from app.routes import (
     auth,
     notification
 )
+from app.mqtt.publisher import start_mqtt_publisher, stop_mqtt_publisher
 from app.db.mongo import connect_to_mongo, close_mongo_connection
 from app.mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
 from app.core.config import settings
@@ -29,11 +30,13 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     await connect_to_mongo()
+    await start_mqtt_publisher()
     await start_mqtt_subscriber()
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
+    await stop_mqtt_publisher()
     await stop_mqtt_subscriber()
     await close_mongo_connection()
 

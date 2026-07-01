@@ -33,10 +33,6 @@ export function SessionHistoryTable({
     <section>
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-xl font-semibold">Histórico de sessões</h2>
-
-        <button className="text-xs text-muted-foreground underline-offset-4 hover:underline">
-          Ver todas
-        </button>
       </div>
 
       <div className="overflow-hidden rounded-t-md">
