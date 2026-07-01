@@ -1,10 +1,10 @@
 from fastapi import APIRouter
 
-from schemas.facial_metrics import (
+from app.schemas.facial_metrics import (
     FacialMetricsRequest,
     FacialMetricsResponse,
 )
-from services.facial_metrics_service import FacialMetricsService
+from app.services.facial_metrics_service import FacialMetricsService
 
 router = APIRouter(prefix="/facial-metrics", tags=["Facial Metrics"])
 

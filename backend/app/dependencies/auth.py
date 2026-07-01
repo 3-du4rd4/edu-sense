@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-from core.security import decode_access_token
-from services.auth_service import AuthService
+from app.core.security import decode_access_token
+from app.services.auth_service import AuthService
 
 bearer_scheme = HTTPBearer()
 

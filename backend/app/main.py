@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import (
+from app.routes import (
     health, 
     session, 
     websocket, 
@@ -11,10 +11,10 @@ from routes import (
     auth,
     notification
 )
-from db.mongo import connect_to_mongo, close_mongo_connection
-from mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
-from mqtt.publisher import start_mqtt_publisher, stop_mqtt_publisher
-from core.config import settings
+from app.mqtt.publisher import start_mqtt_publisher, stop_mqtt_publisher
+from app.db.mongo import connect_to_mongo, close_mongo_connection
+from app.mqtt.subscriber import start_mqtt_subscriber, stop_mqtt_subscriber
+from app.core.config import settings
 
 app = FastAPI()
 

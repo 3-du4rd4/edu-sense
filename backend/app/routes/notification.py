@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, Query
 
-from dependencies.auth import get_current_user
-from schemas.notification import NotificationResponse
-from services.notification_service import NotificationService
+from app.dependencies.auth import get_current_user
+from app.schemas.notification import NotificationResponse
+from app.services.notification_service import NotificationService
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
 
