@@ -62,6 +62,7 @@ export function SigninForm() {
               <Input
                 type="email"
                 value={email}
+                placeholder="Insira seu email"
                 onChange={(event) => setEmail(event.target.value)}
                 className="rounded-md pl-10 text-sm"
                 required
@@ -75,6 +76,7 @@ export function SigninForm() {
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={password}
+                  placeholder="Insira sua senha"
                   onChange={(event) => setPassword(event.target.value)}
                   className="rounded-md px-10 text-sm"
                   required

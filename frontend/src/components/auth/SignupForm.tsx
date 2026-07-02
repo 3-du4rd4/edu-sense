@@ -54,6 +54,7 @@ export function SignupForm() {
 
             <Input
               value={name}
+              placeholder="Insira seu nome completo"
               onChange={(event) => setName(event.target.value)}
               className="rounded-md pl-10 text-sm"
               required
@@ -67,6 +68,7 @@ export function SignupForm() {
 
             <Input
               type="email"
+              placeholder="Insira seu email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               className="rounded-md pl-10 text-sm"

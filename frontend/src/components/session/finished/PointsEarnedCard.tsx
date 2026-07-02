@@ -6,9 +6,9 @@ type PointsEarnedCardProps = {
 export function PointsEarnedCard({ points, level }: PointsEarnedCardProps) {
   return (
     <section className="relative self-start rounded-xl px-6 py-4 bg-[#FDBC28]/15 text-center">
-      <div className="absolute -right-4 -top-4 flex size-10 items-center justify-center rounded-full bg-yellow-400 text-lg font-bold text-white">
+      {/* <div className="absolute -right-4 -top-4 flex size-10 items-center justify-center rounded-full bg-yellow-400 text-lg font-bold text-white">
         {level}
-      </div>
+      </div> */}
 
       <p className="text-sm font-semibold">Parabéns!</p>
 
