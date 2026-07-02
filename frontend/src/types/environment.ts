@@ -5,4 +5,5 @@ export type EnvironmentReading = {
   noise: number;
   light: number;
   timestamp: string;
+  requestTimestamp: string | null;
 };

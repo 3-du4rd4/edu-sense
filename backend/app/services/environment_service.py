@@ -30,6 +30,7 @@ class EnvironmentService:
             "temperature": data.temperature,
             "noise": data.noise,
             "light": data.light,
+            "requestTimestamp": data.requestTimestamp,
             "timestamp": datetime.now(timezone.utc)
         }
 
