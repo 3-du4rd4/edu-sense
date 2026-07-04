@@ -3,8 +3,9 @@ from statistics import mean, pstdev
 
 
 class TemporalWindowService:
-    def __init__(self, window_size_seconds: int):
+    def __init__(self, window_size_seconds: int, ear_threshold: float):
         self.window_size_seconds = window_size_seconds
+        self.ear_threshold = ear_threshold
         self.samples = deque(maxlen=window_size_seconds)
 
 
@@ -25,6 +26,11 @@ class TemporalWindowService:
         eyes_closed_values = [sample["eyesClosed"] for sample in self.samples]
         yawning_values = [sample["yawning"] for sample in self.samples]
 
+        perclos_values = [
+            sample["ear"] < self.ear_threshold 
+            for sample in self.samples
+        ]
+
         return {
             "earMean": round(mean(ears), 4),
             "earMin": round(min(ears), 4),
@@ -33,7 +39,7 @@ class TemporalWindowService:
             "marMax": round(max(mars), 4),
             "marStd": round(pstdev(mars), 4) if len(mars) > 1 else 0,
             "perclos": round(
-                sum(eyes_closed_values) / len(eyes_closed_values),
+                sum(perclos_values) / len(perclos_values),
                 4,
             ),
             "eyesClosedRatio": round(

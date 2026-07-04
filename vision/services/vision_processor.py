@@ -26,6 +26,7 @@ class VisionProcessor:
         self.mqtt_publisher = mqtt_client
 
         self.temporal_window_service = TemporalWindowService(
+            ear_threshold=settings.EAR_THRESHOLD,
             window_size_seconds=settings.TEMPORAL_WINDOW_SECONDS
         )
 

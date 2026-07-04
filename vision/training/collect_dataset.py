@@ -88,6 +88,7 @@ def process_video(
     frame_interval = int(fps)
 
     temporal_window = TemporalWindowService(
+        ear_threshold=settings.EAR_THRESHOLD,
         window_size_seconds=settings.TEMPORAL_WINDOW_SECONDS,
     )
 
