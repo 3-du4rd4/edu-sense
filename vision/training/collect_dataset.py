@@ -110,7 +110,15 @@ def process_video(
             frame_index += 1
             continue
 
+        print(
+            f"Video={video_path.name} "
+            f"frame={frame_index} "
+            f"second={processed_second}"
+        )
+
         metrics = face_metrics_service.extract_metrics(frame)
+
+        print("metrics extracted")
 
         if metrics:
             temporal_window.add_sample(metrics)

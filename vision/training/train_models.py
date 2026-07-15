@@ -19,7 +19,7 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import LeaveOneGroupOut
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
@@ -63,15 +63,17 @@ def main():
     X = df[FEATURE_COLUMNS]
     y = df[TARGET_COLUMN]
 
-    stratify = (
-        y
-        if y.nunique() > 1 and y.value_counts().min() >= 2
-        else None
-    )
+    groups = df["video"].str.extract(r"video-(\d+)")[0]
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=stratify
-    )
+    # stratify = (
+    #     y
+    #     if y.nunique() > 1 and y.value_counts().min() >= 2
+    #     else None
+    # )
+
+    # X_train, X_test, y_train, y_test = train_test_split(
+    #     X, y, test_size=0.2, random_state=42, stratify=stratify
+    # )
 
     models = {
         "Logistic Regression": Pipeline(
@@ -111,49 +113,151 @@ def main():
     best_f1 = -1
     best_y_test = None
     best_y_proba = None
+    best_y_pred = None
+
+    logo = LeaveOneGroupOut()
 
     for model_name, model in models.items():
         print(f"\nTraining {model_name}...")
 
-        model.fit(X_train, y_train)
+        fold_results = []
 
-        y_pred = model.predict(X_test)
+        all_y_true = []
+        all_y_pred = []
+        all_y_proba = []
 
-        y_proba = model.predict_proba(X_test)[:, 1]
+        for fold, (train_idx, test_idx) in enumerate(
+            logo.split(X, y, groups),
+            start=1
+        ):
+            print(f"\nFold {fold}:")
 
-        auc = roc_auc_score(y_test, y_proba)
+            X_train = X.iloc[train_idx]
+            y_train = y.iloc[train_idx]
 
-        accuracy = accuracy_score(y_test, y_pred)
+            X_test = X.iloc[test_idx]
+            y_test = y.iloc[test_idx]
+
+            model.fit(X_train, y_train)
+
+            y_pred = model.predict(X_test)
+            y_proba = model.predict_proba(X_test)[:, 1]
+
+            all_y_true.extend(y_test.tolist())
+            all_y_pred.extend(y_pred.tolist())
+            all_y_proba.extend(y_proba.tolist())
+
+            fold_results.append(
+                {
+                    "accuracy": accuracy_score(
+                    y_test,
+                    y_pred,
+                ),
+                "precision": precision_score(
+                    y_test,
+                    y_pred,
+                    zero_division=0,
+                ),
+                "recall": recall_score(
+                    y_test,
+                    y_pred,
+                    zero_division=0,
+                ),
+                "f1": f1_score(
+                    y_test,
+                    y_pred,
+                    zero_division=0,
+                ),
+                }
+            )
+
+        # model.fit(X_train, y_train)
+
+        # y_pred = model.predict(X_test)
+
+        # y_proba = model.predict_proba(X_test)[:, 1]
+
+        # auc = roc_auc_score(y_test, y_proba)
+
+        # accuracy = accuracy_score(y_test, y_pred)
+
+        # precision = precision_score(
+        #     y_test, y_pred, zero_division=0
+        # )
+
+        # recall = recall_score(
+        #     y_test, y_pred, zero_division=0
+        # )
+
+        # f1 = f1_score(
+        #     y_test, y_pred, zero_division=0
+        # )
+
+        # results.append({
+        #     "model": model_name,
+        #     "accuracy": accuracy,
+        #     "precision": precision,
+        #     "recall": recall,
+        #     "f1": f1,
+        #     "auc": auc
+        # })
+
+        accuracy = accuracy_score(
+            all_y_true,
+            all_y_pred,
+        )
 
         precision = precision_score(
-            y_test, y_pred, zero_division=0
+            all_y_true,
+            all_y_pred,
+            zero_division=0,
         )
 
         recall = recall_score(
-            y_test, y_pred, zero_division=0
+            all_y_true,
+            all_y_pred,
+            zero_division=0,
         )
 
         f1 = f1_score(
-            y_test, y_pred, zero_division=0
+            all_y_true,
+            all_y_pred,
+            zero_division=0,
         )
 
-        results.append({
-            "model": model_name,
-            "accuracy": accuracy,
-            "precision": precision,
-            "recall": recall,
-            "f1": f1,
-            "auc": auc
-        })
+        auc = roc_auc_score(
+            all_y_true,
+            all_y_proba,
+        )
 
-        print(classification_report(y_test, y_pred, zero_division=0))
+        results.append(
+            {
+                "model": model_name,
+                "accuracy": accuracy,
+                "precision": precision,
+                "recall": recall,
+                "f1": f1,
+                "auc": auc,
+            }
+        )
+
+        print(
+            classification_report(
+                all_y_true,
+                all_y_pred,
+                zero_division=0,
+            )
+        )
+
+        # print(classification_report(y_test, y_pred, zero_division=0))
 
         if f1 > best_f1:
             best_f1 = f1
             best_model_name = model_name
             best_model = model
-            best_y_test = y_test
-            best_y_proba = y_proba
+            best_y_test = all_y_true
+            best_y_pred = all_y_pred
+            best_y_proba = all_y_proba
 
     results_df = pd.DataFrame(results).sort_values(
         by="f1", ascending=False
@@ -163,6 +267,8 @@ def main():
     print(results_df.to_string(index=False))
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
+
+    best_model.fit(X, y)  # Retrain the best model on the entire dataset
 
     joblib.dump(
         {
@@ -181,7 +287,7 @@ def main():
     results_df.to_csv(MODEL_COMPARISON_CSV_PATH, index=False)
 
     plot_model_comparison(results_df)
-    plot_confusion_matrix(best_model, X_test, y_test)
+    plot_confusion_matrix(best_model, best_y_test, best_y_pred)
     plot_feature_importance(best_model, best_model_name)
     plot_roc_curve(best_y_test, best_y_proba, best_model_name)
 
@@ -235,10 +341,10 @@ def plot_model_comparison(results_df: pd.DataFrame):
     plt.close()
 
 
-def plot_confusion_matrix(model, X_test, y_test):
-    y_pred = model.predict(X_test)
+def plot_confusion_matrix(model, y_true, y_pred):
+    # y_pred = model.predict(X_test)
 
-    matrix = confusion_matrix(y_test, y_pred)
+    matrix = confusion_matrix(y_true, y_pred)
 
     display = ConfusionMatrixDisplay(
         confusion_matrix=matrix,
@@ -284,9 +390,9 @@ def plot_feature_importance(model, model_name: str):
         y="feature",
     )
 
-    plt.title(f"Feature importance - {model_name}")
-    plt.xlabel("Importance")
-    plt.ylabel("Feature")
+    plt.title(f"Importância das características - {model_name}")
+    plt.xlabel("Importância")
+    plt.ylabel("Característica")
     plt.tight_layout()
     plt.savefig(FEATURE_IMPORTANCE_PATH, dpi=300)
     plt.close()
